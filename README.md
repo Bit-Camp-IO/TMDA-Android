@@ -31,7 +31,7 @@ To get started with the TMDA Android app, follow these steps:
 1. Clone this repository to your local machine using the following command:
 
 ```bash
-git clone https://github.com/your-username/tmda-android-app.git
+git clone https://github.com/Bit-Camp-IO/TMDA-Android.git
 ```
 
 2. Open Android Studio and select "Open an Existing Project."
