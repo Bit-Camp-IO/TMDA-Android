@@ -83,11 +83,3 @@ If you have any questions, suggestions, or feedback, please contact the project 
 Email: your-email@example.com\
 GitHub: [Bit-Camp-IO](https://github.com/Bit-Camp-IO)
 ```
-
-In this version, I've added the following icons:
-
-- License: ![GitHub](https://img.shields.io/github/license/your-username/tmda-android-app)
-- Last Commit: ![GitHub last commit](https://img.shields.io/github/last-commit/your-username/tmda-android-app)
-- Issues: ![GitHub issues](https://img.shields.io/github/issues/your-username/tmda-android-app)
-
-Feel free to customize the badges according to your preferences and replace `your-username` with your actual GitHub username.
