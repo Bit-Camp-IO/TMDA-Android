@@ -83,7 +83,7 @@ If you have any questions, suggestions, or feedback, please contact the project 
 
 Your Name\
 Email: your-email@example.com\
-GitHub: [Your GitHub Profile](https://github.com/your-username)
+GitHub: [Your GitHub Profile](https://github.com/Bit-Camp-IO)
 ```
 
 In this version, I've added the following icons:
