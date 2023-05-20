@@ -2,7 +2,7 @@
 # TMDA Android App
 
 ![GitHub](https://img.shields.io/github/license/Bit-Camp-IO/tmda-android-app)
-![GitHub last commit](https://img.shields.io/github/last-commit/Bit-Camp-IO/tmda-android-app)
+![GitHub last commit](https://img.shields.io/github/last-commit/Bit-IO/tmda-android-app)
 ![GitHub issues](https://img.shields.io/github/issues/your-username/tmda-android-app)
 
 This repository contains the source code for the TMDA Android app, which allows users to browse and search for movies using the TMDB API. The app provides information such as movie details, ratings, reviews, and trailers.
