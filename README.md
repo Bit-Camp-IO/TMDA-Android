@@ -80,7 +80,6 @@ The TMDA Android app is built using the TMDB API, which provides movie data to p
 
 If you have any questions, suggestions, or feedback, please contact the project maintainer:
 
-Your Name\Bit-IO
 Email: your-email@example.com\
 GitHub: [Bit-Camp-IO](https://github.com/Bit-Camp-IO)
 ```
