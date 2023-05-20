@@ -21,7 +21,7 @@ This repository contains the source code for the TMDA Android app, which allows 
 Before running the app, ensure that you have the following:
 
 - Android Studio (version X.X.X or higher)
-- Java Development Kit (JDK) (version X.X or higher)
+- Java Development Kit (JDK) (version 1.8 or higher)
 - TMDB API key ([Sign up](https://www.themoviedb.org/documentation/api) for an account and obtain an API key)
 
 ## Getting Started
