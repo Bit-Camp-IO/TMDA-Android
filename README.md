@@ -1,6 +1,4 @@
-Certainly! Here's an updated version of the README file with icons added:
 
-```markdown
 # TMDA Android App
 
 ![GitHub](https://img.shields.io/github/license/your-username/tmda-android-app)
