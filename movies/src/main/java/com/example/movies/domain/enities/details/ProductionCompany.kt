@@ -1,4 +1,4 @@
-package com.example.movies.domain.enities
+package com.example.movies.domain.enities.details
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

@@ -1,4 +1,4 @@
-package com.example.movies.domain.enities
+package com.example.movies.domain.enities.details
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
@@ -6,6 +6,6 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class SpokenLanguage(
     @Json(name = "english_name") val englishName: String,
-    @Json(name = "spoken_languages") val languageCode: String,
+    @Json(name = "iso_639_1") val languageCode: String,
     val name: String
 )

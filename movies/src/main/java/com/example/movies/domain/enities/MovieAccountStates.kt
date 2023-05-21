@@ -3,7 +3,9 @@ package com.example.movies.domain.enities
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class Genre(
+data class MovieAccountStates(
     val id: Int,
-    val name: String
+    val favorite: Boolean,
+    val rated: Boolean,
+    val watchlist: Boolean
 )
