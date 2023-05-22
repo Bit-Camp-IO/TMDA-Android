@@ -12,7 +12,7 @@ data class CrewMember(
     val name: String,
     @Json(name = "original_name") val originalName: String,
     val popularity: Double,
-    @Json(name = "profile_path") val profilePath: String,
+    @Json(name = "profile_path") val profilePath: String?,
     @Json(name = "credit_id") val creditId: String,
     val department: String,
     val job: String

@@ -1,4 +1,4 @@
-package com.example.movies.domain.enities.videos_container
+package com.example.movies.domain.enities.videos
 
 import com.squareup.moshi.JsonClass
 

@@ -20,7 +20,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TMDATheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -29,9 +28,17 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
         runBlocking {
-            val x = RetrofitService.service.getMovieDetails(11)
-            Log.d("xxxxx",x.toString())
+            try {
+                val x = RetrofitService.service.getMovieDetails(11)
+                Log.d("xxxxx",x.toString())
+            }
+            catch (e:Exception){
+                throw e
+                Log.d("xxxxx", e.localizedMessage!!.toString())
+            }
+
         }
     }
 }

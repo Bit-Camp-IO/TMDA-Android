@@ -9,5 +9,4 @@ data class ImageCollection(
     @Json(name = "backdrops") val backDrops: List<ImageItem>,
     @Json(name = "logos") val logos: List<ImageItem>,
     @Json(name = "posters") val posters: List<ImageItem>,
-
-    )
+)
