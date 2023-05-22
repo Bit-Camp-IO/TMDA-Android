@@ -6,6 +6,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Result(
+    @SerialName("adult")
+    val adult: Boolean?,
     @SerialName("backdrop_path")
     val backdropPath: String?,
     @SerialName("first_air_date")
