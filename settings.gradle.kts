@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 pluginManagement {
     repositories {
         google()
@@ -14,9 +16,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "TMDA"
-include(":app")
-include(":movies")
-include(":tv")
-include(":authentication")
-include(":account")
-include(":core")
+include(":app",":movies",":tv",":authentication",":account",":core")
