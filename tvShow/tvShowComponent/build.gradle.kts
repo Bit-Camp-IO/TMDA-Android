@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.kapt3.base.Kapt
 import java.util.Properties
 
 plugins {
-    id("com.android.application")
+    id("com.android.library")
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
@@ -15,24 +15,18 @@ val localPropsFile = localProps.load(project.rootProject.file("local.properties"
 val hilt= extra["hilt"]
 val retrofit=extra["retrofit"]
 
+
 android {
-    namespace = "com.example.tmda"
+    namespace = "com.bitIO.tvshowcomponent"
     compileSdk = 33
 
     defaultConfig {
-        applicationId = "com.example.tmda"
-        minSdk = 26
-        targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = 24
 
-        buildConfigField("String", "BASE_URL", "\"https://api.themoviedb.org/3/\"")
         buildConfigField("String", "API_KEY", localProps.getProperty("apiKey"))
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -42,7 +36,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-//            multiDexEnabled = true
         }
     }
     compileOptions {
@@ -66,11 +59,6 @@ android {
 }
 
 dependencies {
-
-    //region TvShow
-//    api(project(":tvShow:ui"))
-    api(project(":tvShow:tvShowComponent"))
-    //endregion
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
@@ -109,8 +97,7 @@ dependencies {
 
     //save Data
     implementation ("androidx.datastore:datastore-preferences:1.0.0")
-
+    implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
     implementation ("com.squareup.okhttp3:okhttp:4.10.0")
     implementation ("com.squareup.okhttp3:logging-interceptor:4.10.0")
-
 }

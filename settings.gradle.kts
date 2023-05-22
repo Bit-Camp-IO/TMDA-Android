@@ -1,3 +1,5 @@
+import java.net.URL
+
 pluginManagement {
     repositories {
         google()
@@ -16,7 +18,8 @@ dependencyResolutionManagement {
 rootProject.name = "TMDA"
 include(":app")
 include(":movies")
-include(":tv")
 include(":authentication")
 include(":account")
 include(":core")
+include(":tvShow:ui")
+include(":tvShow:tvShowComponent")
