@@ -9,13 +9,12 @@ import androidx.navigation.NavController
 
 @Composable
 fun TvShowScreen(
-//    navController: NavController,
+    navController: NavController,
     viewModel: TvShowViewModel = hiltViewModel()
 ) {
 
-//    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsState()
 
-    val ui = viewModel._uiState2.collectAsState()
-    Text("Test API: $ui ")
+    Text("Test API: ${uiState.result} ")
 
 }

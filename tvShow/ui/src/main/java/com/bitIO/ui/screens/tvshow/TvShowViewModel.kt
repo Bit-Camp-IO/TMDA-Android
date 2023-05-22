@@ -18,12 +18,10 @@ class TvShowViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(TvShowTopRatedState())
     val uiState = _uiState.asStateFlow()
 
-     val _uiState2 = MutableStateFlow("")
 
     init {
         viewModelScope.launch {
-            _uiState2.update { "From ViewModel" }
-//            _uiState.update { it.copy(result = getTopRatedTvShow()) }
+            _uiState.update { it.copy(result = getTopRatedTvShow()) }
         }
     }
 

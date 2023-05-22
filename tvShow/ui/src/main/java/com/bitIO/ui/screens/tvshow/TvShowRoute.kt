@@ -9,6 +9,6 @@ import com.bitIO.ui.START_DESTINATION
 private const val ROUTE = START_DESTINATION
 fun NavGraphBuilder.tvShowRoute(navController: NavHostController) {
     composable(route = ROUTE) {
-        TvShowScreen()
+        TvShowScreen(navController= navController)
     }
 }

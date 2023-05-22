@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.kapt3.base.Kapt
 import java.util.Properties
 
 plugins {
@@ -42,7 +41,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-//            multiDexEnabled = true
         }
     }
     compileOptions {
@@ -68,7 +66,7 @@ android {
 dependencies {
 
     //region TvShow
-//    api(project(":tvShow:ui"))
+    api(project(":tvShow:ui"))
     api(project(":tvShow:tvShowComponent"))
     //endregion
 
@@ -91,12 +89,6 @@ dependencies {
 
     implementation("androidx.navigation:navigation-compose:2.5.3")
 
-    //Lottie
-    implementation("com.airbnb.android:lottie:5.2.0")
-
-    //Coil
-    implementation("io.coil-kt:coil-compose:2.2.2")
-
     //hilt
     implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
     implementation("com.google.dagger:hilt-android:2.42")
@@ -107,8 +99,6 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
 
-    //save Data
-    implementation ("androidx.datastore:datastore-preferences:1.0.0")
 
     implementation ("com.squareup.okhttp3:okhttp:4.10.0")
     implementation ("com.squareup.okhttp3:logging-interceptor:4.10.0")
