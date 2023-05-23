@@ -80,6 +80,6 @@ fun MovieBriefDto.toMovie(): Movie {
 }
 
 
-fun Int.toGenre(){
-
+fun Int.toGenre():Genre{
+TODO("Not Yet impl")
 }
