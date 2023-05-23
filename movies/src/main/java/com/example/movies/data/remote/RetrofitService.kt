@@ -1,15 +1,14 @@
 package com.example.movies.data.remote
 
-import com.example.movies.data.mappers.CoreGenreAdapter
 import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 object RetrofitService {
+
     private val moshi by lazy {
-        Moshi.Builder().add(CoreGenreAdapter())
-            .build()
+        Moshi.Builder().build()
     }
     private val client by lazy {
         OkHttpClient.Builder().addInterceptor(ApiKeyInterceptor.getInstance())

@@ -49,6 +49,11 @@ dependencies {
     implementation("com.squareup.moshi:moshi:1.15.0")
     ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.0")
 
+    //Room
+    implementation ("androidx.room:room-runtime:2.5.1")
+    implementation("androidx.room:room-ktx:2.5.1")
+    ksp ("androidx.room:room-compiler:2.5.1")
+
 
 
     testImplementation("junit:junit:4.13.2")

@@ -16,4 +16,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "TMDA"
-include(":app",":movies",":tv",":authentication",":account",":core")
+include(":app",":movies",":tv",":authentication",":account", ":shared")
