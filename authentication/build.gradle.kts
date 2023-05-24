@@ -3,6 +3,9 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
 }
+kotlin {
+    jvmToolchain(8)
+}
 
 android {
     namespace = "com.example.authentication"

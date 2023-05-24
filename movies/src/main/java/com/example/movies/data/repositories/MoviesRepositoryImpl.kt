@@ -7,9 +7,14 @@ import com.example.movies.data.dto.movies.LatestMovieDto
 import com.example.movies.data.dto.movies.MovieDetailsDto
 import com.example.movies.data.dto.movies.MoviesBriefWrapperDto
 import com.example.movies.data.dto.videos.VideoContainerDto
+import com.example.movies.data.local.abstractions.MoviesDao
+import com.example.movies.data.remote.MoviesApiServices
 import com.example.movies.domain.repositories.MoviesRepository
 
-class MoviesRepositoryImpl:MoviesRepository {
+class MoviesRepositoryImpl(
+    private val moviesApiServices: MoviesApiServices,
+    private val moviesDao: MoviesDao
+) : MoviesRepository {
     override suspend fun getMovieDetails(id: Int): MovieDetailsDto {
         TODO("Not yet implemented")
     }

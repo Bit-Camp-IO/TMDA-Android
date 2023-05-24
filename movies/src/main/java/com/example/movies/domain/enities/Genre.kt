@@ -1,3 +1,6 @@
 package com.example.movies.domain.enities
 
-data class Genre(val id: Int, val name: String)
+import androidx.room.ColumnInfo
+
+
+data class Genre(@ColumnInfo(name = "genre_code") val id: Int, val name: String)

@@ -22,5 +22,5 @@ object RetrofitService {
     }
 
 
-    val service: ApiServices by lazy { retrofit.create(ApiServices::class.java) }
+    val service: MoviesApiServices by lazy { retrofit.create(MoviesApiServices::class.java) }
 }

@@ -1,7 +1,7 @@
 package com.example.authentication.data.remote
 
 import com.example.authentication.data.dto.GuestSessionDto
-import com.example.authentication.data.dto.RequestTokenDto
+import com.example.authentication.data.dto.RequestTokenDetailsDto
 import com.example.authentication.data.dto.SessionDto
 import okhttp3.RequestBody
 import retrofit2.http.Body
@@ -9,18 +9,18 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 
-interface ApiServices {
+interface AuthApiServices {
     @GET("authentication/guest_session/new")
-    suspend fun createGuestSession(): GuestSessionDto
+    suspend fun getGuestSession(): GuestSessionDto
 
     @GET("authentication/token/new")
-    suspend fun createRequestToken(): RequestTokenDto
+    suspend fun getRequestToken(): RequestTokenDetailsDto
 
     @POST("authentication/session/new")
     suspend fun createSession(@Body body: RequestBody): SessionDto
 
     @POST("authentication/token/validate_with_login")
-    suspend fun createLoginSession(@Body body: RequestBody): RequestTokenDto
+    suspend fun createActiveTokenWithLogin(@Body body: RequestBody): RequestTokenDetailsDto
 
     @DELETE("authentication/session")
     suspend fun deleteSession(@Body body: RequestBody): Boolean

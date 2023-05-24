@@ -48,6 +48,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
     implementation("com.squareup.moshi:moshi:1.15.0")
     ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.0")
+    implementation ("com.google.code.gson:gson:2.10.1")
 
     //Room
     implementation ("androidx.room:room-runtime:2.5.1")
