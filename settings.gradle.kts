@@ -1,4 +1,4 @@
-@file:Suppress("UnstableApiUsage")
+import java.net.URL
 
 pluginManagement {
     repositories {
@@ -16,4 +16,11 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "TMDA"
-include(":app",":movies",":tv",":authentication",":account", ":shared")
+include(":shared")
+include(":app")
+include(":movies")
+include(":authentication")
+include(":account")
+include(":core")
+include(":tvShow:ui")
+include(":tvShow:tvShowComponent")

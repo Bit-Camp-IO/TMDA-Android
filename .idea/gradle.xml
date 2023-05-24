@@ -4,8 +4,6 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <option name="testRunner" value="GRADLE" />
-        <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="gradleJvm" value="jbr-17" />
         <option name="modules">
@@ -14,9 +12,12 @@
             <option value="$PROJECT_DIR$/account" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/authentication" />
+            <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/movies" />
             <option value="$PROJECT_DIR$/shared" />
-            <option value="$PROJECT_DIR$/tv" />
+            <option value="$PROJECT_DIR$/tvShow" />
+            <option value="$PROJECT_DIR$/tvShow/tvShowComponent" />
+            <option value="$PROJECT_DIR$/tvShow/ui" />
           </set>
         </option>
       </GradleProjectSettings>
