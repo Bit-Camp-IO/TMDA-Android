@@ -2,13 +2,12 @@ package com.bitIO.tvshowcomponent.data.remote.response
 
 
 import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 
-data class TopRatedTvShowResponse(
+data class BaseTvShowResponse(
     @SerialName("page")
     val page: Int?,
     @SerialName("results")
-    val results: List<Result?>?,
+    val results: List<TvShowDto>?,
     @SerialName("total_pages")
     val totalPages: Int?,
     @SerialName("total_results")

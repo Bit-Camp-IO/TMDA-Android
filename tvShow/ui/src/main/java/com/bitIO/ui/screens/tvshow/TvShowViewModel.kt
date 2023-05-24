@@ -21,7 +21,7 @@ class TvShowViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            _uiState.update { it.copy(result = getTopRatedTvShow()) }
+            _uiState.update { it.copy(tvShowUiState = getTopRatedTvShow().toUiState()) }
         }
     }
 

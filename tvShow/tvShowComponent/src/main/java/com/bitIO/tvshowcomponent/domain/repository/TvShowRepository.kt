@@ -1,9 +1,9 @@
 package com.bitIO.tvshowcomponent.domain.repository
 
-import com.bitIO.tvshowcomponent.data.remote.response.Result
+import com.bitIO.tvshowcomponent.data.remote.response.TvShowDto
 
 interface TvShowRepository {
 
-    suspend fun getTopRatedTvShow(): List<Result?>?
+    suspend fun getTopRatedTvShow(): List<TvShowDto>?
 
 }
