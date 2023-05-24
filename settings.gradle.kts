@@ -16,11 +16,14 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "TMDA"
-include(":shared")
 include(":app")
 include(":movies")
-include(":authentication")
-include(":account")
-include(":core")
+
 include(":tvShow:ui")
 include(":tvShow:tvShowComponent")
+
+include(":shared")
+
+include(":authentication")
+include(":account")
+
