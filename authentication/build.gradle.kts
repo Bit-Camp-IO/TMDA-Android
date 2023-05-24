@@ -1,7 +1,7 @@
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp")
+    id("kotlin-kapt")
 }
 kotlin {
     jvmToolchain(8)
@@ -45,12 +45,11 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
     implementation("com.squareup.moshi:moshi:1.15.0")
-    ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.0")
-
+    kapt ("com.squareup.moshi:moshi-kotlin-codegen:1.13.0")
     //Room
     implementation ("androidx.room:room-runtime:2.5.1")
     implementation("androidx.room:room-ktx:2.5.1")
-    ksp ("androidx.room:room-compiler:2.5.1")
+    kapt ("androidx.room:room-compiler:2.5.1")
 
     //Internal
     implementation (project(":shared"))
