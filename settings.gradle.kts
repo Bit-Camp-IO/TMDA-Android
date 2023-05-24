@@ -1,5 +1,14 @@
 @file:Suppress("UnstableApiUsage")
 
+include(":account:core:data")
+
+
+include(":account:core:network")
+
+
+include(":account:core")
+
+
 pluginManagement {
     repositories {
         google()
