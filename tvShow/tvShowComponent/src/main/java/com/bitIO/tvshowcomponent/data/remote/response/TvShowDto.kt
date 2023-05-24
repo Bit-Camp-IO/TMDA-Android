@@ -5,7 +5,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Result(
+data class TvShowDto(
     @SerialName("adult")
     val adult: Boolean?,
     @SerialName("backdrop_path")
