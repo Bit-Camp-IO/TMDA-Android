@@ -1,4 +1,4 @@
-package com.example.movies.data.remote
+package com.example.authentication.data.remote
 
 import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
@@ -22,5 +22,5 @@ object RetrofitService {
     }
 
 
-    val service: MoviesApiServices by lazy { retrofit.create(MoviesApiServices::class.java) }
+    val service: AuthApiServices by lazy { retrofit.create(AuthApiServices::class.java) }
 }
