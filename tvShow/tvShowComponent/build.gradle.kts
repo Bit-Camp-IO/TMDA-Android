@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.kapt3.base.Kapt
 import java.util.Properties
 
 plugins {
@@ -76,28 +75,17 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-
     implementation("androidx.navigation:navigation-compose:2.5.3")
-
-    //Lottie
-    implementation("com.airbnb.android:lottie:5.2.0")
-
-    //Coil
-    implementation("io.coil-kt:coil-compose:2.2.2")
 
     //hilt
     implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
-    implementation("com.google.dagger:hilt-android:2.42")
-    kapt("com.google.dagger:hilt-compiler:2.42")
+    implementation("com.google.dagger:hilt-android:$hilt")
+    kapt("com.google.dagger:hilt-compiler:$hilt")
 
     //Retrofit
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.retrofit2:retrofit:$retrofit")
+    implementation("com.squareup.retrofit2:converter-gson:$retrofit")
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
-
-    //save Data
-    implementation ("androidx.datastore:datastore-preferences:1.0.0")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
-    implementation ("com.squareup.okhttp3:okhttp:4.10.0")
     implementation ("com.squareup.okhttp3:logging-interceptor:4.10.0")
 }
