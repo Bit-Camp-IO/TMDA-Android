@@ -1,4 +1,5 @@
-import java.net.URL
+
+
 
 pluginManagement {
     repositories {
@@ -19,11 +20,12 @@ rootProject.name = "TMDA"
 include(":app")
 include(":movies")
 
-include(":tvShow:ui")
+//include(":tvShow:ui")
 include(":tvShow:tvShowComponent")
+//include(":try")
 
 include(":shared")
-
+//
 include(":authentication")
-include(":account")
+//include(":account")
 

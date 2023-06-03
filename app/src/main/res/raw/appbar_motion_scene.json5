@@ -1,0 +1,48 @@
+{
+  start: {
+    headerImage: {
+      width: "spread",
+      height: "160.dp",
+      top: [
+        'parent',
+        'top',
+        0
+      ],
+      start: [
+        'parent',
+        'start',
+        0
+      ],
+      end: [
+        'parent',
+        'end',
+        0
+      ],
+      translationY: 0,
+      alpha: 1
+    }
+  },
+  end: {
+    headerImage: {
+      width: "spread",
+      height: 250,
+      top: [
+        'parent',
+        'top',
+        0
+      ],
+      start: [
+        'parent',
+        'start',
+        0
+      ],
+      end: [
+        'parent',
+        'end',
+        0
+      ],
+      translationY: -250,
+      alpha: 0.3,
+    }
+  }
+}

@@ -1,6 +1,5 @@
 package com.example.movies.domain.enities
 
-import com.example.movies.data.dto.shared.GenreDto
 
 data class MovieDetails(
     val isAdult: Boolean,

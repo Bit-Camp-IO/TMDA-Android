@@ -3,9 +3,9 @@ package com.bitIO.tvshowcomponent.data.remote
 import com.bitIO.tvshowcomponent.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.Response
-import javax.inject.Inject
 
-class TvShowInterceptor @Inject constructor() : Interceptor {
+
+class TvShowInterceptor: Interceptor {
 
     private val apikey = BuildConfig.API_KEY
 

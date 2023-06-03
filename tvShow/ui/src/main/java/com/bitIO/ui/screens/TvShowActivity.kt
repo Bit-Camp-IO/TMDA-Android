@@ -11,17 +11,17 @@ import com.bitIO.ui.screens.tvshow.TvShowScreen
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.HiltAndroidApp
 
-@AndroidEntryPoint
-class TvShowActivity : ComponentActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            MaterialTheme {
-                val navController = rememberNavController()
-                TvShowNavGraph(navController = navController, START_DESTINATION)
-            }
-        }
-    }
-
-}
+//@AndroidEntryPoint
+//class TvShowActivity : ComponentActivity() {
+//
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            MaterialTheme {
+//                val navController = rememberNavController()
+//                TvShowNavGraph(navController = navController, START_DESTINATION)
+//            }
+//        }
+//    }
+//
+//}

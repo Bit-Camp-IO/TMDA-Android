@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 import java.util.Properties
 
 plugins {
@@ -5,14 +7,17 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    id("com.google.devtools.ksp")
 }
-
+kotlin {
+    jvmToolchain(8)
+}
 
 val localProps = Properties()
 val localPropsFile = localProps.load(project.rootProject.file("local.properties").inputStream())
 
-val hilt = extra["hilt"]
-val retrofit = extra["retrofit"]
+val hilt = "2.46.1"
+val retrofit = "2.9.0"
 
 kotlin {
     jvmToolchain(8)
@@ -37,7 +42,6 @@ android {
             useSupportLibrary = true
         }
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -46,6 +50,11 @@ android {
                 "proguard-rules.pro"
             )
         }
+        getByName("debug") {
+            isJniDebuggable = true
+            isRenderscriptDebuggable = true
+        }
+
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -58,50 +67,45 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.2"
+        kotlinCompilerExtensionVersion = "1.4.7"
     }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    buildToolsVersion = "33.0.2"
 }
 
 dependencies {
+    val composeBom = platform("androidx.compose:compose-bom:2023.05.01")
+    implementation(composeBom)
+    androidTestImplementation(composeBom)
 
-    //region TvShow
-    api(project(":tvShow:ui"))
+
+//    api(project(":tvShow:ui"))
     api(project(":tvShow:tvShowComponent"))
+
+
+    api(project(":movies"))
+//    implementation(project(":authentication"))
+//    implementation(project(":account"))
     //endregion
 
-    //region TvShow
-    api(project(":tvShow:ui"))
-    api(project(":tvShow:tvShowComponent"))
-    //endregion
-
-    //region TvShow
-    implementation(project(":movies"))
-    implementation(project(":authentication"))
-    implementation(project(":account"))
-    //endregion
-
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
-    implementation("androidx.activity:activity-compose:1.5.1")
+    implementation("androidx.core:core-ktx:1.10.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+    implementation("androidx.activity:activity-compose:1.7.2")
     implementation("androidx.navigation:navigation-compose:2.5.3")
-    implementation(platform("androidx.compose:compose-bom:2022.10.00"))
-    implementation("androidx.compose.ui:ui")
+    //Compose
+    implementation("androidx.compose.ui:ui-android:1.5.0-beta01")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
-    implementation("androidx.recyclerview:recyclerview:1.3.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2022.10.00"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha10")
+     //
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
 
     //hilt
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
@@ -111,7 +115,27 @@ dependencies {
     //Retrofit
     implementation("com.squareup.retrofit2:retrofit:$retrofit")
     implementation("com.squareup.retrofit2:converter-gson:$retrofit")
-    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+   // implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
+    implementation("com.squareup.moshi:moshi:1.15.0")
+    //Room
+    implementation ("androidx.room:room-runtime:2.5.1")
+    implementation("androidx.room:room-ktx:2.5.1")
+    ksp ("androidx.room:room-compiler:2.5.1")
+
+    //Paging
+    implementation("androidx.paging:paging-runtime-ktx:3.1.1")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha20")
+
+    //Coil
+    implementation("io.coil-kt:coil-compose:2.4.0")
+    //Testing
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+
+    implementation("androidx.paging:paging-runtime-ktx:3.1.1")
 
 }
