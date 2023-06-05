@@ -54,22 +54,22 @@ fun BottomNavBar(navController: NavController) {
 val bottomNavItems = listOf(
     BottomNavItem(
         name = "Movies",
-        route = moviesRoute,
+        route = Destinations.MOVIES_ROUTE,
         iconId = R.drawable.ic_movie,
     ),
     BottomNavItem(
         name = "Series",
-        route = seriesRoute,
+        route = Destinations.SERIES_ROUTE,
         iconId = R.drawable.ic_tv,
     ),
     BottomNavItem(
         name = "Search",
-        route = searchRoute,
+        route = Destinations.SEARCH_ROUTE,
         iconId = R.drawable.ic_search,
     ),
     BottomNavItem(
         name = "Account",
-        route = accountRoute,
+        route = Destinations.ACCOUNT_ROUTE,
         iconId = R.drawable.ic_user,
     ),
 )

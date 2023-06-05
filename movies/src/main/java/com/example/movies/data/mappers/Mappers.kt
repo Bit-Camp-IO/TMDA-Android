@@ -1,14 +1,16 @@
 package com.example.movies.data.mappers
 
-import com.example.movies.data.dto.movies.LatestMovieDto
 import com.example.movies.data.dto.movies.MovieBriefDto
 import com.example.movies.data.dto.movies.MovieDetailsDto
+import com.example.movies.data.dto.movies.MoviesBriefWrapperDto
 import com.example.movies.data.dto.shared.GenreDto
 import com.example.movies.data.dto.shared.MovieCollectionDetailsDto
+import com.example.movies.data.util.genreMap
 import com.example.movies.domain.enities.Genre
 import com.example.movies.domain.enities.Movie
 import com.example.movies.domain.enities.MovieCollectionDetails
 import com.example.movies.domain.enities.MovieDetails
+import com.example.movies.domain.enities.MoviesPage
 
 fun MovieDetailsDto.toMovieDetails(): MovieDetails {
     return MovieDetails(
@@ -33,6 +35,7 @@ fun MovieDetailsDto.toMovieDetails(): MovieDetails {
         runtime = runtime,
     )
 }
+
 fun MovieCollectionDetailsDto.toMovieCollectionDetails(): MovieCollectionDetails {
     return MovieCollectionDetails(
         id = id,
@@ -41,30 +44,15 @@ fun MovieCollectionDetailsDto.toMovieCollectionDetails(): MovieCollectionDetails
         backdropPath = backdropPath
     )
 }
+
 fun GenreDto.toGenre() = Genre(id = id, name = name)
-fun LatestMovieDto.toMovie(): Movie {
-    return Movie(
-        isAdult = isAdult,
-        backdropPath = backdropPath,
-        genres = genres.map { it.toGenre() },
-        id = id,
-        originalLanguage = originalLanguage,
-        originalTitle = originalTitle,
-        overview = overview,
-        popularity = popularity,
-        posterPath = posterPath,
-        releaseDate = releaseDate,
-        title = title,
-        hasVideo = hasVideo,
-        voteAverage = voteAverage,
-        voteCount = voteCount,
-    )
-}
+
+
 fun MovieBriefDto.toMovie(): Movie {
     return Movie(
         isAdult = isAdult,
         backdropPath = backdropPath,
-        genres = genreIds.map { Genre(it, "") },
+        genres = genreIds.map { it.toGenre() },
         id = id,
         originalLanguage = originalLanguage,
         originalTitle = originalTitle,
@@ -79,7 +67,14 @@ fun MovieBriefDto.toMovie(): Movie {
     )
 }
 
+fun MoviesBriefWrapperDto.toMoviePage() = MoviesPage(
+    page = page,
+    results = results.map { it.toMovie() },
+    totalPages = totalPages,
+    totalResults = totalResults
 
-fun Int.toGenre():Genre{
-TODO("Not Yet impl")
+)
+
+internal fun Int.toGenre(): Genre {
+    return Genre(this, genreMap[this]!!)
 }

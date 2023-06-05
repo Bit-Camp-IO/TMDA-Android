@@ -1,23 +1,17 @@
 package com.example.movies.data.repositories
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
 import com.example.movies.data.dto.account.MovieAccountStatesDto
 import com.example.movies.data.dto.credits.CreditsDto
 import com.example.movies.data.dto.image.ImageCollectionDto
 import com.example.movies.data.dto.movies.LatestMovieDto
 import com.example.movies.data.dto.videos.VideoContainerDto
 import com.example.movies.data.local.MoviesDao
-import com.example.movies.data.mappers.toMovie
 import com.example.movies.data.mappers.toMovieDetails
-import com.example.movies.data.paging.MoviesPagingSource
-import com.example.movies.data.paging.MoviesPagingSourceWithId
+import com.example.movies.data.mappers.toMoviePage
 import com.example.movies.data.remote.MoviesApiService
-import com.example.movies.domain.enities.Movie
 import com.example.movies.domain.enities.MovieDetails
+import com.example.movies.domain.enities.MoviesPage
 import com.example.movies.domain.repositories.MoviesRepository
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class MoviesRepositoryImpl @Inject constructor(
@@ -45,32 +39,32 @@ class MoviesRepositoryImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun getRecommendMovies(id: Int, page: Int): List<Movie> {
-        return moviesApiService.getRecommendMovies(id, page).results.map { it.toMovie() }
+    override suspend fun getRecommendMovies(id: Int, page: Int): MoviesPage {
+        return moviesApiService.getRecommendMovies(id, page).toMoviePage()
     }
 
-    override suspend fun getSimilarMovies(id: Int, page: Int): List<Movie> {
-        return moviesApiService.getSimilarMovies(id, page).results.map { it.toMovie() }
+    override suspend fun getSimilarMovies(id: Int, page: Int): MoviesPage {
+        return moviesApiService.getSimilarMovies(id, page).toMoviePage()
     }
 
-    override suspend fun getNowPlayingMovies(page: Int): List<Movie> {
-        return moviesApiService.getNowPlayingMovies(page).results.map { it.toMovie() }
+    override suspend fun getNowPlayingMovies(page: Int): MoviesPage {
+        return moviesApiService.getNowPlayingMovies(page).toMoviePage()
     }
 
-    override suspend fun getPopularMovies(page: Int): List<Movie> {
-        return moviesApiService.getPopularMovies(page).results.map { it.toMovie() }
+    override suspend fun getPopularMovies(page: Int): MoviesPage {
+        return moviesApiService.getPopularMovies(page).toMoviePage()
     }
 
-    override suspend fun getTopRatedMovies(page: Int): List<Movie> {
-        return moviesApiService.getTopRatedMovies(page).results.map { it.toMovie() }
+    override suspend fun getTopRatedMovies(page: Int): MoviesPage {
+        return moviesApiService.getTopRatedMovies(page).toMoviePage()
     }
 
-    override suspend fun getUpComingMovies(page: Int): List<Movie> {
-        return moviesApiService.getUpComingMovies(page).results.map { it.toMovie() }
+    override suspend fun getUpComingMovies(page: Int): MoviesPage {
+        return moviesApiService.getUpComingMovies(page).toMoviePage()
     }
 
-    override suspend fun getTrendingMovies(): List<Movie> {
-        return moviesApiService.getTrendingMovies().results.map { it.toMovie() }
+    override suspend fun getTrendingMovies(): MoviesPage {
+        return moviesApiService.getTrendingMovies().toMoviePage()
     }
 
     override suspend fun getMovieVideos(id: Int): VideoContainerDto {
@@ -78,45 +72,45 @@ class MoviesRepositoryImpl @Inject constructor(
     }
 
 
-    override fun getMoviesStream(movieId: Int): Flow<PagingData<Movie>> {
-        return Pager(
-            config = PagingConfig(20, enablePlaceholders = false),
-            pagingSourceFactory = {
-                MoviesPagingSourceWithId(
-                    apiServices = moviesApiService,
-                    movieId
-                )
-            }
-        ).flow
-    }
-
-    override fun getNowPlayingMoviesStream(movieId: Int): Flow<PagingData<Movie>> {
-        return Pager(
-            config = PagingConfig(20, enablePlaceholders = false),
-            pagingSourceFactory = { MoviesPagingSource(moviesApiService::getNowPlayingMovies) }
-        ).flow
-    }
-
-    override fun getPopularMoviesStream(movieId: Int): Flow<PagingData<Movie>> {
-        return Pager(
-            config = PagingConfig(20, enablePlaceholders = false),
-            pagingSourceFactory = { MoviesPagingSource(moviesApiService::getPopularMovies) }
-        ).flow
-    }
-
-    override fun getUpComingMoviesStream(movieId: Int): Flow<PagingData<Movie>> {
-        return Pager(
-            config = PagingConfig(20, enablePlaceholders = false),
-            pagingSourceFactory = { MoviesPagingSource(moviesApiService::getUpComingMovies) }
-        ).flow
-    }
-
-    override fun getTopRatedMoviesStream(movieId: Int): Flow<PagingData<Movie>> {
-        return Pager(
-            config = PagingConfig(20, enablePlaceholders = false),
-            pagingSourceFactory = { MoviesPagingSource(moviesApiService::getTopRatedMovies) }
-        ).flow
-    }
+//    override fun getMoviesStream(movieId: Int): Flow<PagingData<Movie>> {
+//        return Pager(
+//            config = PagingConfig(20, enablePlaceholders = false),
+//            pagingSourceFactory = {
+//                MoviesPagingSourceWithId(
+//                    apiServices = moviesApiService,
+//                    movieId
+//                )
+//            }
+//        ).flow
+//    }
+//
+//    override fun getNowPlayingMoviesStream(): Flow<PagingData<Movie>> {
+//        return Pager(
+//            config = PagingConfig(20, enablePlaceholders = false),
+//            pagingSourceFactory = { MoviesPagingSource(moviesApiService::getNowPlayingMovies) }
+//        ).flow
+//    }
+//
+//    override fun getPopularMoviesStream(): Flow<PagingData<Movie>> {
+//        return Pager(
+//            config = PagingConfig(20, enablePlaceholders = false),
+//            pagingSourceFactory = { MoviesPagingSource(moviesApiService::getPopularMovies) }
+//        ).flow
+//    }
+//
+//    override fun getUpComingMoviesStream(): Flow<PagingData<Movie>> {
+//        return Pager(
+//            config = PagingConfig(20, enablePlaceholders = false),
+//            pagingSourceFactory = { MoviesPagingSource(moviesApiService::getUpComingMovies) }
+//        ).flow
+//    }
+//
+//    override fun getTopRatedMoviesStream(): Flow<PagingData<Movie>> {
+//        return Pager(
+//            config = PagingConfig(20, enablePlaceholders = false),
+//            pagingSourceFactory = { MoviesPagingSource(moviesApiService::getTopRatedMovies) }
+//        ).flow
+//    }
 
 
 }

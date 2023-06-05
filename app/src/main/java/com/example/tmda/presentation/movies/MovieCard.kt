@@ -48,7 +48,7 @@ fun MovieCard(movie: Movie) {
         ) {
 
             AsyncImage(
-                model = "https://image.tmdb.org/t/p/w500" + movie.backdropPath!!,
+                model = "https://image.tmdb.org/t/p/w500" + (movie.backdropPath ?: movie.posterPath),
                 contentDescription = movie.title + "image",
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
@@ -70,7 +70,7 @@ fun MovieCard(movie: Movie) {
                     color = Color.White
                 )
                 Text(
-                    text = movie.releaseDate.take(4)+". genre/genre ."+movie.originalLanguage,
+                    text = movie.releaseDate.take(4) + ". genre/genre ." + movie.originalLanguage,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Normal,
                     color = Color.White

@@ -25,7 +25,7 @@ fun <T> ItemsLazyRowComponent(
     hasBottomDivider: Boolean = true,
     onSeeAllClicked: () -> Unit,
     items: List<T>,
-    contentCard: @Composable (T?) -> Unit
+    contentCard: @Composable (T) -> Unit
 ) {
 
     Row(
@@ -55,9 +55,9 @@ fun <T> ItemsLazyRowComponent(
     }
 
     LazyRow {
-        item{ Spacer(modifier =Modifier.width(16.dp) )}
-        items(count = 20) { contentCard(null) }
-        item{ Spacer(modifier =Modifier.width(16.dp) )}
+        item { Spacer(modifier = Modifier.width(16.dp)) }
+        items(items.size) { contentCard(items[it]) }
+        item { Spacer(modifier = Modifier.width(16.dp)) }
     }
     if (hasBottomDivider) Divider(
         modifier = Modifier

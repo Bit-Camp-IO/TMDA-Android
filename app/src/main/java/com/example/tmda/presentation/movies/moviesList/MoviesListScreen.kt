@@ -16,20 +16,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.tmda.presentation.movies.MovieCard
 import com.example.tmda.presentation.shared.AppToolBar
 
 @OptIn(ExperimentalFoundationApi::class)
-@Preview
+
 @Composable
-fun MoviesListScreen() {
+fun MoviesListScreen(title: String,navController: NavController, savedStateHandle: SavedStateHandle) {
     val viewModel = hiltViewModel<MoviesListViewModel>()
     val movies = viewModel.getMovieList().collectAsLazyPagingItems()
+
 
     LazyColumn(
         Modifier
@@ -40,7 +42,7 @@ fun MoviesListScreen() {
 
         stickyHeader {
             Spacer(modifier = Modifier.height(16.dp))
-            MovieListScreenAppBar()
+            MovieListScreenAppBar(title)
         }
         items(count = movies.itemCount) { MovieCard(movie = movies[it]!!) }
         when (val state = movies.loadState.refresh) { //FIRST LOAD
@@ -48,6 +50,7 @@ fun MoviesListScreen() {
                 //TODO Error Item
                 //state.error to get error message
             }
+
             is LoadState.Loading -> { // Loading UI
                 item {
                     Column(
@@ -66,12 +69,14 @@ fun MoviesListScreen() {
                     }
                 }
             }
+
             else -> {}
         }
         when (val state = movies.loadState.append) { // Pagination
             is LoadState.Error -> {
 
             }
+
             is LoadState.Loading -> { // Pagination Loading UI
                 item {
                     Column(
@@ -86,6 +91,7 @@ fun MoviesListScreen() {
                     }
                 }
             }
+
             else -> {}
         }
     }
@@ -95,7 +101,8 @@ fun MoviesListScreen() {
 
 
 @Composable
-fun MovieListScreenAppBar() {
-    AppToolBar(title = "Top Movies") {}
+fun MovieListScreenAppBar(title: String) {
+    AppToolBar(title = title) {}
 }
+
 
