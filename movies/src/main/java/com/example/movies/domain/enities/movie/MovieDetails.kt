@@ -6,7 +6,7 @@ import com.example.movies.domain.enities.MovieCollectionDetails
 
 data class MovieDetails(
     val isAdult: Boolean,
-    val backdropPath: String,
+    val backdropPath: String?,
     val movieCollectionDetails: MovieCollectionDetails?,
     val originalLanguage: String,
     val originalTitle: String,

@@ -18,7 +18,7 @@ data class MovieUiDto(
     val hasVideo: Boolean,
     val voteAverage: Double,
     val voteCount: Int,
-    val isSaved: Boolean
+    var isSaved: Boolean
 ) {
     constructor(
         movie: Movie, isSaved: Boolean

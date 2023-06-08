@@ -1,5 +1,6 @@
 package com.example.tmda.presentation.movies
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,23 +23,31 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.movies.domain.enities.movie.Movie
 import com.example.tmda.R
+import com.example.tmda.presentation.movies.moviesList.MovieUiDto
+import com.example.tmda.presentation.shared.SavedItemIcon
 import com.example.tmda.presentation.shared.mainShape
 import com.example.tmda.ui.theme.BlackTransparent28
+import kotlinx.coroutines.launch
 
 
 @Composable
-fun MovieCard(movie: Movie) {
+fun MovieCard(
+    movie: MovieUiDto,
+    onCardClicked: (Int) -> Unit,
+    onSaveItemClicked: suspend (Int, Boolean) -> Unit
+) {
     Surface(
         shape = moviesCardShape, color = BlackTransparent28,
         modifier = Modifier
             .fillMaxWidth()
             .height(160.dp)
             .padding(vertical = 8.dp)
+            .clickable { onCardClicked(movie.id) }
 
     ) {
         Row(
@@ -46,7 +56,7 @@ fun MovieCard(movie: Movie) {
                 .fillMaxWidth()
                 .padding(all = 8.dp)
         ) {
-
+            val coroutineScope = rememberCoroutineScope()
             AsyncImage(
                 model = getTmdbImageLink(movie.backdropPath ?: movie.posterPath!!),
                 contentDescription = movie.title + "image",
@@ -61,13 +71,30 @@ fun MovieCard(movie: Movie) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .weight(0.4f)
-                    .fillMaxHeight(),
+                    .fillMaxHeight()
+                    .padding(end = 16.dp),
             ) {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    SavedItemIcon(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .clickable {
+                                coroutineScope.launch {
+                                    onSaveItemClicked(movie.id, movie.isSaved)
+                                    movie.isSaved = !movie.isSaved
+                                }
+                            },
+                        isSaved = movie.isSaved
+                    )
+
+                }
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = movie.title,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
-                    color = Color.White
+                    color = Color.White,
+                    textAlign = TextAlign.Center
                 )
                 Text(
                     text = movie.releaseDate.take(4) + ". genre/genre ." + movie.originalLanguage,
@@ -97,7 +124,7 @@ fun MovieCard(movie: Movie) {
                         )
                     }
                     Text(
-                        text = movie.popularity.toString() + "%",
+                        text = movie.popularity.toString(),
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Normal,
                         color = Color.White
@@ -105,7 +132,6 @@ fun MovieCard(movie: Movie) {
 
                 }
             }
-            // BookMarkIconButton { TODO("not impl") }
         }
 
 

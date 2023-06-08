@@ -41,7 +41,6 @@ import com.example.tmda.presentation.movies.getTmdbImageLink
 import com.example.tmda.presentation.movies.movieDetails.MovieDetailsScreenDto
 import com.example.tmda.ui.theme.BlackTransparent37
 import com.example.tmda.ui.theme.GoldenYellow
-import com.example.tmda.ui.theme.PineGreen
 import com.example.tmda.ui.theme.WhiteTransparent60
 import kotlin.math.roundToInt
 
@@ -159,20 +158,7 @@ fun ServicesBox(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(20.dp))
-            if (isSaved)
-                Icon(
-                    painterResource(id = R.drawable.ic_bookmark_filled),
-                    contentDescription = null,
-                    tint = PineGreen,
-                    modifier = Modifier.size(30.dp)
-                )
-            else
-                Icon(
-                    painterResource(id = R.drawable.ic_bookmark),
-                    contentDescription = null,
-                    tint = PineGreen,
-                    modifier = Modifier.size(30.dp)
-                )
+            SavedItemIcon(modifier = Modifier.size(30.dp), isSaved = isSaved)
             Text(text = "Add")
 
         }

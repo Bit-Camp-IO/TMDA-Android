@@ -10,7 +10,7 @@ import com.example.movies.domain.enities.review.Review
 
 data class MovieDetailsScreenDto(
     val isAdult: Boolean,
-    val backdropPath: String,
+    val backdropPath: String?,
     val movieCollectionDetails: MovieCollectionDetails?,
     val originalLanguage: String,
     val originalTitle: String,
@@ -34,7 +34,7 @@ data class MovieDetailsScreenDto(
     val recommendedMovies: List<Movie>,
     val reviews: List<Review>,
     val videos: List<Video>,
-    val isSaved: Boolean
+    var isSaved: Boolean
 ) {
     constructor(
         movieDetails: MovieDetails,

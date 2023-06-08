@@ -50,7 +50,7 @@ fun MovieDetailsScreen(navController: NavController) {
         is UiState.Success<MovieDetailsScreenDto> -> DetailsScreenLoaded(
             uiState.data,
             viewModel.isSaved.value,
-            viewModel::addMovieToSavedList
+            viewModel::addOrRemoveMovieToSavedList
         )
     }
 }

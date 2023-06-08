@@ -94,13 +94,11 @@ class MoviesDetailsViewModel @Inject constructor(
         }
     }
 
-    fun addMovieToSavedList() {
+    fun addOrRemoveMovieToSavedList() {
         viewModelScope.launch(Dispatchers.IO) {
             addMovieToWatchListUseCase.invoke(16874876, user.sessionId, movieId, !_isSaved.value)
             _isSaved.value = !_isSaved.value
         }
-
-
     }
 }
 

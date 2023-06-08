@@ -23,6 +23,7 @@ import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.tmda.presentation.movies.MovieCard
+import com.example.tmda.presentation.navigation.navigateToMovieDetails
 import com.example.tmda.presentation.shared.AppToolBar
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -34,21 +35,30 @@ fun MoviesListScreen(
     savedStateHandle: SavedStateHandle
 ) {
     val viewModel = hiltViewModel<MoviesListViewModel>()
-    val movies = viewModel.getMovieList().collectAsLazyPagingItems()
+    val movies = viewModel.pagesStream.collectAsLazyPagingItems()
+
+
 
 
     LazyColumn(
+
         Modifier
             .background(Color.Transparent)
-            .fillMaxSize()
+            .fillMaxSize(),
 
-    ) {
+        ) {
 
         stickyHeader {
             Spacer(modifier = Modifier.height(16.dp))
             MovieListScreenAppBar(title)
         }
-        items(count = movies.itemCount) { MovieCard(movie = movies[it]!!) }
+        items(count = movies.itemCount) {
+            MovieCard(
+                movie = movies[it]!!,
+                onCardClicked = navController::navigateToMovieDetails,
+                onSaveItemClicked = viewModel::addOrRemoveMovieToSavedList
+            )
+        }
         when (val state = movies.loadState.refresh) { //FIRST LOAD
             is LoadState.Error -> {
                 //TODO Error Item
