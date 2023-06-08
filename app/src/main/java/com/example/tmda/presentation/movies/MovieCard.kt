@@ -24,7 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.movies.domain.enities.Movie
+import com.example.movies.domain.enities.movie.Movie
 import com.example.tmda.R
 import com.example.tmda.presentation.shared.mainShape
 import com.example.tmda.ui.theme.BlackTransparent28
@@ -48,7 +48,7 @@ fun MovieCard(movie: Movie) {
         ) {
 
             AsyncImage(
-                model = "https://image.tmdb.org/t/p/w500" + (movie.backdropPath ?: movie.posterPath),
+                model = getTmdbImageLink(movie.backdropPath ?: movie.posterPath!!),
                 contentDescription = movie.title + "image",
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier

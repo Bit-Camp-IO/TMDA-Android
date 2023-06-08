@@ -1,12 +1,15 @@
 package com.example.tmda.presentation.navigation
 
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -16,20 +19,21 @@ import com.example.tmda.ui.theme.GreyMetallic
 import com.example.tmda.ui.theme.PineGreen
 import com.example.tmda.ui.theme.WhiteTransparent60
 
+
 @Composable
 fun BottomNavBar(navController: NavController) {
+
     NavigationBar(
-        Modifier.height(70.dp),
+        Modifier.height(60.dp).clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
         contentColor = GreyMetallic,
         containerColor = GreyMetallic
-
-
     ) {
+
         val backStackEntry = navController.currentBackStackEntryAsState()
         bottomNavItems.forEach { item ->
-
             val selected = item.route == backStackEntry.value?.destination?.parent?.route
             NavigationBarItem(
+                modifier = Modifier.padding(top=8.dp),
                 selected = selected,
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = PineGreen,
@@ -38,7 +42,6 @@ fun BottomNavBar(navController: NavController) {
                 ),
                 onClick = { navController.navigate(item.route) },
                 icon = {
-
                     Icon(
                         painter = painterResource(id = item.iconId),
                         contentDescription = "${item.name} Icon",
@@ -47,7 +50,6 @@ fun BottomNavBar(navController: NavController) {
             )
         }
     }
-
 }
 
 

@@ -2,6 +2,7 @@ package com.example.tmda.presentation.movies.moviesHome
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,10 +32,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.movies.domain.enities.Movie
+import com.example.movies.domain.enities.movie.Movie
 import com.example.tmda.R
+import com.example.tmda.presentation.movies.getTmdbImageLink
 import com.example.tmda.presentation.movies.moviesList.ScreenType
-import com.example.tmda.presentation.navigation.Destinations
+import com.example.tmda.presentation.navigation.navigateToMovieDetails
+import com.example.tmda.presentation.navigation.navigateToMovieListScreen
 import com.example.tmda.presentation.shared.ImageCard
 import com.example.tmda.presentation.shared.ItemsLazyRowComponent
 import com.example.tmda.ui.theme.PineGreen
@@ -53,41 +56,38 @@ fun MoviesHomeScreen(navController: NavController) {
             ItemsLazyRowComponent(
                 title = "Popular",
                 onSeeAllClicked = {
-                    navigateToMovieListScreen(
+                    navController.navigateToMovieListScreen(
                         "Popular Movies",
-                        ScreenType.Popular,
-                        navController
+                        ScreenType.Popular
                     )
                 },
                 items = viewModel.popularMoviesState.value
-            ) { MovieHomeCard(movie = it) }
+            ) { MovieHomeCard(movie = it, navController::navigateToMovieDetails) }
         }
         item {
             ItemsLazyRowComponent(
                 title = "Upcoming",
                 onSeeAllClicked = {
-                    navigateToMovieListScreen(
+                    navController.navigateToMovieListScreen(
                         "Upcoming Movies",
-                        ScreenType.Upcoming,
-                        navController
+                        ScreenType.Upcoming
                     )
                 },
                 items = viewModel.upComingMoviesState.value
-            ) { MovieHomeCard(movie = it) }
+            ) { MovieHomeCard(movie = it, onClick = navController::navigateToMovieDetails) }
         }
         item {
             ItemsLazyRowComponent(
                 title = "Top Rated",
                 hasBottomDivider = false,
                 onSeeAllClicked = {
-                    navigateToMovieListScreen(
+                    navController.navigateToMovieListScreen(
                         "Top Rated Movies",
-                        ScreenType.TopRated,
-                        navController
+                        ScreenType.TopRated
                     )
                 },
                 items = viewModel.topRatedMoviesState.value
-            ) { MovieHomeCard(movie = it) }
+            ) { MovieHomeCard(movie = it, onClick = navController::navigateToMovieDetails) }
         }
 
     }
@@ -118,7 +118,7 @@ fun NowPlayingCard(movie: Movie) {
         contentAlignment = Alignment.BottomStart
     ) {
         AsyncImage(
-            model = "https://image.tmdb.org/t/p/w500" + movie.posterPath!!,
+            model = getTmdbImageLink(movie.posterPath!!),
             contentDescription = movie.title + "image",
             contentScale = ContentScale.Crop,
             modifier = Modifier.fillMaxSize()
@@ -220,8 +220,10 @@ fun DotsIndicator(totalDots: Int, currentIndex: Int) {
 
 
 @Composable
-fun MovieHomeCard(movie: Movie) {
-    Box(contentAlignment = Alignment.BottomCenter) {
+fun MovieHomeCard(movie: Movie, onClick: (Int) -> Unit) {
+    Box(
+        contentAlignment = Alignment.BottomCenter,
+        modifier = Modifier.clickable { onClick(movie.id) }) {
         ImageCard(movie.posterPath ?: movie.backdropPath!!, movie.title)
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -262,10 +264,3 @@ fun getMoviesYearAndGenres(movie: Movie): String {
 
 }
 
-fun navigateToMovieListScreen(
-    screenTitle: String,
-    screenType: ScreenType,
-    navController: NavController
-) {
-    navController.navigate("${Destinations.MOVIES_LIST_SCREEN}/${screenTitle}/${screenType}/${-1}")
-}

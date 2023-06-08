@@ -1,7 +1,8 @@
-package com.example.movies.domain.enities
+package com.example.movies.domain.enities.movie
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.movies.domain.enities.Genre
 
 @Entity(tableName = "movies")
 data class Movie(

@@ -1,6 +1,8 @@
 package com.example.tmda.di
 
 import com.bitIO.tvshowcomponent.data.remote.TvShowApiService
+import com.example.authentication.data.repositories.UserRepositoryImpl
+import com.example.authentication.domain.repositories.UserRepository
 import com.example.movies.data.repositories.MoviesRepositoryImpl
 import com.example.movies.domain.repositories.MoviesRepository
 import com.example.tmda.infrastructure.remote.TmdaApiServices
@@ -30,6 +32,12 @@ abstract class AbstractionModule {
     abstract fun bindMoviesRepo(
         moviesRepositoryImpl: MoviesRepositoryImpl
     ): MoviesRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindAuthRepo(
+        authRepositoryImpl: UserRepositoryImpl
+    ): UserRepository
 
 
 }

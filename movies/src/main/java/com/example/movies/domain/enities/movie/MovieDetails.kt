@@ -1,10 +1,13 @@
-package com.example.movies.domain.enities
+package com.example.movies.domain.enities.movie
+
+import com.example.movies.domain.enities.Genre
+import com.example.movies.domain.enities.MovieCollectionDetails
 
 
 data class MovieDetails(
     val isAdult: Boolean,
     val backdropPath: String,
-    val movieCollectionDetails: MovieCollectionDetails,
+    val movieCollectionDetails: MovieCollectionDetails?,
     val originalLanguage: String,
     val originalTitle: String,
     val posterPath: String,
@@ -14,6 +17,7 @@ data class MovieDetails(
     val hasVideo: Boolean,
     val overview: String,
     val popularity: Double,
+    val productionCountry: String,
     val title: String,
     val genres: List<Genre>,
     val id: Int,

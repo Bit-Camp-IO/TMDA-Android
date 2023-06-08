@@ -13,4 +13,5 @@ interface TvShowDao {
 
     @Query("SELECT * FROM tvShows")
     fun getAllTvShows(): List<TvShow>
+
 }

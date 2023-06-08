@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.tmda.presentation.movies.getTmdbImageLink
 import com.example.tmda.ui.theme.WhiteTransparent20
 
 
@@ -31,7 +32,7 @@ fun ImageCard(imagePath: String, title: String) {
     ) {
 
         AsyncImage(
-            model = "https://image.tmdb.org/t/p/w500$imagePath",
+            model = getTmdbImageLink(imagePath) ,
             contentDescription = "$title image",
             modifier = Modifier
                 .graphicsLayer { alpha = 0.99f }

@@ -9,7 +9,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 
-interface AuthApiServices {
+interface UserApiServices {
     @GET("authentication/guest_session/new")
     suspend fun getGuestSession(): GuestSessionDto
 

@@ -2,8 +2,8 @@ package com.example.tmda.presentation.movies.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.movies.domain.enities.Movie
-import com.example.movies.domain.enities.MoviesPage
+import com.example.movies.domain.enities.movie.Movie
+import com.example.movies.domain.enities.movie.MoviesPage
 
 class MoviesPagingSource(
     private val responseGetter: suspend (Int) -> MoviesPage,

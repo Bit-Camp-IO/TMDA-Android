@@ -21,7 +21,14 @@ fun NavigationHost(navController: NavHostController) {
             startDestination = Destinations.MOVIES_HOME_SCREEN
         ) {
             composable(Destinations.MOVIES_HOME_SCREEN) { MoviesHomeScreen(navController) }
-            composable(Destinations.MOVIES_DETAILS_SCREEN) { MovieDetailsScreen() }
+            composable(
+                "${Destinations.MOVIES_DETAILS_SCREEN}/{$MOVIE_ID}",
+                arguments = listOf(
+                    navArgument(MOVIE_ID) {
+                        type = NavType.IntType
+                    },
+                )
+            ) { MovieDetailsScreen(navController) }
             composable(
                 "${Destinations.MOVIES_LIST_SCREEN}/{$MOVIE_LIST_SCREEN_TITLE}/{$MOVIES_LIST_SCREEN_ID}/{$MOVIE_ID}",
                 arguments = listOf(
@@ -34,7 +41,6 @@ fun NavigationHost(navController: NavHostController) {
                     navArgument(MOVIE_ID) {
                         type = NavType.IntType
                         defaultValue = -1
-
                     })
             ) {
 
@@ -66,7 +72,7 @@ fun NavigationHost(navController: NavHostController) {
             startDestination = Destinations.SEARCH_SCREEN
         ) {
             composable(Destinations.SEARCH_SCREEN) {}
-            composable(Destinations.MOVIES_DETAILS_SCREEN) { MovieDetailsScreen() }
+            composable(Destinations.MOVIES_DETAILS_SCREEN) { MovieDetailsScreen(navController) }
             composable(Destinations.MOVIES_LIST_SCREEN) {
                 MoviesListScreen(
                     it.arguments!!.getString(MOVIE_LIST_SCREEN_TITLE)!!,
@@ -82,7 +88,7 @@ fun NavigationHost(navController: NavHostController) {
             startDestination = Destinations.ACCOUNT_SCREEN
         ) {
             composable(Destinations.ACCOUNT_SCREEN) {}
-            composable(Destinations.MOVIES_DETAILS_SCREEN) { MovieDetailsScreen() }
+            composable(Destinations.MOVIES_DETAILS_SCREEN) { MovieDetailsScreen(navController) }
             composable(Destinations.MOVIES_LIST_SCREEN) {
                 MoviesListScreen(
                     it.arguments!!.getString(MOVIE_LIST_SCREEN_TITLE)!!,

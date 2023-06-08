@@ -3,6 +3,8 @@ package com.example.tmda.di
 import android.app.Application
 import androidx.room.Room
 import com.bitIO.tvshowcomponent.data.local.abstractions.TvShowDao
+import com.example.authentication.data.local.UserDao
+import com.example.authentication.data.remote.UserApiServices
 import com.example.movies.data.local.MoviesDao
 import com.example.movies.data.remote.MoviesApiService
 import com.example.tmda.infrastructure.local.TmdaDatabase
@@ -17,11 +19,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
-//    @Provides
-//    @Singleton
-//    fun provideApplication(@ApplicationContext context: Context): Application? {
-//        return context.applicationContext as Application
-//    }
 
     @Provides
     @Singleton
@@ -33,6 +30,7 @@ object AppModule {
         ).build()
     }
 
+    //Movies
     @Provides
     @Singleton
     fun provideMoviesDao(database: TmdaDatabase): MoviesDao {
@@ -41,13 +39,29 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideMoviesApiService(): MoviesApiService {
+        return TmdaRemoteDataSource.tmdbService
+    }
+
+    //TvShow
+    @Provides
+    @Singleton
     fun provideTvShowDao(database: TmdaDatabase): TvShowDao {
         return database.tvShowDao()
     }
 
+
+    //Auth
+
     @Provides
     @Singleton
-    fun provideTmdbApiService(): MoviesApiService {
+    fun provideUserDao(database: TmdaDatabase): UserDao {
+        return database.userDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserApiService(): UserApiServices {
         return TmdaRemoteDataSource.tmdbService
     }
 

@@ -3,7 +3,7 @@ package com.example.movies.data.local
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.example.movies.domain.enities.Movie
+import com.example.movies.domain.enities.movie.Movie
 
 @Dao
 interface MoviesDao {

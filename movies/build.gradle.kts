@@ -57,7 +57,7 @@ dependencies {
 
     //Paging3
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
-
+    //Hilt-java-injection
     implementation("javax.inject:javax.inject:1")
 
     //Internal

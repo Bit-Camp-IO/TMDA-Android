@@ -28,7 +28,11 @@ import com.example.tmda.presentation.shared.AppToolBar
 @OptIn(ExperimentalFoundationApi::class)
 
 @Composable
-fun MoviesListScreen(title: String,navController: NavController, savedStateHandle: SavedStateHandle) {
+fun MoviesListScreen(
+    title: String,
+    navController: NavController,
+    savedStateHandle: SavedStateHandle
+) {
     val viewModel = hiltViewModel<MoviesListViewModel>()
     val movies = viewModel.getMovieList().collectAsLazyPagingItems()
 
@@ -104,5 +108,6 @@ fun MoviesListScreen(title: String,navController: NavController, savedStateHandl
 fun MovieListScreenAppBar(title: String) {
     AppToolBar(title = title) {}
 }
+
 
 

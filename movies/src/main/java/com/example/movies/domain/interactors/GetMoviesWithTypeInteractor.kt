@@ -1,6 +1,6 @@
 package com.example.movies.domain.interactors
 
-import com.example.movies.domain.enities.MoviesPage
+import com.example.movies.domain.enities.movie.MoviesPage
 import com.example.movies.domain.repositories.MoviesRepository
 import javax.inject.Inject
 
@@ -78,14 +78,14 @@ class GetMoviesWithTypeInteractor @Inject constructor(
     ) : BaseUseCase {
         class Similar(repo: MoviesRepository, movieId: Int) : MovieUseCaseWithId(repo, movieId) {
             override suspend fun invoke(pageNumber: Int): MoviesPage {
-                return repo.getSimilarMovies(id = movieId, pageNumber)
+                return repo.getSimilarMovies(movieId = movieId, pageNumber)
             }
         }
 
         class Recommended(repo: MoviesRepository, movieId: Int) :
             MovieUseCaseWithId(repo, movieId) {
             override suspend fun invoke(pageNumber: Int): MoviesPage {
-                return repo.getRecommendMovies(id = movieId, pageNumber)
+                return repo.getRecommendMovies(movieId = movieId, pageNumber)
             }
         }
     }

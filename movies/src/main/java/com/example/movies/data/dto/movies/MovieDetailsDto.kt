@@ -12,7 +12,7 @@ import com.squareup.moshi.JsonClass
 data class MovieDetailsDto(
     @Json(name = "adult") val isAdult: Boolean,
     @Json(name = "backdrop_path") val backdropPath: String,
-    @Json(name = "belongs_to_collection") val movieCollectionDetailsDto: MovieCollectionDetailsDto,
+    @Json(name = "belongs_to_collection") val movieCollectionDetailsDto: MovieCollectionDetailsDto?,
     @Json(name = "original_language") val originalLanguage: String,
     @Json(name = "original_title") val originalTitle: String,
     @Json(name = "poster_path") val posterPath: String,

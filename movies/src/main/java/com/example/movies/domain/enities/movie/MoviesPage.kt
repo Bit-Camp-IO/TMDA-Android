@@ -1,4 +1,4 @@
-package com.example.movies.domain.enities
+package com.example.movies.domain.enities.movie
 
 data class MoviesPage(
     val page: Int,
