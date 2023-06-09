@@ -4,7 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.tmda.presentation.movies.moviesList.UiPage
 
-class PagingSource<T : Any>(
+class UiPagingSource<T : Any>(
     private val responseGetter: suspend (Int) -> UiPage<T>,
 ) :
     PagingSource<Int, T>() {
@@ -29,3 +29,4 @@ class PagingSource<T : Any>(
     }
 
 }
+

@@ -15,7 +15,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,6 +45,9 @@ fun MovieCard(
     onCardClicked: (Int) -> Unit,
     onSaveItemClicked: suspend (Int, Boolean) -> Unit
 ) {
+ var isSavedState by  remember {
+       mutableStateOf(movie.isSaved)
+   }
     Surface(
         shape = moviesCardShape, color = BlackTransparent28,
         modifier = Modifier
@@ -82,9 +89,10 @@ fun MovieCard(
                                 coroutineScope.launch {
                                     onSaveItemClicked(movie.id, movie.isSaved)
                                     movie.isSaved = !movie.isSaved
+                                    isSavedState =movie.isSaved
                                 }
                             },
-                        isSaved = movie.isSaved
+                        isSaved = isSavedState
                     )
 
                 }

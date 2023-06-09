@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,10 +22,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.paging.LoadState
+import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.tmda.presentation.movies.MovieCard
 import com.example.tmda.presentation.navigation.navigateToMovieDetails
 import com.example.tmda.presentation.shared.AppToolBar
+
 
 @OptIn(ExperimentalFoundationApi::class)
 
@@ -35,19 +38,36 @@ fun MoviesListScreen(
     savedStateHandle: SavedStateHandle
 ) {
     val viewModel = hiltViewModel<MoviesListViewModel>()
-    val movies = viewModel.pagesStream.collectAsLazyPagingItems()
+    val movies: LazyPagingItems<MovieUiDto> =
+        viewModel.getMoviesPagesStream().collectAsLazyPagingItems()
+    val lazyColumnState = rememberLazyListState()
+//    LaunchedEffect(Unit) {
+//        if (!viewModel.isFirstCompose) return@LaunchedEffect
+//
+//
+//        Log.d("xxxxasdads", viewModel.firstItemIndex.toString())
+//        lazyColumnState.scrollToItem(viewModel.firstItemIndex, viewModel.offset)
+//       // viewModel.invalidatePagingData()
+//
+//    }
 
 
+    if (viewModel.isFirstCompose)
+        viewModel.isFirstCompose = false
 
+
+    fun onNavigate(movieId: Int) {
+        viewModel.firstItemIndex = lazyColumnState.firstVisibleItemIndex
+        viewModel.offset = lazyColumnState.firstVisibleItemScrollOffset
+        navController.navigateToMovieDetails(movieId)
+    }
 
     LazyColumn(
-
         Modifier
             .background(Color.Transparent)
             .fillMaxSize(),
-
-        ) {
-
+        state = lazyColumnState
+    ) {
         stickyHeader {
             Spacer(modifier = Modifier.height(16.dp))
             MovieListScreenAppBar(title)
@@ -55,7 +75,7 @@ fun MoviesListScreen(
         items(count = movies.itemCount) {
             MovieCard(
                 movie = movies[it]!!,
-                onCardClicked = navController::navigateToMovieDetails,
+                onCardClicked = ::onNavigate,
                 onSaveItemClicked = viewModel::addOrRemoveMovieToSavedList
             )
         }
