@@ -14,11 +14,11 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.example.tmda.R
 
 @Composable
-fun LoadingScreen(){
+fun LoadingScreen(modifier: Modifier=Modifier){
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.neon_loading))
     val progress by animateLottieCompositionAsState(composition, restartOnPlay = true, iterations = 5)
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {

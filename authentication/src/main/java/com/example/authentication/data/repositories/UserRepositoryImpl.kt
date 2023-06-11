@@ -37,7 +37,6 @@ class UserRepositoryImpl @Inject constructor(
         cachedUser = user
         userDao.saveCurrentUser(user)
         userState.value = cachedUser
-
         return user
     }
 

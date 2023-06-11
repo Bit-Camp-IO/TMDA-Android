@@ -1,5 +1,6 @@
 package com.example.tmda.presentation.movies
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -45,12 +46,16 @@ fun MovieCard(
     onCardClicked: (Int) -> Unit,
     onSaveItemClicked: suspend (Int, Boolean) -> Unit
 ) {
- var isSavedState by  remember { movie.isSaved }
+    val xx =  if (movie.id == 931102) {
+        Log.d("aaaaaaa", movie.toString())
+        true
+    } else false
+    var isSavedState by remember { movie.isSaved }
     Surface(
         shape = moviesCardShape, color = BlackTransparent28,
         modifier = Modifier
             .fillMaxWidth()
-            .height(160.dp)
+            .height(if (xx)400.dp else 160.dp)
             .padding(vertical = 8.dp)
             .clickable { onCardClicked(movie.id) }
 
@@ -86,7 +91,7 @@ fun MovieCard(
                             .clickable {
                                 coroutineScope.launch {
                                     onSaveItemClicked(movie.id, movie.isSaved.value)
-                                    movie.isSaved.value = ! movie.isSaved.value
+                                    movie.isSaved.value = !movie.isSaved.value
                                     isSavedState = movie.isSaved.value
                                 }
                             },

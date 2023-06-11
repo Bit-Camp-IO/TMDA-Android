@@ -20,10 +20,10 @@ include(":movies")
 
 //include(":tvShow:ui")
 include(":tvShow:tvShowComponent")
-//include(":try")
 
-include(":shared")
-//
+
+
+
 include(":authentication")
-//include(":account")
+
 

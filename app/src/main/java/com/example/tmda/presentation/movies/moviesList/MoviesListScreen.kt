@@ -1,5 +1,6 @@
 package com.example.tmda.presentation.movies.moviesList
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,7 +38,7 @@ fun MoviesListScreen(
     navController: NavController,
     savedStateHandle: SavedStateHandle
 ) {
-
+    Log.d("xxxxxx","xxxxxxx")
     val viewModel = hiltViewModel<MoviesListViewModel>()
     val movies: LazyPagingItems<MovieUiDto> =
         viewModel.getPagesStream().collectAsLazyPagingItems()
@@ -97,7 +98,7 @@ fun MovieList(
         item { Spacer(modifier = Modifier.height(64.dp)) }
         items(
             count = movies.itemSnapshotList.size,
-            key = {movies.peek(it)!!.id},
+            key = {it},
 
         ) {
 

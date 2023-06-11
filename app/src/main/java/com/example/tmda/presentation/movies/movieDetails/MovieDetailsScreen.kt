@@ -58,6 +58,7 @@ fun MovieDetailsScreen(
     val viewModel = hiltViewModel<DetailsViewModel>()
     val stateHolder = viewModel.detailsScreenStateHolder
 
+
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_START) {
@@ -165,10 +166,11 @@ private fun calculateProgress(scrollState: LazyListState): State<Float> {
 
 @Composable
 fun PreviewSection(movieDetailsState: UiState<MovieDetails>) {
+
     when (movieDetailsState) {
         is UiState.Failure -> TODO()
         is UiState.Loading -> {
-            LoadingScreen()
+            LoadingScreen(Modifier.height(180.dp))
         }
 
         is UiState.Success -> {

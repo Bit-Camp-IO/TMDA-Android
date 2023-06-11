@@ -83,14 +83,13 @@ dependencies {
     androidTestImplementation(composeBom)
 
 
-//    api(project(":tvShow:ui"))
+
     api(project(":tvShow:tvShowComponent"))
 
 
     api(project(":movies"))
     api(project(":authentication"))
-//    implementation(project(":authentication"))
-//    implementation(project(":account"))
+
     //endregion
 
     implementation("androidx.core:core-ktx:1.10.1")

@@ -49,7 +49,6 @@ import kotlin.math.floor
 @Composable
 fun MoviesHomeScreen(navController: NavController) {
     val viewModel = hiltViewModel<MoviesHomeViewModel>()
-
     LazyColumn {
         item { NowPlayingHeader(viewModel.nowPlayingMoviesState.value) }
         item {

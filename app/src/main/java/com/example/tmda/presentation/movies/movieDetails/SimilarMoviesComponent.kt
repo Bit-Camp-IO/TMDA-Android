@@ -71,7 +71,7 @@ fun SimilarMoviesRow(
     }
     when(moviesState){
         is UiState.Failure -> TODO()
-        is UiState.Loading -> {LoadingScreen()}
+        is UiState.Loading -> {LoadingScreen(Modifier.height(180.dp))}
         is UiState.Success -> {
             LazyRow {
                 items(count = moviesState.data.size) {
