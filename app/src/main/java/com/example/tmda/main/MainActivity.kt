@@ -1,3 +1,5 @@
+@file:OptIn(FlowPreview::class)
+
 package com.example.tmda.main
 
 import android.os.Bundle
@@ -11,7 +13,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,13 +25,16 @@ import com.example.tmda.presentation.login.LoginScreen
 import com.example.tmda.presentation.navigation.BottomNavBar
 import com.example.tmda.presentation.navigation.NavigationHost
 import com.example.tmda.presentation.shared.BackGround
+import com.example.tmda.presentation.shared.LoadingScreen
 import com.example.tmda.ui.theme.TMDATheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.FlowPreview
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
 
+    @OptIn(FlowPreview::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -49,11 +53,13 @@ class MainActivity : ComponentActivity() {
 
             }
         }
+
     }
 }
 
 @Composable
 fun AppLoginStateHandler(loginState: MainViewModel.LoginState, navController: NavHostController) {
+
     when (loginState) {
         MainViewModel.LoginState.Loading -> LoadingScreen()
         MainViewModel.LoginState.LoggedOut -> LoginScreen()
@@ -63,16 +69,7 @@ fun AppLoginStateHandler(loginState: MainViewModel.LoginState, navController: Na
 
 }
 
-@Composable
-fun LoadingScreen() {
-    Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        LinearProgressIndicator()
-    }
-}
+
 
 @Composable
 fun ErrorScreen() {

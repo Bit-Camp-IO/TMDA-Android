@@ -16,10 +16,13 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val getSessionStateStreamUseCase: GetSessionStateStreamUseCase,
+
 ) : ViewModel() {
     private val _userState: MutableState<LoginState> = mutableStateOf(LoginState.Loading)
     val userState: State<LoginState>
         get() = _userState
+
+
 
     init {
         _userState.value = LoginState.Loading
@@ -27,9 +30,10 @@ class MainViewModel @Inject constructor(
     }
 
 
+
     private fun observeUserState() {
         viewModelScope.launch {
-            getUserFlow().debounce(1500).collect {
+            getUserFlow().debounce(200).collect {
                 _userState.value = if (it == null) LoginState.LoggedOut else LoginState.LoggedIn
             }
         }

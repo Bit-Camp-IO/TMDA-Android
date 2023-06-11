@@ -16,7 +16,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -35,6 +34,7 @@ import com.example.tmda.R
 import com.example.tmda.presentation.movies.moviesList.MovieUiDto
 import com.example.tmda.presentation.shared.SavedItemIcon
 import com.example.tmda.presentation.shared.mainShape
+import com.example.tmda.presentation.shared.toSuccessState
 import com.example.tmda.ui.theme.BlackTransparent28
 import kotlinx.coroutines.launch
 
@@ -45,9 +45,7 @@ fun MovieCard(
     onCardClicked: (Int) -> Unit,
     onSaveItemClicked: suspend (Int, Boolean) -> Unit
 ) {
- var isSavedState by  remember {
-       mutableStateOf(movie.isSaved)
-   }
+ var isSavedState by  remember { movie.isSaved }
     Surface(
         shape = moviesCardShape, color = BlackTransparent28,
         modifier = Modifier
@@ -65,7 +63,7 @@ fun MovieCard(
         ) {
             val coroutineScope = rememberCoroutineScope()
             AsyncImage(
-                model = getTmdbImageLink(movie.backdropPath ?: movie.posterPath!!),
+                model = getTmdbImageLink(movie.backdropPath ?: movie.posterPath),
                 contentDescription = movie.title + "image",
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
@@ -87,12 +85,12 @@ fun MovieCard(
                             .size(24.dp)
                             .clickable {
                                 coroutineScope.launch {
-                                    onSaveItemClicked(movie.id, movie.isSaved)
-                                    movie.isSaved = !movie.isSaved
-                                    isSavedState =movie.isSaved
+                                    onSaveItemClicked(movie.id, movie.isSaved.value)
+                                    movie.isSaved.value = ! movie.isSaved.value
+                                    isSavedState = movie.isSaved.value
                                 }
                             },
-                        isSaved = isSavedState
+                        isSavedState = isSavedState.toSuccessState()
                     )
 
                 }

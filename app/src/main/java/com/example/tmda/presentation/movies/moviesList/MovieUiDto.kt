@@ -1,5 +1,7 @@
 package com.example.tmda.presentation.movies.moviesList
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import com.example.movies.domain.enities.Genre
 import com.example.movies.domain.enities.movie.Movie
 
@@ -18,7 +20,7 @@ data class MovieUiDto(
     val hasVideo: Boolean,
     val voteAverage: Double,
     val voteCount: Int,
-    var isSaved: Boolean
+    var isSaved: MutableState<Boolean>
 ) {
     constructor(
         movie: Movie, isSaved: Boolean
@@ -37,6 +39,6 @@ data class MovieUiDto(
         movie.hasVideo,
         movie.voteAverage,
         movie.voteCount,
-        isSaved
+        mutableStateOf(isSaved)
     )
 }

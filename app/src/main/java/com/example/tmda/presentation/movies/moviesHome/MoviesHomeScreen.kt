@@ -62,7 +62,7 @@ fun MoviesHomeScreen(navController: NavController) {
                     )
                 },
                 items = viewModel.popularMoviesState.value
-            ) { MovieHomeCard(movie = it, navController::navigateToMovieDetails) }
+            ) { MovieHomeCard(movie = it, navController::navigateToMovieDetails,200.dp,270.dp) }
         }
         item {
             ItemsLazyRowComponent(
@@ -74,7 +74,7 @@ fun MoviesHomeScreen(navController: NavController) {
                     )
                 },
                 items = viewModel.upComingMoviesState.value
-            ) { MovieHomeCard(movie = it, onClick = navController::navigateToMovieDetails) }
+            ) { MovieHomeCard(movie = it, onClick = navController::navigateToMovieDetails,200.dp,270.dp) }
         }
         item {
             ItemsLazyRowComponent(
@@ -87,7 +87,7 @@ fun MoviesHomeScreen(navController: NavController) {
                     )
                 },
                 items = viewModel.topRatedMoviesState.value
-            ) { MovieHomeCard(movie = it, onClick = navController::navigateToMovieDetails) }
+            ) { MovieHomeCard(movie = it, onClick = navController::navigateToMovieDetails,200.dp,270.dp) }
         }
 
     }
@@ -220,11 +220,11 @@ fun DotsIndicator(totalDots: Int, currentIndex: Int) {
 
 
 @Composable
-fun MovieHomeCard(movie: Movie, onClick: (Int) -> Unit) {
+fun MovieHomeCard(movie: Movie, onClick: (Int) -> Unit, width: Dp, height: Dp) {
     Box(
         contentAlignment = Alignment.BottomCenter,
-        modifier = Modifier.clickable { onClick(movie.id) }) {
-        ImageCard(movie.posterPath ?: movie.backdropPath!!, movie.title)
+        modifier = Modifier.clickable { onClick(movie.id) }.size(width, height )) {
+        ImageCard(movie.posterPath ?: movie.backdropPath, movie.title, width, height)
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier

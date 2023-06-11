@@ -10,6 +10,7 @@ class UiPagingSource<T : Any>(
     PagingSource<Int, T>() {
     override fun getRefreshKey(state: PagingState<Int, T>): Int? {
         return state.anchorPosition?.let {
+
             val closestIndex = state.closestPageToPosition(it)
             closestIndex?.prevKey?.plus(1) ?: closestIndex?.nextKey?.minus(1)
         }
@@ -20,11 +21,13 @@ class UiPagingSource<T : Any>(
             val pageIndex = params.key ?: 1
             val response = responseGetter(pageIndex)
             val page = response.results
+            assert(page.size==20)
             val nextKey = if (response.totalPages <= pageIndex) null else response.page + 1
-            val prevKey = if (pageIndex <= 1) null else response.page - 1
-            LoadResult.Page(page, nextKey = nextKey, prevKey = prevKey)
+            val prevKey = null
+                //if (pageIndex <= 1) null else response.page - 1
+             LoadResult.Page(page, nextKey = nextKey, prevKey = prevKey)
         } catch (e: Exception) {
-            LoadResult.Error(e)
+            throw e
         }
     }
 

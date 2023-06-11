@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,7 +28,11 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.movies.domain.enities.credits.CastMember
 import com.example.movies.domain.enities.credits.CreditItem
+import com.example.movies.domain.enities.credits.Credits
 import com.example.movies.domain.enities.credits.CrewMember
+import com.example.tmda.presentation.shared.LoadingScreen
+import com.example.tmda.presentation.shared.UiState
+import com.example.tmda.presentation.shared.mainShape
 import com.example.tmda.ui.theme.BlackTransparent60
 import com.example.tmda.ui.theme.PineGreen
 import com.example.tmda.ui.theme.WhiteTransparent60
@@ -37,10 +40,11 @@ import com.example.tmda.ui.theme.WhiteTransparent60
 @Composable
 fun CreditsComponent(
     title: String = "Casts",
-    creditItems: List<CreditItem>,
+    creditItemsState: UiState<Credits>,
     onSeeAllClicked: () -> Unit,
     onCardClicked: (Int) -> Unit
 ) {
+
 
     Row(
         modifier = Modifier
@@ -68,12 +72,26 @@ fun CreditsComponent(
         }
     }
 
-    LazyRow {
-        items(creditItems.size) {
-            CreditItemsCard(creditItems[it])
+    when (creditItemsState) {
+        is UiState.Failure -> TODO()
+        is UiState.Loading -> {
+            LoadingScreen()
         }
 
+        is UiState.Success -> {
+            val creditItems = creditItemsState.data
+            LazyRow {
+                item { Spacer(modifier = Modifier.width(16.dp)) }
+                items(creditItems.cast .size, key = { creditItems.cast[it].id }) {
+                    CreditItemsCard(creditItems.cast[it])
+                }
+                item { Spacer(modifier = Modifier.width(16.dp)) }
+
+            }
+        }
     }
+
+
     Divider(
         modifier = Modifier
             .fillMaxWidth()
@@ -81,20 +99,14 @@ fun CreditsComponent(
     )
 }
 
-@Composable
-fun CastCard(castMember: CastMember) {
-
-
-}
 
 @Composable
 fun CreditItemsCard(creditItem: CreditItem) {
     Box(
         modifier = Modifier
-            .padding(horizontal = 8.dp)
-            .width(100.dp)
-            .height(150.dp)
-            .clip(RoundedCornerShape(10.dp)),
+            .width(140.dp)
+            .height(180.dp)
+            .clip(mainShape()),
         contentAlignment = Alignment.BottomCenter
     ) {
         AsyncImage(
@@ -116,8 +128,19 @@ fun CreditItemsCard(creditItem: CreditItem) {
                 is CrewMember -> creditItem.job
                 else -> TODO("Implement Behavior for the new Type")
             }
-            Text(text = creditItem.name, fontSize = 10.sp ,maxLines = 1, overflow = TextOverflow.Visible)
-            Text(text = subTitleText, fontSize = 10.sp, color = WhiteTransparent60, maxLines = 1, overflow = TextOverflow.Visible)
+            Text(
+                text = creditItem.name,
+                fontSize = 10.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Visible
+            )
+            Text(
+                text = subTitleText,
+                fontSize = 10.sp,
+                color = WhiteTransparent60,
+                maxLines = 1,
+                overflow = TextOverflow.Visible
+            )
 
         }
     }

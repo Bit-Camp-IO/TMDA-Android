@@ -13,22 +13,22 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.Dp
 import coil.compose.AsyncImage
 import com.example.tmda.presentation.movies.getTmdbImageLink
 import com.example.tmda.ui.theme.WhiteTransparent20
 
 
 @Composable
-fun ImageCard(imagePath: String, title: String) {
+fun ImageCard(imagePath: String?, title: String,width:Dp,height:Dp) {
     val mainShape = remember {
         mainShape()
     }
     Surface(
         shape = mainShape,
         modifier = Modifier
-            .width(200.dp)
-            .height(270.dp)
+            .width(width)
+            .height(height  )
     ) {
 
         AsyncImage(

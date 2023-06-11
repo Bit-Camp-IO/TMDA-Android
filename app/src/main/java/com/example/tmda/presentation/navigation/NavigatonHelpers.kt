@@ -6,9 +6,10 @@ import com.example.tmda.presentation.movies.moviesList.ScreenType
 
 fun NavController.navigateToMovieListScreen(
     screenTitle: String,
-    screenType: ScreenType
+    screenType: ScreenType,
+    id:Int=-1
 ) {
-    navigate("${Destinations.MOVIES_LIST_SCREEN}/$screenTitle/$screenType/${-1}")
+    navigate("${Destinations.MOVIES_LIST_SCREEN}/$screenTitle/$screenType/${id}")
 }
 
 fun NavController.navigateToMovieDetails(movieId: Int) {

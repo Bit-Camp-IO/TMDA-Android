@@ -15,6 +15,8 @@ import com.example.tmda.presentation.navigation.MOVIES_LIST_SCREEN_ID
 import com.example.tmda.presentation.navigation.MOVIE_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,27 +32,58 @@ class MoviesListViewModel @Inject constructor(
     private val screenType: ScreenType = savedStateHandle[MOVIES_LIST_SCREEN_ID]!!
     private val movieId: Int? = savedStateHandle[MOVIE_ID]
     private lateinit var user: User
-    private var pageProvider: PageProvider
     private var moviesUseCase: GetMoviesWithTypeInteractor.BaseUseCase
-
     private var pagesStream: Flow<PagingData<MovieUiDto>>? = null
     var isFirstCompose = true
-    var firstItemIndex = 0
-    var offset = 0
+
 
     init {
         viewModelScope.launch(Dispatchers.IO) { user = userUseCase.invoke() }
         moviesUseCase = screenType.toUseCase()
-        pageProvider = PageProvider(viewModelScope, moviesUseCase::invoke) { movieId ->
-            getMovieSavedStateUseCase.invoke(movieId, user.sessionId)
+    }
+
+    fun getPagesStream(): Flow<PagingData<MovieUiDto>> {
+        if (pagesStream == null) {
+            val pageProvider = PageProvider(
+                viewModelScope,
+                moviesUseCase::invoke
+            ) { getMovieSavedStateUseCase.invoke(it, user.sessionId) }
+            pagesStream = pageProvider.createPager().flow .cachedIn(viewModelScope)
+        }
+        return pagesStream!!
+    }
+
+
+
+
+
+
+    fun addOrRemoveMovieToSavedList(movieId: Int, isSaved: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            addMovieToWatchListUseCase.invoke(16874876, user.sessionId, movieId, !isSaved)
         }
     }
 
-    fun getMoviesPagesStream(): Flow<PagingData<MovieUiDto>> {
-        pagesStream = pageProvider.getMoviesPagesStream().cachedIn(viewModelScope)
-        return pagesStream!!
+    fun updateIsSavedState(movies: List<MovieUiDto>, priorityRange: IntRange) {
+        viewModelScope.launch(Dispatchers.IO) {
+          priorityRange.map {
+                async {
+                    val movie = movies[it]
+                    val isSaved=getMovieSavedStateUseCase.invoke(movie.id, user.sessionId)
+                    movie.isSaved.value = isSaved
+                    isSaved
+                }
+            }.awaitAll()
 
 
+            movies.forEachIndexed { index, movie ->
+                launch lowPriority@{
+                    if (index in priorityRange) return@lowPriority
+                    movie.isSaved.value =
+                        getMovieSavedStateUseCase.invoke(movie.id, user.sessionId)
+                }
+            }
+        }
     }
 
     private fun ScreenType.toUseCase() = when (this) {
@@ -69,18 +102,4 @@ class MoviesListViewModel @Inject constructor(
             movieId!!
         )
     }
-
-
-    fun addOrRemoveMovieToSavedList(movieId: Int, isSaved: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
-            addMovieToWatchListUseCase.invoke(16874876, user.sessionId, movieId, !isSaved)
-        }
-    }
-
-    fun invalidatePagingData() {
-        pageProvider.invalidatePagingData()
-
-
-    }
-
 }

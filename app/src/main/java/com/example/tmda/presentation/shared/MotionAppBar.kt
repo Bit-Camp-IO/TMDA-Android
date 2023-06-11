@@ -34,11 +34,12 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.MotionLayout
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.movies.domain.enities.Video
+import com.example.movies.domain.enities.movie.MovieDetails
 import com.example.tmda.R
 import com.example.tmda.presentation.movies.getTmdbImageLink
-import com.example.tmda.presentation.movies.movieDetails.MovieDetailsScreenDto
 import com.example.tmda.ui.theme.BlackTransparent37
 import com.example.tmda.ui.theme.GoldenYellow
 import com.example.tmda.ui.theme.WhiteTransparent60
@@ -47,66 +48,83 @@ import kotlin.math.roundToInt
 @SuppressLint("ModifierParameter")
 @Composable
 fun MotionLayoutAppBar(
-    movieDetails: MovieDetailsScreenDto,
+    movieDetailsState: UiState<MovieDetails>,
+    videosState: UiState<List<Video>>,
     modifier: Modifier = Modifier.background(Color.Transparent),
     progress: Float,
-    isSaved: Boolean,
+    isSavedState: UiState<Boolean>,
+    navController: NavController,
     onSavedClicked: () -> Unit
 ) {
-    MotionLayout(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(Color.Transparent),
-        start = startConstraintSet(),
-        end = endConstraintSet(),
-
-        progress = progress
-    ) {
-        AsyncImage(
-            modifier = Modifier
-                .layoutId(MotionLayoutAppBarItem.Image)
-                .fillMaxSize()
-                .background(Color.Transparent)
-                .clip(
-                    RoundedCornerShape(
-                        bottomEnd = 24.dp,
-                        bottomStart = 24.dp
-                    )
-                ),
-            model = getTmdbImageLink(movieDetails.posterPath),
-            contentScale = ContentScale.Crop,
-            contentDescription = "${movieDetails.title} image",
-            alignment = Alignment.TopStart
-        )
-        AppToolBar(modifier = Modifier.layoutId(MotionLayoutAppBarItem.MainAppBar)) {
-            IconButton(
-                modifier = Modifier
-                    .background(color = BlackTransparent37, shape = RoundedCornerShape(8.dp))
-                    .size(40.dp, 40.dp),
-                onClick = { }, content = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_more),
-                        contentDescription = "",
-                        tint = WhiteTransparent60
-                    )
-                })
+    when (movieDetailsState) {
+        is UiState.Failure -> {}
+        is UiState.Loading -> {
+            LoadingScreen()
         }
-        ServicesBox(
-            modifier = Modifier.layoutId(MotionLayoutAppBarItem.ServicesBox),
-            movieDetails,
-            isSaved,
-            onSavedClicked
-        )
+
+        is UiState.Success -> {
+            val movieDetails = movieDetailsState.data
+            MotionLayout(
+                modifier = modifier
+                    .fillMaxWidth()
+                    .background(Color.Transparent),
+                start = startConstraintSet(),
+                end = endConstraintSet(),
+                progress = progress
+            ) {
+                AsyncImage(
+                    modifier = Modifier
+                        .layoutId(MotionLayoutAppBarItem.Image)
+                        .fillMaxSize()
+                        .background(Color.Transparent)
+                        .clip(
+                            RoundedCornerShape(
+                                bottomEnd = 24.dp,
+                                bottomStart = 24.dp
+                            )
+                        ),
+                    model = getTmdbImageLink(movieDetails.posterPath),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = "${movieDetails.title} image",
+                    alignment = Alignment.TopStart
+                )
+                AppToolBar(modifier = Modifier.layoutId(MotionLayoutAppBarItem.MainAppBar), navController =navController) {
+                    IconButton(
+                        modifier = Modifier
+                            .background(
+                                color = BlackTransparent37,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .size(40.dp, 40.dp),
+                        onClick = { }, content = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_more),
+                                contentDescription = "",
+                                tint = WhiteTransparent60
+                            )
+                        })
+                }
+                ServicesBox(
+                    modifier = Modifier.layoutId(MotionLayoutAppBarItem.ServicesBox),
+                    movieDetails,
+                    videosState,
+                    isSavedState,
+                    onSavedClicked
+                )
 
 
+            }
+        }
     }
+
 }
 
 @Composable
 fun ServicesBox(
     modifier: Modifier,
-    movieDetails: MovieDetailsScreenDto,
-    isSaved: Boolean,
+    movieDetails: MovieDetails,
+    videosState: UiState<List<Video>>,
+    isSavedState: UiState<Boolean>,
     onSavedClicked: () -> Unit
 ) {
     val context = LocalContext.current as ComponentActivity
@@ -141,16 +159,28 @@ fun ServicesBox(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Image(
-                modifier = Modifier
-                    .size(60.dp)
-                    .clickable {
-                        val videoKeys = movieDetails.videos.getParsedYoutubeList()
-                        context.openYouTubePlaylist(videoKeys)
-                    },
-                painter = painterResource(id = R.drawable.play_button),
-                contentDescription = "play trailer"
-            )
+
+            when (val videosState = videosState) {
+                is UiState.Failure -> TODO()
+                is UiState.Loading -> {
+                    LoadingScreen()
+                }
+
+                is UiState.Success -> {
+
+                    Image(
+                        modifier = Modifier
+                            .size(60.dp)
+                            .clickable {
+                                val videoKeys = videosState.data.getParsedYoutubeList()
+                                context.openYouTubePlaylist(videoKeys)
+                            },
+                        painter = painterResource(id = R.drawable.play_button),
+                        contentDescription = "play trailer"
+                    )
+                }
+            }
+
         }
         Column(
             modifier = sharedModifier.clickable { onSavedClicked() },
@@ -158,7 +188,7 @@ fun ServicesBox(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(20.dp))
-            SavedItemIcon(modifier = Modifier.size(30.dp), isSaved = isSaved)
+            SavedItemIcon(modifier = Modifier.size(30.dp), isSavedState = isSavedState)
             Text(text = "Add")
 
         }

@@ -8,20 +8,31 @@ import com.example.tmda.R
 import com.example.tmda.ui.theme.PineGreen
 
 @Composable
-fun SavedItemIcon(modifier: Modifier,
-    isSaved:Boolean){
-    if (isSaved)
-    Icon(
-        painterResource(id = R.drawable.ic_bookmark_filled),
-        contentDescription = null,
-        tint = PineGreen,
-        modifier = modifier
-    )
-    else
-    Icon(
-        painterResource(id = R.drawable.ic_bookmark),
-        contentDescription = null,
-        tint = PineGreen,
-        modifier = modifier
-    )
+fun SavedItemIcon(
+    modifier: Modifier,
+    isSavedState: UiState<Boolean>
+) {
+    when(isSavedState){
+        is UiState.Failure -> TODO()
+        is UiState.Loading -> {
+            LoadingScreen()}
+        is UiState.Success -> {
+            val isSaved=isSavedState.data
+            if (isSaved)
+                Icon(
+                    painterResource(id = R.drawable.ic_bookmark_filled),
+                    contentDescription = null,
+                    tint = PineGreen,
+                    modifier = modifier
+                )
+            else
+                Icon(
+                    painterResource(id = R.drawable.ic_bookmark),
+                    contentDescription = null,
+                    tint = PineGreen,
+                    modifier = modifier
+                )
+        }
+    }
+
 }

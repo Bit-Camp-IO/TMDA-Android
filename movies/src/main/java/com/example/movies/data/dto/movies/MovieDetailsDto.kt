@@ -25,7 +25,7 @@ data class MovieDetailsDto(
     val title: String,
     val genres: List<GenreDto>,
     val id: Int,
-    @Json(name = "imdb_id") val imdbId: String,
+    @Json(name = "imdb_id") val imdbId: String?,
     @Json(name = "production_companies") val productionCompanies: List<ProductionCompanyDto>,
     @Json(name = "production_countries") val productionCountries: List<ProductionCountryDto>,
     @Json(name = "spoken_languages") val spokenLanguages: List<SpokenLanguageDto>,
