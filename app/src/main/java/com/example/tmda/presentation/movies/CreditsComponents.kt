@@ -31,6 +31,7 @@ import com.example.movies.domain.enities.credits.CreditItem
 import com.example.movies.domain.enities.credits.Credits
 import com.example.movies.domain.enities.credits.CrewMember
 import com.example.tmda.presentation.shared.LoadingScreen
+import com.example.tmda.presentation.shared.NoDataComponent
 import com.example.tmda.presentation.shared.UiState
 import com.example.tmda.presentation.shared.mainShape
 import com.example.tmda.ui.theme.BlackTransparent60
@@ -82,9 +83,13 @@ fun CreditsComponent(
             val creditItems = creditItemsState.data
             LazyRow {
                 item { Spacer(modifier = Modifier.width(16.dp)) }
-                items(creditItems.cast .size, key = { creditItems.cast[it].id }) {
-                    CreditItemsCard(creditItems.cast[it])
-                }
+                if (creditItems.cast.isEmpty())
+                    item { NoDataComponent(modifier = Modifier
+                        .height(160.dp)
+                        ) } else
+                    items(creditItems.cast.size, key = { creditItems.cast[it].id }) {
+                        CreditItemsCard(creditItems.cast[it])
+                    }
                 item { Spacer(modifier = Modifier.width(16.dp)) }
 
             }

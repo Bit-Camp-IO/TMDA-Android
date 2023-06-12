@@ -5,9 +5,10 @@ import androidx.paging.PagingState
 import com.example.tmda.presentation.movies.moviesList.UiPage
 
 class UiPagingSource<T : Any>(
-    private val responseGetter: suspend (Int) -> UiPage<T>,
+     var responseGetter: suspend (Int) -> UiPage<T>,
 ) :
     PagingSource<Int, T>() {
+
     override fun getRefreshKey(state: PagingState<Int, T>): Int? {
         return state.anchorPosition?.let {
 
@@ -21,10 +22,8 @@ class UiPagingSource<T : Any>(
             val pageIndex = params.key ?: 1
             val response = responseGetter(pageIndex)
             val page = response.results
-            assert(page.size==20)
             val nextKey = if (response.totalPages <= pageIndex) null else response.page + 1
-            val prevKey = null
-                //if (pageIndex <= 1) null else response.page - 1
+            val prevKey = if (pageIndex <= 1) null else response.page - 1
              LoadResult.Page(page, nextKey = nextKey, prevKey = prevKey)
         } catch (e: Exception) {
             throw e

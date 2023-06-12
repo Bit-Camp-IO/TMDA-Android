@@ -10,10 +10,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 
-class PageProvider(
+class MovieWithBookMarkPageProvider(
     private val coroutineScope: CoroutineScope,
     private val moviePageProvider: suspend (Int) -> MoviesPage,
-    private val isMovieSavedProvider: suspend (Int) -> Boolean,
+    private val isMovieSavedProvider: suspend (Int) -> Boolean = { false },
 
     ) {
 
@@ -23,18 +23,18 @@ class PageProvider(
             initialKey = 1,
             config = PagingConfig(
                 20,
-                prefetchDistance = 20,
-                enablePlaceholders = false,
-
-
-                ), pagingSourceFactory = {
-
-                UiPagingSource(::getMovieDtoPage) })
+                prefetchDistance = 10,
+                initialLoadSize = 20,
+                enablePlaceholders = true,
+            ), pagingSourceFactory = {
+                UiPagingSource(::getMovieDtoPage)
+            })
     }
 
     private suspend fun getMovieDtoPage(pageIndex: Int): UiPage<MovieUiDto> {
-        val moviesPage = moviePageProvider(pageIndex)
-        val isSavedCorrespondingList = coroutineScope.async(Dispatchers.IO) { getIsSavedCorrespondingList(moviesPage) }.await()
+        val moviesPage = coroutineScope.async { moviePageProvider(pageIndex) }.await()
+        val isSavedCorrespondingList =
+            coroutineScope.async(Dispatchers.IO) { getIsSavedCorrespondingList(moviesPage) }.await()
         val moviesUiDtoList = moviesPage.results.mapIndexed { index, movie ->
             MovieUiDto(movie, isSavedCorrespondingList[index])
         }

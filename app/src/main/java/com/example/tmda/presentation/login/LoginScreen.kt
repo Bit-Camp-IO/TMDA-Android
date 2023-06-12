@@ -45,8 +45,7 @@ import com.example.tmda.ui.theme.WhiteTransparent60
 fun LoginScreen() {
     val viewModel = hiltViewModel<LoginViewModel>()
 
-//    var username = viewModel.userName
-//    var password = viewModel.password
+
     var isPasswordVisible by remember {
         mutableStateOf(false)
     }

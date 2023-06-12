@@ -10,7 +10,7 @@ import com.example.authentication.domain.interactors.GetCurrentUserUseCase
 import com.example.movies.domain.interactors.AddMovieToWatchListUseCase
 import com.example.movies.domain.interactors.GetMovieSavedStateUseCase
 import com.example.movies.domain.interactors.GetMoviesWithTypeInteractor
-import com.example.tmda.presentation.movies.paging.PageProvider
+import com.example.tmda.presentation.movies.paging.MovieWithBookMarkPageProvider
 import com.example.tmda.presentation.navigation.MOVIES_LIST_SCREEN_ID
 import com.example.tmda.presentation.navigation.MOVIE_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,7 +34,7 @@ class MoviesListViewModel @Inject constructor(
     private lateinit var user: User
     private var moviesUseCase: GetMoviesWithTypeInteractor.BaseUseCase
     private var pagesStream: Flow<PagingData<MovieUiDto>>? = null
-    var isFirstCompose = true
+
 
 
     init {
@@ -44,19 +44,14 @@ class MoviesListViewModel @Inject constructor(
 
     fun getPagesStream(): Flow<PagingData<MovieUiDto>> {
         if (pagesStream == null) {
-            val pageProvider = PageProvider(
+            val movieWithBookMarkPageProvider = MovieWithBookMarkPageProvider(
                 viewModelScope,
                 moviesUseCase::invoke
             ) { getMovieSavedStateUseCase.invoke(it, user.sessionId) }
-            pagesStream = pageProvider.createPager().flow .cachedIn(viewModelScope)
+            pagesStream = movieWithBookMarkPageProvider.createPager().flow .cachedIn(viewModelScope)
         }
         return pagesStream!!
     }
-
-
-
-
-
 
     fun addOrRemoveMovieToSavedList(movieId: Int, isSaved: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {

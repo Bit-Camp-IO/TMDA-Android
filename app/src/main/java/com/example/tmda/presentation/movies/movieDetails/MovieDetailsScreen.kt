@@ -3,7 +3,6 @@
 package com.example.tmda.presentation.movies.movieDetails
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -25,7 +24,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -62,8 +68,8 @@ fun MovieDetailsScreen(
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_START) {
-                Log.d("xxxxxx","xxxxxxx")
-                viewModel.checkIfSavedStateUpdated() }
+                viewModel.checkIfSavedStateUpdated()
+            }
         }
 
         lifecycleOwner.lifecycle.addObserver(observer)
@@ -89,14 +95,19 @@ fun DetailsScreenLoaded(
     navController: NavController
 ) {
     val scrollState = rememberLazyListState()
-    val progress = calculateProgress(scrollState)
+    val motionLayoutState = remember {
+        mutableFloatStateOf(0f)
+    }
+    val progress =  calculateProgress(motionLayoutState, scrollState)
     Box {
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.Transparent), state = scrollState
         ) {
+
             stickyHeader {
+                motionLayoutState.value = progress.value
                 MotionLayoutAppBar(
                     progress = progress.value,
                     movieDetailsState = stateHolder.movieDetails.value,
@@ -105,9 +116,8 @@ fun DetailsScreenLoaded(
                     navController = navController,
                     onSavedClicked = onSavedClicked
                 )
-
-
             }
+
             item { PreviewSection(movieDetailsState = stateHolder.movieDetails.value) }
             item {
                 CreditsComponent(
@@ -150,11 +160,28 @@ fun DetailsScreenLoaded(
 
 @SuppressLint("FrequentlyChangedStateReadInComposition")
 @Composable
-private fun calculateProgress(scrollState: LazyListState): State<Float> {
+private fun calculateProgress(
+    appBarState: MutableState<Float>,
+    scrollState: LazyListState
+): State<Float> {
+
+    val targetOffset = 50f
+  //  var targetValue=0f
+   // val isLastItemVisible = scrollState.layoutInfo.visibleItemsInfo.lastIndex==4
+//    if (scrollState.isScrollingUp()){
+//        if (scrollState.firstVisibleItemIndex==0&&scrollState.firstVisibleItemScrollOffset>50f){
+//            targetValue=1f
+//        }
+//    }
+//    if (!scrollState.isScrollingUp()){
+//        if (scrollState.firstVisibleItemIndex==0&&scrollState.firstVisibleItemScrollOffset>50f){
+//            targetValue=1f
+//        }
+//    }
     val targetValue =
         when {
             scrollState.firstVisibleItemIndex != 0 -> 1f
-            else -> if (scrollState.firstVisibleItemScrollOffset > 50f) 1f else 0f
+            else -> if (scrollState.firstVisibleItemScrollOffset > targetOffset) 1f else 0f
         }
 
     return animateFloatAsState(
@@ -162,7 +189,23 @@ private fun calculateProgress(scrollState: LazyListState): State<Float> {
         animationSpec = tween(1000, easing = LinearEasing), label = ""
     )
 }
-
+@Composable
+private fun LazyListState.isScrollingUp(): Boolean {
+    var previousIndex by remember(this) { mutableIntStateOf(firstVisibleItemIndex) }
+    var previousScrollOffset by remember(this) { mutableIntStateOf(firstVisibleItemScrollOffset) }
+    return remember(this) {
+        derivedStateOf {
+            if (previousIndex != firstVisibleItemIndex) {
+                previousIndex > firstVisibleItemIndex
+            } else {
+                previousScrollOffset >= firstVisibleItemScrollOffset
+            }.also {
+                previousIndex = firstVisibleItemIndex
+                previousScrollOffset = firstVisibleItemScrollOffset
+            }
+        }
+    }.value
+}
 
 @Composable
 fun PreviewSection(movieDetailsState: UiState<MovieDetails>) {
@@ -239,6 +282,6 @@ fun getMovieGenresParsed(genres: List<Genre>, genreLimit: Int) =
 
 
 fun getMovieYearParsed(date: String) =
-    date.subSequence(0, 4).toString()
+    if (date.length >= 4) date.subSequence(0, 4).toString() else ""
 
 

@@ -61,7 +61,7 @@ fun MovieCollectionDetailsDto.toMovieCollectionDetails(): MovieCollectionDetails
 fun GenreDto.toGenre() = Genre(id = id, name = name)
 
 
-fun MovieBriefDto.toMovie(): Movie {
+fun MovieBriefDto.toMovie( ): Movie {
     return Movie(
         isAdult = isAdult,
         backdropPath = backdropPath,

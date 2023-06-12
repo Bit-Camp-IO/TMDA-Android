@@ -34,5 +34,11 @@ interface MoviesRepository {
         isSaveRequest: Boolean
     )
 
+    suspend fun searchMovies(
+        keyword: String,
+        includeAdults: Boolean = true,
+        page: Int
+    ): MoviesPage
+
 
 }

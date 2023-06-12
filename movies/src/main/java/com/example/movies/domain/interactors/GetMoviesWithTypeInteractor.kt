@@ -48,7 +48,6 @@ class GetMoviesWithTypeInteractor @Inject constructor(
         }
 
 
-
     }
 
     enum class MovieType {

@@ -17,15 +17,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.movies.domain.enities.movie.Movie
 import com.example.tmda.ui.theme.PineGreen
 
 @Composable
-fun <T> ItemsLazyRowComponent(
+fun ItemsLazyRowComponent(
     title: String = "More like this",
     hasBottomDivider: Boolean = true,
     onSeeAllClicked: () -> Unit,
-    items: List<T>,
-    contentCard: @Composable (T) -> Unit
+    items: List<Movie>,
+    contentCard: @Composable (Movie) -> Unit
 ) {
 
     Row(
@@ -56,7 +57,11 @@ fun <T> ItemsLazyRowComponent(
 
     LazyRow {
         item { Spacer(modifier = Modifier.width(16.dp)) }
-        items(items.size) { contentCard(items[it]) }
+        items(items.size,
+            key = { items[it].id },
+            contentType = { Movie::class }
+
+        ) { contentCard(items[it]) }
         item { Spacer(modifier = Modifier.width(16.dp)) }
     }
     if (hasBottomDivider) Divider(

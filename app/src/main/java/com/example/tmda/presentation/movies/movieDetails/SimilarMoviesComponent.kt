@@ -30,6 +30,7 @@ import com.example.tmda.R
 import com.example.tmda.presentation.movies.getTmdbImageLink
 import com.example.tmda.presentation.shared.ImageCard
 import com.example.tmda.presentation.shared.LoadingScreen
+import com.example.tmda.presentation.shared.NoDataComponent
 import com.example.tmda.presentation.shared.UiState
 import com.example.tmda.presentation.shared.mainShape
 import com.example.tmda.ui.theme.GoldenYellow
@@ -69,14 +70,22 @@ fun SimilarMoviesRow(
 
         }
     }
-    when(moviesState){
+    when (moviesState) {
         is UiState.Failure -> TODO()
-        is UiState.Loading -> {LoadingScreen(Modifier.height(180.dp))}
+        is UiState.Loading -> {
+            LoadingScreen(Modifier.height(180.dp))
+        }
+
         is UiState.Success -> {
+            if (moviesState.data.isEmpty())
+                NoDataComponent(
+                    modifier = Modifier
+                        .height(160.dp))
+            else
             LazyRow {
-                items(count = moviesState.data.size) {
-                    SimilarMovieCard(moviesState.data[it], onCardItemClicked)
-                }
+                    items(count = moviesState.data.size) {
+                        SimilarMovieCard(moviesState.data[it], onCardItemClicked)
+                    }
             }
         }
     }

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.movies.domain.enities.movie.Movie
 import com.example.movies.domain.interactors.GetMoviesWithTypeInteractor
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,30 +37,30 @@ class MoviesHomeViewModel @Inject constructor(private val interactor: GetMoviesW
     val popularMoviesState: State<List<Movie>>
         get() = _popularMoviesState
 
-    fun getNowPlayingMovies() =
-        viewModelScope.launch {
+    private fun getNowPlayingMovies() =
+        viewModelScope.launch(Dispatchers.IO) {
             val movies = interactor.invoke(GetMoviesWithTypeInteractor.MovieType.NowPlaying)
                 .invoke(1).results.take(5)
             _nowPlayingMoviesState.value = movies
         }
 
 
-    fun getUpComingMovies() =
-        viewModelScope.launch {
+    private fun getUpComingMovies() =
+        viewModelScope.launch(Dispatchers.IO) {
             val movies =
                 interactor.invoke(GetMoviesWithTypeInteractor.MovieType.Upcoming).invoke(1).results
             _upComingMoviesState.value = movies
         }
 
-    fun getUpTopRatedMovies() =
-        viewModelScope.launch {
+    private fun getUpTopRatedMovies() =
+        viewModelScope.launch(Dispatchers.IO) {
             val movies =
                 interactor.invoke(GetMoviesWithTypeInteractor.MovieType.TopRated).invoke(1).results
             _topRatedMoviesState.value = movies
         }
 
-    fun getUpPopularMovies() =
-        viewModelScope.launch {
+    private fun getUpPopularMovies() =
+        viewModelScope.launch(Dispatchers.IO) {
             val movies =
                 interactor.invoke(GetMoviesWithTypeInteractor.MovieType.Popular).invoke(1).results
             _popularMoviesState.value = movies

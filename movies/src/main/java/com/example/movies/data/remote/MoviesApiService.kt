@@ -84,4 +84,11 @@ interface MoviesApiService {
         @Query("session_id") sessionId: String,
         @Body body: RequestBody
     )
+
+    @GET("search/movie")
+    suspend fun searchMovies(
+        @Query("query") keyword: String,
+        @Query("include_adult") includeAdults: Boolean,
+        @Query("page") page: Int
+    ): MoviesBriefWrapperDto
 }

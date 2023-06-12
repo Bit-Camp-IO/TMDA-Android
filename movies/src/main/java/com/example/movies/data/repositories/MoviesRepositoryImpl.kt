@@ -87,4 +87,12 @@ class MoviesRepositoryImpl @Inject constructor(
         return moviesApiService.postMovieToWatchList(accountId, sessionId, body)
     }
 
+    override suspend fun searchMovies(
+        keyword: String,
+        includeAdults: Boolean,
+        page: Int
+    ): MoviesPage {
+       return  moviesApiService.searchMovies(keyword,includeAdults,page).toMoviePage()
+    }
+
 }

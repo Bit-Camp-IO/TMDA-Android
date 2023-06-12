@@ -1,6 +1,5 @@
 package com.example.tmda.presentation.movies
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -43,19 +42,17 @@ import kotlinx.coroutines.launch
 @Composable
 fun MovieCard(
     movie: MovieUiDto,
+    hasBookMarkIcon: Boolean,
     onCardClicked: (Int) -> Unit,
     onSaveItemClicked: suspend (Int, Boolean) -> Unit
 ) {
-    val xx =  if (movie.id == 931102) {
-        Log.d("aaaaaaa", movie.toString())
-        true
-    } else false
+
     var isSavedState by remember { movie.isSaved }
     Surface(
         shape = moviesCardShape, color = BlackTransparent28,
         modifier = Modifier
             .fillMaxWidth()
-            .height(if (xx)400.dp else 160.dp)
+            .height(160.dp)
             .padding(vertical = 8.dp)
             .clickable { onCardClicked(movie.id) }
 
@@ -84,7 +81,10 @@ fun MovieCard(
                     .fillMaxHeight()
                     .padding(end = 16.dp),
             ) {
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                if (hasBookMarkIcon) Row(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.End
+                ) {
                     SavedItemIcon(
                         modifier = Modifier
                             .size(24.dp)
@@ -98,7 +98,8 @@ fun MovieCard(
                         isSavedState = isSavedState.toSuccessState()
                     )
 
-                }
+                } else Spacer(modifier = Modifier.height(24.dp))
+
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
                     text = movie.title,

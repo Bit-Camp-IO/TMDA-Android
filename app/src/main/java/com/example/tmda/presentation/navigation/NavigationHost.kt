@@ -11,6 +11,7 @@ import com.example.tmda.presentation.movies.movieDetails.MovieDetailsScreen
 import com.example.tmda.presentation.movies.moviesHome.MoviesHomeScreen
 import com.example.tmda.presentation.movies.moviesList.MoviesListScreen
 import com.example.tmda.presentation.movies.moviesList.ScreenType
+import com.example.tmda.presentation.movies.search.SearchScreen
 
 
 @Composable
@@ -71,7 +72,7 @@ fun NavigationHost(navController: NavHostController) {
             route = Destinations.SEARCH_ROUTE,
             startDestination = Destinations.SEARCH_SCREEN
         ) {
-            composable(Destinations.SEARCH_SCREEN) {}
+            composable(Destinations.SEARCH_SCREEN) { SearchScreen(navController = navController)}
             composable(Destinations.MOVIES_DETAILS_SCREEN) { MovieDetailsScreen(navController) }
             composable(Destinations.MOVIES_LIST_SCREEN) {
                 MoviesListScreen(

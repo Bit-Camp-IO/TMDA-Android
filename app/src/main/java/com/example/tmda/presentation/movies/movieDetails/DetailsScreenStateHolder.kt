@@ -16,7 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class DetailsScreenStateHolder(
-     val movieId: Int,
+    val movieId: Int,
     private val coroutineScope: CoroutineScope,
     private val movieDetailsProvider: suspend (Int) -> MovieDetails,
     private val isMovieSavedProvider: suspend (Int) -> Boolean,
@@ -30,7 +30,7 @@ class DetailsScreenStateHolder(
     //
     private val _movieDetails: MutableState<UiState<MovieDetails>> =
         mutableStateOf(UiState.Loading())
-     val movieDetails: State<UiState<MovieDetails>>
+    val movieDetails: State<UiState<MovieDetails>>
         get() = _movieDetails
 
     //
@@ -88,7 +88,7 @@ class DetailsScreenStateHolder(
             _movieVideos.value = movieVideosProvider(movieId).toSuccessState()
         }
 
-     fun updateIsSaved() =
+    fun updateIsSaved() =
         coroutineScope.launch(Dispatchers.IO) {
             _isSaved.value = isMovieSavedProvider(movieId).toSuccessState()
         }
@@ -96,7 +96,8 @@ class DetailsScreenStateHolder(
     private fun updateCredits() {
         coroutineScope.launch(Dispatchers.IO) {
             _movieCredits.value = movieCreditsProvider(movieId).toSuccessState()
-        }}
+        }
+    }
 
     private fun updateSimilarMovies() {
         coroutineScope.launch(Dispatchers.IO) {
@@ -104,17 +105,20 @@ class DetailsScreenStateHolder(
             _similarMovies.value = similarMoviesProvider(1).results.toSuccessState()
         }
     }
+
     private fun updateRecommendedMovies() {
         coroutineScope.launch(Dispatchers.IO) {
-          _recommendedMovies.value =recommendedMoviesProvider(1).results.toSuccessState()
-        }}
+            _recommendedMovies.value = recommendedMoviesProvider(1).results.toSuccessState()
+        }
+    }
 
     private fun updateReviews() {
         coroutineScope.launch(Dispatchers.IO) {
-           _reviews.value = reviewsProvider(movieId).toSuccessState()
-        }}
+            _reviews.value = reviewsProvider(movieId).toSuccessState()
+        }
+    }
 
-     fun addOrRemoveMovieToSavedList() {
+    fun addOrRemoveMovieToSavedList() {
         coroutineScope.launch(Dispatchers.IO) {
             when (val isSaved = _isSaved.value) {
                 is UiState.Failure -> {}

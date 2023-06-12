@@ -1,6 +1,5 @@
 package com.example.tmda.presentation.movies.moviesList
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,12 +13,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.paging.LoadState
@@ -29,33 +32,38 @@ import com.example.tmda.presentation.movies.MovieCard
 import com.example.tmda.presentation.navigation.navigateToMovieDetails
 import com.example.tmda.presentation.shared.AppToolBar
 import com.example.tmda.presentation.shared.LoadingScreen
-import kotlinx.coroutines.delay
 
 
 @Composable
 fun MoviesListScreen(
     title: String,
     navController: NavController,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
 ) {
-    Log.d("xxxxxx","xxxxxxx")
+
     val viewModel = hiltViewModel<MoviesListViewModel>()
     val movies: LazyPagingItems<MovieUiDto> =
         viewModel.getPagesStream().collectAsLazyPagingItems()
     val lazyListState = rememberLazyListState()
 
-    LaunchedEffect(Unit) {
-        if (viewModel.isFirstCompose) {
-            viewModel.isFirstCompose = false
-            delay(100)
-            return@LaunchedEffect
-        }
-        val priorityStart = lazyListState.firstVisibleItemIndex
-        val priorityEnd = priorityStart + lazyListState.layoutInfo.visibleItemsInfo.lastIndex
-        val priorityRange = priorityStart until  priorityEnd
-        viewModel.updateIsSavedState(movies.itemSnapshotList.items, priorityRange)
-    }
 
+    DisposableEffect(lifecycleOwner) {
+
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                val priorityStart = lazyListState.firstVisibleItemIndex
+                val priorityEnd =
+                    priorityStart + lazyListState.layoutInfo.visibleItemsInfo.lastIndex
+                val priorityRange = priorityStart until priorityEnd
+                viewModel.updateIsSavedState(movies.itemSnapshotList.items, priorityRange)
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+
+    }
     Box(
         Modifier.fillMaxSize(),
         contentAlignment = Alignment.TopStart
@@ -68,11 +76,12 @@ fun MoviesListScreen(
                     navController = navController,
                     listState = lazyListState,
                     movies = movies,
+                    hasBookMark = true,
                     addOrRemoveMovieToSavedList = viewModel::addOrRemoveMovieToSavedList
                 )
             }
         }
-        AppToolBar(Modifier.padding(top = 16.dp), title,navController) {}
+        AppToolBar(Modifier.padding(top = 16.dp), title, navController) {}
     }
 
 
@@ -83,9 +92,10 @@ fun MoviesListScreen(
 fun MovieList(
 
     navController: NavController,
-    listState: LazyListState,
+    listState: LazyListState= rememberLazyListState(),
     movies: LazyPagingItems<MovieUiDto>,
-    addOrRemoveMovieToSavedList: (Int, Boolean) -> Unit
+    hasBookMark: Boolean,
+    addOrRemoveMovieToSavedList: (Int, Boolean) -> Unit= { _, _ -> }
 
 ) {
     LazyColumn(
@@ -98,12 +108,14 @@ fun MovieList(
         item { Spacer(modifier = Modifier.height(64.dp)) }
         items(
             count = movies.itemSnapshotList.size,
-            key = {it},
+            contentType = { MovieUiDto::class },
+            key = { movies.peek(it)!!.id },
 
-        ) {
+            ) {
 
             MovieCard(
                 movie = movies[it]!!,
+                hasBookMark,
                 onCardClicked = navController::navigateToMovieDetails,
                 onSaveItemClicked = addOrRemoveMovieToSavedList
             )
