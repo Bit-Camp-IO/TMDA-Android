@@ -3,6 +3,7 @@ import java.util.Properties
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
 
 }
 kotlin {
@@ -25,7 +26,6 @@ android {
         buildConfigField("String", "API_KEY", localProps.getProperty("apiKey"))
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
-        targetSdk = 33
     }
     buildTypes {
         release {
@@ -43,7 +43,6 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    buildToolsVersion = "33.0.2"
 
 }
 
@@ -55,12 +54,16 @@ dependencies {
 
     //Retrofit
     implementation("com.squareup.retrofit2:retrofit:$retrofit")
-    implementation("com.squareup.retrofit2:converter-gson:$retrofit")
+    implementation("com.squareup.moshi:moshi:1.14.0")
+    implementation("androidx.paging:paging-common-ktx:3.1.1")
+    ksp("com.squareup.moshi:moshi-kotlin-codegen:1.15.0")
     implementation("com.squareup.okhttp3:okhttp:4.10.0")
     implementation("com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:1.0.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
     implementation("androidx.room:room-common:2.5.1")
     implementation("androidx.room:room-ktx:2.5.1")
+    implementation("javax.inject:javax.inject:1")
+
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

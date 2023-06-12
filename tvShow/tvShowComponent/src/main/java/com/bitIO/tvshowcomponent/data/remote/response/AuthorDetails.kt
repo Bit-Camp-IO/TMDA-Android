@@ -1,17 +1,19 @@
 package com.bitIO.tvshowcomponent.data.remote.response
 
 
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@Serializable
+@JsonClass(generateAdapter = true)
 data class AuthorDetails(
-    @SerialName("avatar_path")
+    @Json(name = "avatar_path")
     val avatarPath: String?,
-    @SerialName("name")
+    @Json(name = "name")
     val name: String?,
-    @SerialName("rating")
+    @Json(name = "rating")
     val rating: Double?,
-    @SerialName("username")
+    @Json(name = "username")
     val username: String?
 )

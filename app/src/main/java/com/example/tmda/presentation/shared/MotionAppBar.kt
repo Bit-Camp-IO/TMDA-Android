@@ -23,11 +23,14 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.MotionLayout
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.tmda.R
 import com.example.tmda.ui.theme.BlackTransparent37
 import com.example.tmda.ui.theme.GoldenYellow
@@ -38,6 +41,9 @@ import com.example.tmda.ui.theme.WhiteTransparent60
 @Composable
 fun MotionLayoutAppBar(
     modifier: Modifier = Modifier.background(Color.Transparent),
+    imageUrl: String,
+    voteCount: Int,
+    voteAvg: Double,
     progress: Float
 ) {
     MotionLayout(
@@ -46,11 +52,13 @@ fun MotionLayoutAppBar(
             .background(Color.Transparent),
         start = startConstraintSet(),
         end = endConstraintSet(),
-
         progress = progress
     ) {
-
-        Image(
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(imageUrl)
+                .crossfade(true)
+                .build(),
             modifier = Modifier
                 .layoutId(MotionLayoutAppBarItem.Image)
                 .background(Color.Transparent)
@@ -60,7 +68,6 @@ fun MotionLayoutAppBar(
                         bottomStart = 120.dp
                     )
                 ),
-            painter = painterResource(id = R.drawable.movie_bar),
             contentScale = ContentScale.FillBounds,
             contentDescription = null
         )
@@ -78,14 +85,17 @@ fun MotionLayoutAppBar(
                     )
                 })
         }
-        ServicesBox(modifier = Modifier.layoutId(MotionLayoutAppBarItem.ServicesBox))
+        ServicesBox(
+            modifier = Modifier.layoutId(MotionLayoutAppBarItem.ServicesBox),
+            voteAvg,
+            voteCount)
 
 
     }
 }
 
 @Composable
-fun ServicesBox(modifier: Modifier) {
+fun ServicesBox(modifier: Modifier, voteAvg: Double, voteCount: Int) {
     val sharedModifier = Modifier
         .background(Color.Transparent)
     Row(
@@ -108,9 +118,9 @@ fun ServicesBox(modifier: Modifier) {
                 modifier = Modifier.size(30.dp)
             )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "6.8" + "/10")
+            Text(text = "$voteAvg/10")
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "100")
+            Text(text = "$voteCount")
         }
         Column(
             modifier = sharedModifier,
@@ -154,7 +164,7 @@ private fun startConstraintSet() = ConstraintSet {
     val servicesBox = createRefFor(MotionLayoutAppBarItem.ServicesBox)
 
     constrain(mainAppBar) {
-        top.linkTo(parent.top,40.dp)
+        top.linkTo(parent.top, 40.dp)
         start.linkTo(parent.start, 16.dp)
         end.linkTo(parent.end, 16.dp)
     }
@@ -185,8 +195,8 @@ private fun endConstraintSet() = ConstraintSet {
     val servicesBox = createRefFor(MotionLayoutAppBarItem.ServicesBox)
 
     constrain(mainAppBar) {
-        width= Dimension.fillToConstraints
-        top.linkTo(parent.top,24.dp)
+        width = Dimension.fillToConstraints
+        top.linkTo(parent.top, 24.dp)
         start.linkTo(parent.start, 24.dp)
         end.linkTo(parent.end, 24.dp)
 

@@ -1,14 +1,17 @@
 package com.example.tmda.presentation.shared
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -25,6 +28,8 @@ fun <T> ItemsLazyRowComponent(
     hasBottomDivider: Boolean = true,
     onSeeAllClicked: () -> Unit,
     items: List<T>,
+    isLoading: Boolean = false,
+    errorMsg: String? = null,
     contentCard: @Composable (T?) -> Unit
 ) {
 
@@ -53,11 +58,29 @@ fun <T> ItemsLazyRowComponent(
 
         }
     }
+    if (isLoading) {
+
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .height(200.dp)) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .size(80.dp)
+                    .align(Alignment.Center)
+            )
+        }
+
+    }
 
     LazyRow {
-        item{ Spacer(modifier =Modifier.width(16.dp) )}
-        items(count = 20) { contentCard(null) }
-        item{ Spacer(modifier =Modifier.width(16.dp) )}
+        item { Spacer(modifier = Modifier.width(16.dp)) }
+        if (items.isNotEmpty()) {
+            items(items.count()) {
+                contentCard(items[it])
+            }
+        }
+        item { Spacer(modifier = Modifier.width(16.dp)) }
     }
     if (hasBottomDivider) Divider(
         modifier = Modifier

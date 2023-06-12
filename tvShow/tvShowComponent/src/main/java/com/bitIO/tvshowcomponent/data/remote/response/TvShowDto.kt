@@ -1,37 +1,38 @@
 package com.bitIO.tvshowcomponent.data.remote.response
 
 
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-
-@Serializable
+@JsonClass(generateAdapter = true)
 data class TvShowDto(
-    @SerialName("adult")
+    @Json(name = "adult")
     val adult: Boolean?,
-    @SerialName("backdrop_path")
+    @Json(name = "backdrop_path")
     val backdropPath: String?,
-    @SerialName("first_air_date")
+    @Json(name = "first_air_date")
     val firstAirDate: String?,
-    @SerialName("genre_ids")
+    @Json(name = "genre_ids")
     val genreIds: List<Int?>?,
-    @SerialName("id")
+    @Json(name = "id")
     val id: Int?,
-    @SerialName("name")
+    @Json(name = "name")
     val name: String?,
-    @SerialName("origin_country")
+    @Json(name = "origin_country")
     val originCountry: List<String?>?,
-    @SerialName("original_language")
+    @Json(name = "original_language")
     val originalLanguage: String?,
-    @SerialName("original_name")
+    @Json(name = "original_name")
     val originalName: String?,
-    @SerialName("overview")
+    @Json(name = "overview")
     val overview: String?,
-    @SerialName("popularity")
+    @Json(name = "popularity")
     val popularity: Double?,
-    @SerialName("poster_path")
+    @Json(name = "poster_path")
     val posterPath: String?,
-    @SerialName("vote_average")
+    @Json(name = "vote_average")
     val voteAverage: Double?,
-    @SerialName("vote_count")
+    @Json(name = "vote_count")
     val voteCount: Int?
 )

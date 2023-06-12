@@ -196,7 +196,7 @@ fun DotsIndicator(totalDots: Int, currentIndex: Int) {
 @Composable
 fun MovieHomeCard(movie: Movie?) {
     Box(contentAlignment = Alignment.BottomCenter) {
-        ImageCard()
+        ImageCard(movie?.posterPath)
         Column(verticalArrangement = Arrangement.Center) {
             Text(
                 text = movie?.title ?: "No Time To Die",

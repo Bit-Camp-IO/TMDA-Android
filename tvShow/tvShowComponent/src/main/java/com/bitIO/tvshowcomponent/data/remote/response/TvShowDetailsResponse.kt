@@ -1,73 +1,75 @@
 package com.bitIO.tvshowcomponent.data.remote.response
 
 
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@Serializable
+@JsonClass(generateAdapter = true)
 data class TvShowDetailsResponse(
-    @SerialName("adult")
+    @Json(name = "adult")
     val adult: Boolean?,
-    @SerialName("backdrop_path")
+    @Json(name = "backdrop_path")
     val backdropPath: String?,
-    @SerialName("created_by")
+    @Json(name = "created_by")
     val createdBy: List<CreatedBy>?,
-    @SerialName("episode_run_time")
+    @Json(name = "episode_run_time")
     val episodeRunTime: List<Int>?,
-    @SerialName("first_air_date")
+    @Json(name = "first_air_date")
     val firstAirDate: String?,
-    @SerialName("genres")
+    @Json(name = "genres")
     val genres: List<Genre>?,
-    @SerialName("homepage")
+    @Json(name = "homepage")
     val homepage: String?,
-    @SerialName("id")
+    @Json(name = "id")
     val id: Int?,
-    @SerialName("in_production")
+    @Json(name = "in_production")
     val inProduction: Boolean?,
-    @SerialName("languages")
+    @Json(name = "languages")
     val languages: List<String>?,
-    @SerialName("last_air_date")
+    @Json(name = "last_air_date")
     val lastAirDate: String?,
-    @SerialName("last_episode_to_air")
+    @Json(name = "last_episode_to_air")
     val lastEpisodeToAir: LastEpisodeToAir?,
-    @SerialName("name")
+    @Json(name = "name")
     val name: String?,
-    @SerialName("networks")
+    @Json(name = "networks")
     val networks: List<Network>?,
-    @SerialName("next_episode_to_air")
+    @Json(name = "next_episode_to_air")
     val nextEpisodeToAir: NextEpisodeToAir?,
-    @SerialName("number_of_episodes")
+    @Json(name = "number_of_episodes")
     val numberOfEpisodes: Int?,
-    @SerialName("number_of_seasons")
+    @Json(name = "number_of_seasons")
     val numberOfSeasons: Int?,
-    @SerialName("origin_country")
+    @Json(name = "origin_country")
     val originCountry: List<String>?,
-    @SerialName("original_language")
+    @Json(name = "original_language")
     val originalLanguage: String?,
-    @SerialName("original_name")
+    @Json(name = "original_name")
     val originalName: String?,
-    @SerialName("overview")
+    @Json(name = "overview")
     val overview: String?,
-    @SerialName("popularity")
+    @Json(name = "popularity")
     val popularity: Double?,
-    @SerialName("poster_path")
+    @Json(name = "poster_path")
     val posterPath: String?,
-    @SerialName("production_companies")
+    @Json(name = "production_companies")
     val productionCompanies: List<ProductionCompany>?,
-    @SerialName("production_countries")
+    @Json(name = "production_countries")
     val productionCountries: List<ProductionCountry>?,
-    @SerialName("seasons")
+    @Json(name = "seasons")
     val seasons: List<Season>?,
-    @SerialName("spoken_languages")
+    @Json(name = "spoken_languages")
     val spokenLanguages: List<SpokenLanguage>?,
-    @SerialName("status")
+    @Json(name = "status")
     val status: String?,
-    @SerialName("tagline")
+    @Json(name = "tagline")
     val tagline: String?,
-    @SerialName("type")
+    @Json(name = "type")
     val type: String?,
-    @SerialName("vote_average")
+    @Json(name = "vote_average")
     val voteAverage: Double?,
-    @SerialName("vote_count")
+    @Json(name = "vote_count")
     val voteCount: Int?
 )

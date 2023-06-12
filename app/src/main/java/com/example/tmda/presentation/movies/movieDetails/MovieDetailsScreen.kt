@@ -64,7 +64,7 @@ fun MovieDetailsScreen() {
                 .fillMaxWidth()
                 .background(Color.Transparent), state = scrollState
         ) {
-            stickyHeader { MotionLayoutAppBar(progress = progress.value) }
+            stickyHeader { MotionLayoutAppBar(progress = progress.value, imageUrl = "", voteAvg = 0.0, voteCount = 0) }
             item { PreviewSection() }
             item { CastsRow {} }
             item { SimilarMoviesRow {} }
