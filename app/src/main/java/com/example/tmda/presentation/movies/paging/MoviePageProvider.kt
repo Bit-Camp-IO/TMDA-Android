@@ -15,15 +15,14 @@ class MoviePageProvider(
 ) {
     lateinit var currentPager: Pager<Int, Movie>
         private set
-    lateinit var pagingSource: UiPagingSource<Movie>
-        private set
+    private lateinit var pagingSource: UiPagingSource<Movie>
     private var currentKeyWord = ""
 
     init {
         createNewPager()
     }
 
-    fun createNewPager() {
+    private fun createNewPager() {
         currentPager = Pager(
             initialKey = 1,
             config = PagingConfig(

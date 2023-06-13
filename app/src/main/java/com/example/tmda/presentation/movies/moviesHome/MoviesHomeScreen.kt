@@ -35,6 +35,7 @@ import coil.compose.AsyncImage
 import com.example.movies.domain.enities.movie.Movie
 import com.example.tmda.R
 import com.example.tmda.presentation.movies.getTmdbImageLink
+import com.example.tmda.presentation.movies.moviesList.MovieUiDto
 import com.example.tmda.presentation.movies.moviesList.ScreenType
 import com.example.tmda.presentation.navigation.navigateToMovieDetails
 import com.example.tmda.presentation.navigation.navigateToMovieListScreen
@@ -57,8 +58,7 @@ fun MoviesHomeScreen(navController: NavController) {
                 onSeeAllClicked = {
                     navController.navigateToMovieListScreen(
                         "Popular Movies",
-                        ScreenType.Popular
-                    )
+                        ScreenType.Popular)
                 },
                 items = viewModel.popularMoviesState.value
             ) { MovieHomeCard(movie = it, navController::navigateToMovieDetails,200.dp,270.dp) }
@@ -219,7 +219,7 @@ fun DotsIndicator(totalDots: Int, currentIndex: Int) {
 
 
 @Composable
-fun MovieHomeCard(movie: Movie, onClick: (Int) -> Unit, width: Dp, height: Dp) {
+fun MovieHomeCard(movie: MovieUiDto, onClick: (Int) -> Unit, width: Dp, height: Dp) {
     Box(
         contentAlignment = Alignment.BottomCenter,
         modifier = Modifier.clickable { onClick(movie.id) }.size(width, height )) {
@@ -237,7 +237,8 @@ fun MovieHomeCard(movie: Movie, onClick: (Int) -> Unit, width: Dp, height: Dp) {
                 overflow = TextOverflow.Clip
             )
             Text(
-                text = getMoviesYearAndGenres(movie),
+                text =movie.releaseDate.take(4) +"."+movie.genres ,
+                //getMoviesYearAndGenres(movie),
                 style = MaterialTheme.typography.labelSmall
             )
             Row(
@@ -257,9 +258,9 @@ fun MovieHomeCard(movie: Movie, onClick: (Int) -> Unit, width: Dp, height: Dp) {
 
 }
 
-fun getMoviesYearAndGenres(movie: Movie): String {
-    val genresName = movie.genres.take(2).map { it.name }.reduce { l, r -> "$l / $r" }
-    return movie.releaseDate.subSequence(0, 4).toString() + " . " + genresName
-
-}
-
+//fun getMoviesYearAndGenres(movie: Movie): String {
+//    val genresName = movie.genres.take(2).map { it.name }.reduce { l, r -> "$l / $r" }
+//    return movie.releaseDate.subSequence(0, 4).toString() + " . " + genresName
+//
+//}
+//

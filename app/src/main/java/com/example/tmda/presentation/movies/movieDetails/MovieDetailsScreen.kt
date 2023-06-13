@@ -24,7 +24,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -98,7 +97,7 @@ fun DetailsScreenLoaded(
     val motionLayoutState = remember {
         mutableFloatStateOf(0f)
     }
-    val progress =  calculateProgress(motionLayoutState, scrollState)
+    val progress =  calculateProgress( scrollState)
     Box {
         LazyColumn(
             modifier = Modifier
@@ -107,7 +106,7 @@ fun DetailsScreenLoaded(
         ) {
 
             stickyHeader {
-                motionLayoutState.value = progress.value
+
                 MotionLayoutAppBar(
                     progress = progress.value,
                     movieDetailsState = stateHolder.movieDetails.value,
@@ -161,7 +160,6 @@ fun DetailsScreenLoaded(
 @SuppressLint("FrequentlyChangedStateReadInComposition")
 @Composable
 private fun calculateProgress(
-    appBarState: MutableState<Float>,
     scrollState: LazyListState
 ): State<Float> {
 

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movies.domain.enities.movie.Movie
 import com.example.movies.domain.interactors.GetMoviesWithTypeInteractor
+import com.example.tmda.presentation.movies.moviesList.MovieUiDto
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,16 +26,16 @@ class MoviesHomeViewModel @Inject constructor(private val interactor: GetMoviesW
     val nowPlayingMoviesState: State<List<Movie>>
         get() = _nowPlayingMoviesState
 
-    private val _upComingMoviesState = mutableStateOf<List<Movie>>(listOf())
-    val upComingMoviesState: State<List<Movie>>
+    private val _upComingMoviesState = mutableStateOf<List<MovieUiDto>>(listOf())
+    val upComingMoviesState: State<List<MovieUiDto>>
         get() = _upComingMoviesState
 
-    private val _topRatedMoviesState = mutableStateOf<List<Movie>>(listOf())
-    val topRatedMoviesState: State<List<Movie>>
+    private val _topRatedMoviesState = mutableStateOf<List<MovieUiDto>>(listOf())
+    val topRatedMoviesState: State<List<MovieUiDto>>
         get() = _topRatedMoviesState
 
-    private val _popularMoviesState = mutableStateOf<List<Movie>>(listOf())
-    val popularMoviesState: State<List<Movie>>
+    private val _popularMoviesState = mutableStateOf<List<MovieUiDto>>(listOf())
+    val popularMoviesState: State<List<MovieUiDto>>
         get() = _popularMoviesState
 
     private fun getNowPlayingMovies() =
@@ -48,7 +49,8 @@ class MoviesHomeViewModel @Inject constructor(private val interactor: GetMoviesW
     private fun getUpComingMovies() =
         viewModelScope.launch(Dispatchers.IO) {
             val movies =
-                interactor.invoke(GetMoviesWithTypeInteractor.MovieType.Upcoming).invoke(1).results
+                interactor.invoke(GetMoviesWithTypeInteractor.MovieType.Upcoming)
+                    .invoke(1).results.map { MovieUiDto(it, false) }
             _upComingMoviesState.value = movies
         }
 
@@ -56,14 +58,14 @@ class MoviesHomeViewModel @Inject constructor(private val interactor: GetMoviesW
         viewModelScope.launch(Dispatchers.IO) {
             val movies =
                 interactor.invoke(GetMoviesWithTypeInteractor.MovieType.TopRated).invoke(1).results
-            _topRatedMoviesState.value = movies
+            _topRatedMoviesState.value = movies.map { MovieUiDto(it, false) }
         }
 
     private fun getUpPopularMovies() =
         viewModelScope.launch(Dispatchers.IO) {
             val movies =
                 interactor.invoke(GetMoviesWithTypeInteractor.MovieType.Popular).invoke(1).results
-            _popularMoviesState.value = movies
+            _popularMoviesState.value = movies.map { MovieUiDto(it, false) }
         }
 
 

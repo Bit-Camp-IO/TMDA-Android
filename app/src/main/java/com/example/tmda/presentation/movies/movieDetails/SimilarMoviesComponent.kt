@@ -96,14 +96,14 @@ fun SimilarMoviesRow(
             .padding(vertical = 16.dp, horizontal = 32.dp)
     )
 }
-
+val shape= mainShape()
 @Composable
 fun SimilarMovieCard(movie: Movie, onCardItemClicked: (Int) -> Unit) {
     Box(
         modifier = Modifier
             .width(140.dp)
             .height(180.dp)
-            .clip(mainShape())
+            .clip(shape)
             .clickable { onCardItemClicked(movie.id) },
         contentAlignment = Alignment.BottomCenter
     ) {

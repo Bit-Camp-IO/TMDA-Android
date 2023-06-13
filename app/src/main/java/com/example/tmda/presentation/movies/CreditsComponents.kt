@@ -104,14 +104,14 @@ fun CreditsComponent(
     )
 }
 
-
+val mainShape= mainShape()
 @Composable
 fun CreditItemsCard(creditItem: CreditItem) {
     Box(
         modifier = Modifier
             .width(140.dp)
             .height(180.dp)
-            .clip(mainShape()),
+            .clip(mainShape),
         contentAlignment = Alignment.BottomCenter
     ) {
         AsyncImage(

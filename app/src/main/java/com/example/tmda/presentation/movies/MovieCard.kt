@@ -65,7 +65,7 @@ fun MovieCard(
         ) {
             val coroutineScope = rememberCoroutineScope()
             AsyncImage(
-                model = getTmdbImageLink(movie.backdropPath ?: movie.posterPath),
+                model = getTmdbImageLink(movie.backdropPath ),
                 contentDescription = movie.title + "image",
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
@@ -109,7 +109,7 @@ fun MovieCard(
                     textAlign = TextAlign.Center
                 )
                 Text(
-                    text = movie.releaseDate.take(4) + ". genre/genre ." + movie.originalLanguage,
+                    text = movie.releaseDate.take(4) + ". ${movie.genres} ." + movie.originalLanguage,
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Normal,
                     color = Color.White
@@ -136,7 +136,7 @@ fun MovieCard(
                         )
                     }
                     Text(
-                        text = movie.popularity.toString(),
+                        text = movie.voteCount.toString(),
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Normal,
                         color = Color.White

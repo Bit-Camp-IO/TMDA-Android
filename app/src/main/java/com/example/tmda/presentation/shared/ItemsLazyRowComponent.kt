@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.movies.domain.enities.movie.Movie
+import com.example.tmda.presentation.movies.moviesList.MovieUiDto
 import com.example.tmda.ui.theme.PineGreen
 
 @Composable
@@ -25,8 +26,8 @@ fun ItemsLazyRowComponent(
     title: String = "More like this",
     hasBottomDivider: Boolean = true,
     onSeeAllClicked: () -> Unit,
-    items: List<Movie>,
-    contentCard: @Composable (Movie) -> Unit
+    items: List<MovieUiDto>,
+    contentCard: @Composable (MovieUiDto) -> Unit
 ) {
 
     Row(

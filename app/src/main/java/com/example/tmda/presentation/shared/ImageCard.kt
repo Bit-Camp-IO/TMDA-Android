@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.BlendMode
@@ -18,12 +17,10 @@ import coil.compose.AsyncImage
 import com.example.tmda.presentation.movies.getTmdbImageLink
 import com.example.tmda.ui.theme.WhiteTransparent20
 
-
+val mainShape= mainShape()
 @Composable
 fun ImageCard(imagePath: String?, title: String,width:Dp,height:Dp) {
-    val mainShape = remember {
-        mainShape()
-    }
+
     Surface(
         shape = mainShape,
         modifier = Modifier

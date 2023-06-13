@@ -25,7 +25,7 @@ class MovieWithBookMarkPageProvider(
                 20,
                 prefetchDistance = 10,
                 initialLoadSize = 20,
-                enablePlaceholders = true,
+                enablePlaceholders = false,
             ), pagingSourceFactory = {
                 UiPagingSource(::getMovieDtoPage)
             })
