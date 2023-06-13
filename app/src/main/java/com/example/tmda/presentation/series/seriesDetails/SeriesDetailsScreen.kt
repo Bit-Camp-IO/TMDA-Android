@@ -51,6 +51,7 @@ import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.MotionLayout
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.bitIO.tvshowcomponent.domain.entity.Cast
@@ -415,7 +416,7 @@ fun MotionLayoutAppBar(
             contentDescription = null
         )
 
-        AppToolBar(modifier = Modifier.layoutId(MotionLayoutAppBarItem.MainAppBar)) {
+        AppToolBar(modifier = Modifier.layoutId(MotionLayoutAppBarItem.MainAppBar), navController = rememberNavController()) {
             IconButton(
                 modifier = Modifier
                     .background(color = BlackTransparent37, shape = RoundedCornerShape(8.dp))
@@ -566,7 +567,7 @@ private fun endConstraintSet() = ConstraintSet {
     }
 }
 
-private enum class MotionLayoutAppBarItem {
+ enum class MotionLayoutAppBarItem {
     MainAppBar,
     Image,
     ServicesBox;

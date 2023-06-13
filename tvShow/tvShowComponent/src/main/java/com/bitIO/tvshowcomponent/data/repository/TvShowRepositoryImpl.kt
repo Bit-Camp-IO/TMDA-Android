@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 private const val PAGE_SIZE = 20
 
-class TvShowRepositoryImp @Inject constructor(private val api: TvShowApiService) : TvShowRepository {
+class TvShowRepositoryImpl @Inject constructor(private val api: TvShowApiService) : TvShowRepository {
     override fun getPagingTvShows(type: Int): Flow<PagingData<TvShowDto>> {
         return Pager(config = PagingConfig(
             pageSize = PAGE_SIZE,

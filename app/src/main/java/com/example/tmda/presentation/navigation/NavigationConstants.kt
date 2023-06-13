@@ -1,5 +1,8 @@
 package com.example.tmda.presentation.navigation
 
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
+
 
 object Destinations {
     const val MOVIES_ROUTE = "moviesRoute"
@@ -21,3 +24,16 @@ const val MOVIES_LIST_SCREEN_ID = "movieListScreenType"
 const val MOVIE_ID = "movieId"
 const val MOVIE_LIST_SCREEN_TITLE = "movieListScreenTitle"
 
+
+object TvShowsList {
+    const val route = "tvshows"
+    const val tvShowTypeArg = "tvshow_type"
+    const val routeWithArgs = "$route/{$tvShowTypeArg}"
+    val arguments = listOf(navArgument(tvShowTypeArg) { type = NavType.IntType })
+}
+object TvShowDetails {
+    const val route = "tvshow_details"
+    const val tvShowIdArg = "tvshow_id"
+    const val routeWithArgs = "$route/{$tvShowIdArg}"
+    val arguments = listOf(navArgument(tvShowIdArg) { type = NavType.IntType })
+}

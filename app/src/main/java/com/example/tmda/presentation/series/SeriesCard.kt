@@ -29,9 +29,9 @@ import com.bitIO.tvshowcomponent.domain.entity.TvShow
 import com.bitIO.tvshowcomponent.domain.entity.TvShowGenre
 import com.example.tmda.R
 import com.example.tmda.presentation.movies.moviesCardShape
-import com.example.tmda.presentation.shared.BookMarkIconButton
 import com.example.tmda.presentation.shared.mainShape
 import com.example.tmda.ui.theme.BlackTransparent28
+import com.example.tmda.ui.theme.PineGreen
 
 val seriesCardShape = mainShape(cornerRadiusDegree = 100f, slopeLength = 30f)
 
@@ -123,7 +123,12 @@ fun SeriesCard(show: TvShow, onBookmarkClick: (TvShow) -> Unit) {
 
                 }
             }
-            BookMarkIconButton { onBookmarkClick(show) }
+            Icon(
+                painterResource(id = R.drawable.ic_bookmark),
+                contentDescription = null,
+                tint = PineGreen,
+                modifier = Modifier.size(30.dp)
+            )
         }
 
 

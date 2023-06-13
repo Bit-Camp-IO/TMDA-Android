@@ -44,7 +44,6 @@ import com.example.tmda.R
 import com.example.tmda.presentation.shared.ImageCard
 import com.example.tmda.presentation.shared.ItemsLazyRowComponent
 import com.example.tmda.ui.theme.WhiteTransparent60
-import com.example.tmda.ui.theme.WhiteTransparent87
 import kotlin.math.ceil
 import kotlin.math.floor
 
@@ -100,32 +99,26 @@ fun SeriesHomeScreen(
         item {
             ItemsLazyRowComponent(
                 title = "Popular",
-                isLoading = seriesUiState.isPopularLoading,
                 items = seriesUiState.popularTvShows,
-                errorMsg = seriesUiState.popularErrorMsg,
                 onSeeAllClicked = { onSeeAllClick(0) }
             ) {
-                SeriesHomeCard(tvShowInfo = it!!, onTvShowClick = { onTvShowClick(it) })
+                SeriesHomeCard(tvShowInfo = it, onTvShowClick = { onTvShowClick(it) })
             }
         }
         item {
             ItemsLazyRowComponent(
                 title = "On The Air",
-                isLoading = seriesUiState.isOnTheAirLoading,
                 items = seriesUiState.onTheAirTvShows,
-                errorMsg = seriesUiState.onTheAirErrorMsg,
                 onSeeAllClicked = { onSeeAllClick(1) }
             ) {
-                SeriesHomeCard(tvShowInfo = it!!, onTvShowClick = { onTvShowClick(it) })
+                SeriesHomeCard(tvShowInfo = it, onTvShowClick = { onTvShowClick(it) })
             }
         }
         item {
             ItemsLazyRowComponent(
                 title = "Top Rated",
                 hasBottomDivider = false,
-                isLoading = seriesUiState.isTopRatedLoading,
                 items = seriesUiState.topRatedTvShows,
-                errorMsg = seriesUiState.topRatedErrorMsg,
                 onSeeAllClicked = { onSeeAllClick(2) }
             ) {
                 SeriesHomeCard(tvShowInfo = it!!, onTvShowClick = { onTvShowClick(it) })
@@ -180,12 +173,12 @@ fun NowPlayingCard(tvShow: TvShowInfo) {
             Row {
                 Text(
                     text = date + tvShow.tvShow.genres?.get(0)?.name,
-                    color = WhiteTransparent87
+                    color = WhiteTransparent60
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
                     text = "S${tvShow.tvShowDetails?.lastSeason?.toString()} ${tvShow.tvShowDetails?.lastEpisode?.toString()} Episodes",
-                    color = WhiteTransparent87
+                    color = WhiteTransparent60
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -291,7 +284,7 @@ fun SeriesHomeCard(tvShowInfo: TvShowInfo, onTvShowClick: (Int) -> Unit) {
                 tvShowInfo.tvShowDetails?.lastEpisode?.let { "$it Episodes" }
     Box(contentAlignment = Alignment.BottomCenter,
         modifier = Modifier.clickable(MutableInteractionSource(), null) { onTvShowClick(tvShowInfo.tvShow?.id!!) }) {
-        ImageCard(tvShowInfo.tvShow?.backdropPath ?: tvShowInfo.tvShow?.posterPath)
+        ImageCard(tvShowInfo.tvShow?.backdropPath ?: tvShowInfo.tvShow?.posterPath,"",200.dp,200.dp)
         Column(verticalArrangement = Arrangement.Center) {
             Text(
                 text = tvShowInfo.tvShow?.name!!,

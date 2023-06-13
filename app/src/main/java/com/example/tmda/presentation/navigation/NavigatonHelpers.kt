@@ -15,3 +15,12 @@ fun NavController.navigateToMovieListScreen(
 fun NavController.navigateToMovieDetails(movieId: Int) {
     navigate("${Destinations.MOVIES_DETAILS_SCREEN}/$movieId")
 }
+
+
+fun NavController.navigateToShowsListScreen(id:Int) {
+    navigate("${TvShowsList.route}/$id")
+}
+
+fun NavController.navigateToTvShowDetailsScreen(movieId: Int) {
+    navigate("${TvShowDetails.route}/$movieId")
+}
