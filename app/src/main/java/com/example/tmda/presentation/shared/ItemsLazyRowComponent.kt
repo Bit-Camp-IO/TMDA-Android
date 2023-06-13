@@ -19,14 +19,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.movies.domain.enities.movie.Movie
 import com.example.tmda.presentation.movies.moviesList.MovieUiDto
-import com.example.tmda.ui.theme.PineGreen
+import com.example.tmda.ui.theme.PineGreenDark
 
 @Composable
 fun ItemsLazyRowComponent(
     title: String = "More like this",
     hasBottomDivider: Boolean = true,
     onSeeAllClicked: () -> Unit,
-    items: List<MovieUiDto>,
+    moviesUiState:UiState< List<MovieUiDto>>,
     contentCard: @Composable (MovieUiDto) -> Unit
 ) {
 
@@ -41,7 +41,7 @@ fun ItemsLazyRowComponent(
             Divider(
                 modifier = Modifier
                     .height(20.dp)
-                    .width(5.dp), thickness = 1.dp, color = PineGreen
+                    .width(5.dp), thickness = 1.dp, color = PineGreenDark
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(text = title, style = MaterialTheme.typography.titleMedium)
@@ -49,25 +49,36 @@ fun ItemsLazyRowComponent(
         TextButton(onClick = onSeeAllClicked, contentPadding = PaddingValues(0.dp)) {
             Text(
                 text = "See All",
-                color = PineGreen,
+                color = PineGreenDark,
                 style = MaterialTheme.typography.titleSmall
             )
 
         }
     }
 
-    LazyRow {
-        item { Spacer(modifier = Modifier.width(16.dp)) }
-        items(items.size,
-            key = { items[it].id },
-            contentType = { Movie::class }
+    when(moviesUiState){
+        is UiState.Failure ->{
+            ErrorScreen {}
+        }
+        is UiState.Loading -> {
+            LoadingScreen(modifier = Modifier.height(300.dp))}
+        is UiState.Success -> {
+            val movies=moviesUiState.data
+            LazyRow {
+                item { Spacer(modifier = Modifier.width(16.dp)) }
+                items(movies.size,
+                    key = { movies[it].id },
+                    contentType = { Movie::class }
 
-        ) { contentCard(items[it]) }
-        item { Spacer(modifier = Modifier.width(16.dp)) }
+                ) { contentCard(movies[it]) }
+                item { Spacer(modifier = Modifier.width(16.dp)) }
+            }
+            if (hasBottomDivider) Divider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp, horizontal = 32.dp)
+            ) else Spacer(modifier = Modifier.height(16.dp))
+        }
     }
-    if (hasBottomDivider) Divider(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp, horizontal = 32.dp)
-    ) else Spacer(modifier = Modifier.height(16.dp))
+
 }

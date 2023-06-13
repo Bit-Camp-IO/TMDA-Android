@@ -1,7 +1,6 @@
 package com.example.tmda.presentation.movies.moviesHome
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,9 +38,12 @@ import com.example.tmda.presentation.movies.moviesList.MovieUiDto
 import com.example.tmda.presentation.movies.moviesList.ScreenType
 import com.example.tmda.presentation.navigation.navigateToMovieDetails
 import com.example.tmda.presentation.navigation.navigateToMovieListScreen
+import com.example.tmda.presentation.shared.ErrorScreen
 import com.example.tmda.presentation.shared.ImageCard
 import com.example.tmda.presentation.shared.ItemsLazyRowComponent
-import com.example.tmda.ui.theme.PineGreen
+import com.example.tmda.presentation.shared.LoadingScreen
+import com.example.tmda.presentation.shared.UiState
+import com.example.tmda.ui.theme.PineGreenDark
 import com.example.tmda.ui.theme.WhiteTransparent60
 import kotlin.math.ceil
 import kotlin.math.floor
@@ -50,61 +52,104 @@ import kotlin.math.floor
 @Composable
 fun MoviesHomeScreen(navController: NavController) {
     val viewModel = hiltViewModel<MoviesHomeViewModel>()
-    LazyColumn {
-        item { NowPlayingHeader(viewModel.nowPlayingMoviesState.value) }
-        item {
-            ItemsLazyRowComponent(
-                title = "Popular",
-                onSeeAllClicked = {
-                    navController.navigateToMovieListScreen(
-                        "Popular Movies",
-                        ScreenType.Popular)
-                },
-                items = viewModel.popularMoviesState.value
-            ) { MovieHomeCard(movie = it, navController::navigateToMovieDetails,200.dp,270.dp) }
-        }
-        item {
-            ItemsLazyRowComponent(
-                title = "Upcoming",
-                onSeeAllClicked = {
-                    navController.navigateToMovieListScreen(
-                        "Upcoming Movies",
-                        ScreenType.Upcoming
+    if (viewModel.isErrorState()) ErrorScreen(viewModel::updateAll) else
+        LazyColumn {
+            item { NowPlayingHeader(viewModel.nowPlayingMoviesState.value) }
+            item {
+                ItemsLazyRowComponent(
+                    title = "Popular",
+                    onSeeAllClicked = {
+                        navController.navigateToMovieListScreen(
+                            "Popular Movies",
+                            ScreenType.Popular
+                        )
+                    },
+                    moviesUiState = viewModel.popularMoviesState.value
+                ) {
+                    MovieHomeCard(
+                        movie = it,
+                        navController::navigateToMovieDetails,
+                        200.dp,
+                        270.dp
                     )
-                },
-                items = viewModel.upComingMoviesState.value
-            ) { MovieHomeCard(movie = it, onClick = navController::navigateToMovieDetails,200.dp,270.dp) }
-        }
-        item {
-            ItemsLazyRowComponent(
-                title = "Top Rated",
-                hasBottomDivider = false,
-                onSeeAllClicked = {
-                    navController.navigateToMovieListScreen(
-                        "Top Rated Movies",
-                        ScreenType.TopRated
+                }
+            }
+            item {
+                ItemsLazyRowComponent(
+                    title = "Upcoming",
+                    onSeeAllClicked = {
+                        navController.navigateToMovieListScreen(
+                            "Upcoming Movies",
+                            ScreenType.Upcoming
+                        )
+                    },
+                    moviesUiState = viewModel.upComingMoviesState.value
+                ) {
+                    MovieHomeCard(
+                        movie = it,
+                        onClick = navController::navigateToMovieDetails,
+                        200.dp,
+                        270.dp
                     )
-                },
-                items = viewModel.topRatedMoviesState.value
-            ) { MovieHomeCard(movie = it, onClick = navController::navigateToMovieDetails,200.dp,270.dp) }
+                }
+            }
+            item {
+                ItemsLazyRowComponent(
+                    title = "Top Rated",
+                    hasBottomDivider = false,
+                    onSeeAllClicked = {
+                        navController.navigateToMovieListScreen(
+                            "Top Rated Movies",
+                            ScreenType.TopRated
+                        )
+                    },
+                    moviesUiState = viewModel.topRatedMoviesState.value
+                ) {
+                    MovieHomeCard(
+                        movie = it,
+                        onClick = navController::navigateToMovieDetails,
+                        200.dp,
+                        270.dp
+                    )
+                }
+            }
         }
-
-    }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun NowPlayingHeader(moviesList: List<Movie>) {
-    val pagerState =
-        rememberPagerState(initialPage = 0, initialPageOffsetFraction = 0f) { moviesList.size }
-    Column(Modifier.background(Color.Transparent)) {
-        HorizontalPager(state = pagerState) {
-            NowPlayingCard(moviesList[it])
-        }
-        Spacer(Modifier.height(8.dp))
-        DotsIndicator(totalDots = pagerState.pageCount, currentIndex = pagerState.currentPage)
+fun NowPlayingHeader(moviesUiState: UiState<List<Movie>>) {
 
+    when (moviesUiState) {
+        is UiState.Failure -> {
+            ErrorScreen {}
+        }
+
+        is UiState.Loading -> {
+            LoadingScreen(Modifier.height(416.dp))
+        }
+
+        is UiState.Success -> {
+            val moviesList = moviesUiState.data
+            val pagerState =
+                rememberPagerState(
+                    initialPage = 0,
+                    initialPageOffsetFraction = 0f
+                ) { moviesList.size }
+            Column {
+                HorizontalPager(state = pagerState) {
+                    NowPlayingCard(moviesList[it])
+                }
+                Spacer(Modifier.height(8.dp))
+                DotsIndicator(
+                    totalDots = pagerState.pageCount,
+                    currentIndex = pagerState.currentPage
+                )
+
+            }
+        }
     }
+
 
 }
 
@@ -127,7 +172,7 @@ fun NowPlayingCard(movie: Movie) {
             Text(
                 text = "Marvel Studios",
                 style = MaterialTheme.typography.bodySmall,
-                color = PineGreen
+                color = PineGreenDark
             )
             Text(text = movie.title, style = MaterialTheme.typography.titleLarge)
 //            Text(
@@ -222,7 +267,10 @@ fun DotsIndicator(totalDots: Int, currentIndex: Int) {
 fun MovieHomeCard(movie: MovieUiDto, onClick: (Int) -> Unit, width: Dp, height: Dp) {
     Box(
         contentAlignment = Alignment.BottomCenter,
-        modifier = Modifier.clickable { onClick(movie.id) }.size(width, height )) {
+        modifier = Modifier
+            .clickable { onClick(movie.id) }
+            .size(width, height)
+    ) {
         ImageCard(movie.posterPath ?: movie.backdropPath, movie.title, width, height)
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -237,7 +285,7 @@ fun MovieHomeCard(movie: MovieUiDto, onClick: (Int) -> Unit, width: Dp, height: 
                 overflow = TextOverflow.Clip
             )
             Text(
-                text =movie.releaseDate.take(4) +"."+movie.genres ,
+                text = movie.releaseDate.take(4) + "." + movie.genres,
                 //getMoviesYearAndGenres(movie),
                 style = MaterialTheme.typography.labelSmall
             )
@@ -257,10 +305,3 @@ fun MovieHomeCard(movie: MovieUiDto, onClick: (Int) -> Unit, width: Dp, height: 
     }
 
 }
-
-//fun getMoviesYearAndGenres(movie: Movie): String {
-//    val genresName = movie.genres.take(2).map { it.name }.reduce { l, r -> "$l / $r" }
-//    return movie.releaseDate.subSequence(0, 4).toString() + " . " + genresName
-//
-//}
-//

@@ -5,7 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.example.tmda.R
-import com.example.tmda.ui.theme.PineGreen
+import com.example.tmda.ui.theme.PineGreenDark
 
 @Composable
 fun SavedItemIcon(
@@ -22,14 +22,14 @@ fun SavedItemIcon(
                 Icon(
                     painterResource(id = R.drawable.ic_bookmark_filled),
                     contentDescription = null,
-                    tint = PineGreen,
+                    tint = PineGreenDark,
                     modifier = modifier
                 )
             else
                 Icon(
                     painterResource(id = R.drawable.ic_bookmark),
                     contentDescription = null,
-                    tint = PineGreen,
+                    tint = PineGreenDark,
                     modifier = modifier
                 )
         }

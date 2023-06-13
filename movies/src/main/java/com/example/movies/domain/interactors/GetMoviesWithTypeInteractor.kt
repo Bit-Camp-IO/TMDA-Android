@@ -9,7 +9,7 @@ class GetMoviesWithTypeInteractor @Inject constructor(
     private val repo: MoviesRepository
 ) {
 
-    fun invoke(movieType: MovieType): MovieUseCase {
+    operator fun invoke(movieType: MovieType): MovieUseCase {
         return getMovieUseCase(movieType)
     }
 
@@ -18,32 +18,51 @@ class GetMoviesWithTypeInteractor @Inject constructor(
     }
 
     interface BaseUseCase {
-        suspend fun invoke(pageNumber: Int): MoviesPage
+        suspend fun invoke(pageNumber: Int): Result<MoviesPage>
     }
 
 
     sealed class MovieUseCase(protected val repo: MoviesRepository) : BaseUseCase {
         class Upcoming(repo: MoviesRepository) : MovieUseCase(repo) {
-            override suspend fun invoke(pageNumber: Int): MoviesPage {
-                return repo.getUpComingMovies(pageNumber)
+            override suspend fun invoke(pageNumber: Int): Result<MoviesPage> {
+                return try {
+                    Result.success(repo.getUpComingMovies(pageNumber))
+                }catch (e:Throwable){
+                    Result.failure(e)
+                }
+
             }
         }
 
         class NowPlaying(repo: MoviesRepository) : MovieUseCase(repo) {
-            override suspend fun invoke(pageNumber: Int): MoviesPage {
-                return repo.getNowPlayingMovies(pageNumber)
+            override suspend fun invoke(pageNumber: Int): Result<MoviesPage> {
+                return try {
+                    Result.success(repo.getNowPlayingMovies(pageNumber))
+                }catch (e:Throwable){
+                    Result.failure(e)
+                }
             }
         }
 
         class TopRated(repo: MoviesRepository) : MovieUseCase(repo) {
-            override suspend fun invoke(pageNumber: Int): MoviesPage {
-                return repo.getTopRatedMovies(pageNumber)
+            override suspend fun invoke(pageNumber: Int):  Result<MoviesPage> {
+                return try {
+                    Result.success(repo.getTopRatedMovies(pageNumber))
+                }catch (e:Throwable){
+                    Result.failure(e)
+                }
+
             }
         }
 
         class Popular(repo: MoviesRepository) : MovieUseCase(repo) {
-            override suspend fun invoke(pageNumber: Int): MoviesPage {
-                return repo.getPopularMovies(pageNumber)
+            override suspend fun invoke(pageNumber: Int):  Result<MoviesPage> {
+                return try {
+                    Result.success(repo.getPopularMovies(pageNumber))
+                }catch (e:Throwable){
+                    Result.failure(e)
+                }
+
             }
         }
 
@@ -76,15 +95,25 @@ class GetMoviesWithTypeInteractor @Inject constructor(
         protected val movieId: Int
     ) : BaseUseCase {
         class Similar(repo: MoviesRepository, movieId: Int) : MovieUseCaseWithId(repo, movieId) {
-            override suspend fun invoke(pageNumber: Int): MoviesPage {
-                return repo.getSimilarMovies(movieId = movieId, pageNumber)
+            override suspend fun invoke(pageNumber: Int):  Result<MoviesPage> {
+                return try {
+                    Result.success(repo.getSimilarMovies(movieId = movieId, pageNumber))
+                }catch (e:Throwable){
+                    Result.failure(e)
+                }
+
+
             }
         }
 
         class Recommended(repo: MoviesRepository, movieId: Int) :
             MovieUseCaseWithId(repo, movieId) {
-            override suspend fun invoke(pageNumber: Int): MoviesPage {
-                return repo.getRecommendMovies(movieId = movieId, pageNumber)
+            override suspend fun invoke(pageNumber: Int):  Result<MoviesPage> {
+                return try {
+                    Result.success(repo.getRecommendMovies(movieId = movieId, pageNumber))
+                }catch (e:Throwable){
+                    Result.failure(e)
+                }
             }
         }
     }

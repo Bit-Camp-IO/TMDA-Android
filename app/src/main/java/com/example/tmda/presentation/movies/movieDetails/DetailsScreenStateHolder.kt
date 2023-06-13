@@ -10,7 +10,9 @@ import com.example.movies.domain.enities.movie.MovieDetails
 import com.example.movies.domain.enities.movie.MoviesPage
 import com.example.movies.domain.enities.review.Review
 import com.example.tmda.presentation.shared.UiState
+import com.example.tmda.presentation.shared.mapToOtherType
 import com.example.tmda.presentation.shared.toSuccessState
+import com.example.tmda.presentation.shared.toUiState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,8 +24,8 @@ class DetailsScreenStateHolder(
     private val isMovieSavedProvider: suspend (Int) -> Boolean,
     private val movieVideosProvider: suspend (Int) -> List<Video>,
     private val movieCreditsProvider: suspend (Int) -> Credits,
-    private val similarMoviesProvider: suspend (Int) -> MoviesPage,
-    private val recommendedMoviesProvider: suspend (Int) -> MoviesPage,
+    private val similarMoviesProvider: suspend (Int) -> Result<MoviesPage>,
+    private val recommendedMoviesProvider: suspend (Int) -> Result<MoviesPage>,
     private val reviewsProvider: suspend (Int) -> List<Review>,
     private val changeSavedStateProvider: suspend (Int, Boolean) -> Unit
 ) {
@@ -101,14 +103,15 @@ class DetailsScreenStateHolder(
 
     private fun updateSimilarMovies() {
         coroutineScope.launch(Dispatchers.IO) {
-
-            _similarMovies.value = similarMoviesProvider(1).results.toSuccessState()
+            _similarMovies.value =
+                similarMoviesProvider(1).mapToOtherType { it.results }.toUiState()
         }
     }
 
     private fun updateRecommendedMovies() {
         coroutineScope.launch(Dispatchers.IO) {
-            _recommendedMovies.value = recommendedMoviesProvider(1).results.toSuccessState()
+            _recommendedMovies.value =
+                recommendedMoviesProvider(1).mapToOtherType { it.results }.toUiState()
         }
     }
 

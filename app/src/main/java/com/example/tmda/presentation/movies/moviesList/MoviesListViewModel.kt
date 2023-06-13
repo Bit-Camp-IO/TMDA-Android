@@ -7,6 +7,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.authentication.domain.entities.User
 import com.example.authentication.domain.interactors.GetCurrentUserUseCase
+import com.example.movies.domain.enities.movie.MoviesPage
 import com.example.movies.domain.interactors.AddMovieToWatchListUseCase
 import com.example.movies.domain.interactors.GetMovieSavedStateUseCase
 import com.example.movies.domain.interactors.GetMoviesWithTypeInteractor
@@ -36,7 +37,6 @@ class MoviesListViewModel @Inject constructor(
     private var pagesStream: Flow<PagingData<MovieUiDto>>? = null
 
 
-
     init {
         viewModelScope.launch(Dispatchers.IO) { user = userUseCase.invoke() }
         moviesUseCase = screenType.toUseCase()
@@ -46,11 +46,25 @@ class MoviesListViewModel @Inject constructor(
         if (pagesStream == null) {
             val movieWithBookMarkPageProvider = MovieWithBookMarkPageProvider(
                 viewModelScope,
-                moviesUseCase::invoke
+                ::moviePageProvider
             ) { getMovieSavedStateUseCase.invoke(it, user.sessionId) }
-            pagesStream = movieWithBookMarkPageProvider.createPager().flow .cachedIn(viewModelScope)
+            pagesStream = movieWithBookMarkPageProvider.createPager().flow.cachedIn(viewModelScope)
         }
         return pagesStream!!
+    }
+
+    private suspend fun moviePageProvider(page: Int): MoviesPage {
+        val result = moviesUseCase.invoke(page)
+        return if (result.isSuccess) {
+            result.getOrNull()!!
+        } else {
+            MoviesPage(
+                page,
+                results = listOf(),
+                totalPages = Int.MAX_VALUE,
+                totalResults = Int.MAX_VALUE
+            )
+        }
     }
 
     fun addOrRemoveMovieToSavedList(movieId: Int, isSaved: Boolean) {
@@ -61,10 +75,10 @@ class MoviesListViewModel @Inject constructor(
 
     fun updateIsSavedState(movies: List<MovieUiDto>, priorityRange: IntRange) {
         viewModelScope.launch(Dispatchers.IO) {
-          priorityRange.map {
+            priorityRange.map {
                 async {
                     val movie = movies[it]
-                    val isSaved=getMovieSavedStateUseCase.invoke(movie.id, user.sessionId)
+                    val isSaved = getMovieSavedStateUseCase.invoke(movie.id, user.sessionId)
                     movie.isSaved.value = isSaved
                     isSaved
                 }

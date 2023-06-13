@@ -37,7 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.tmda.R
-import com.example.tmda.ui.theme.PineGreen
+import com.example.tmda.ui.theme.PineGreenDark
 import com.example.tmda.ui.theme.WhiteTransparent15
 import com.example.tmda.ui.theme.WhiteTransparent60
 
@@ -68,7 +68,7 @@ fun LoginScreen() {
                 focusedContainerColor = WhiteTransparent15,
                 unfocusedContainerColor = WhiteTransparent15,
                 disabledLabelColor = WhiteTransparent15,
-                focusedLabelColor = PineGreen,
+                focusedLabelColor = PineGreenDark,
 
                 ),
         )
@@ -114,7 +114,7 @@ fun LoginScreen() {
                 Text(
                     text = "Forget password?",
                     style = MaterialTheme.typography.bodySmall,
-                    color = PineGreen
+                    color = PineGreenDark
                 )
             }
         }
@@ -141,7 +141,7 @@ fun LoginScreen() {
                 Text(
                     text = "Register",
                     style = MaterialTheme.typography.bodySmall,
-                    color = PineGreen
+                    color = PineGreenDark
                 )
             }
         }

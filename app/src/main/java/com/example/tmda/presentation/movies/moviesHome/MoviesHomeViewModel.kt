@@ -7,6 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.movies.domain.enities.movie.Movie
 import com.example.movies.domain.interactors.GetMoviesWithTypeInteractor
 import com.example.tmda.presentation.movies.moviesList.MovieUiDto
+import com.example.tmda.presentation.shared.UiState
+import com.example.tmda.presentation.shared.mapToOtherType
+import com.example.tmda.presentation.shared.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,57 +19,79 @@ import javax.inject.Inject
 class MoviesHomeViewModel @Inject constructor(private val interactor: GetMoviesWithTypeInteractor) :
     ViewModel() {
     init {
-        getNowPlayingMovies()
-        getUpComingMovies()
-        getUpTopRatedMovies()
-        getUpPopularMovies()
+      updateAll()
     }
 
-    private val _nowPlayingMoviesState = mutableStateOf<List<Movie>>(listOf())
-    val nowPlayingMoviesState: State<List<Movie>>
+    private val _nowPlayingMoviesState = mutableStateOf<UiState<List<Movie>>>(UiState.Loading())
+    val nowPlayingMoviesState: State<UiState<List<Movie>>>
         get() = _nowPlayingMoviesState
 
-    private val _upComingMoviesState = mutableStateOf<List<MovieUiDto>>(listOf())
-    val upComingMoviesState: State<List<MovieUiDto>>
+    private val _upComingMoviesState = mutableStateOf<UiState<List<MovieUiDto>>>(UiState.Loading())
+    val upComingMoviesState: State<UiState<List<MovieUiDto>>>
         get() = _upComingMoviesState
 
-    private val _topRatedMoviesState = mutableStateOf<List<MovieUiDto>>(listOf())
-    val topRatedMoviesState: State<List<MovieUiDto>>
+    private val _topRatedMoviesState = mutableStateOf<UiState<List<MovieUiDto>>>(UiState.Loading())
+    val topRatedMoviesState: State<UiState<List<MovieUiDto>>>
         get() = _topRatedMoviesState
 
-    private val _popularMoviesState = mutableStateOf<List<MovieUiDto>>(listOf())
-    val popularMoviesState: State<List<MovieUiDto>>
+    private val _popularMoviesState = mutableStateOf<UiState<List<MovieUiDto>>>(UiState.Loading())
+    val popularMoviesState: State<UiState<List<MovieUiDto>>>
         get() = _popularMoviesState
 
-    private fun getNowPlayingMovies() =
+
+    fun updateAll(){
+        updateNowPlayingMovies()
+        updateUpComingMovies()
+        updateTopRatedMovies()
+        updatePopularMovies()
+    }
+
+    private fun updateNowPlayingMovies() {
         viewModelScope.launch(Dispatchers.IO) {
             val movies = interactor.invoke(GetMoviesWithTypeInteractor.MovieType.NowPlaying)
-                .invoke(1).results.take(5)
+                .invoke(1).mapToOtherType { it.results.take(5) }.toUiState()
             _nowPlayingMoviesState.value = movies
+
         }
+    }
 
-
-    private fun getUpComingMovies() =
+    private fun updateUpComingMovies() {
         viewModelScope.launch(Dispatchers.IO) {
-            val movies =
-                interactor.invoke(GetMoviesWithTypeInteractor.MovieType.Upcoming)
-                    .invoke(1).results.map { MovieUiDto(it, false) }
-            _upComingMoviesState.value = movies
-        }
+            val moviesUiState =
+                interactor(GetMoviesWithTypeInteractor.MovieType.Upcoming)
+                    .invoke(1).mapToOtherType { it -> it.results.map { MovieUiDto(it, false) } }
+                    .toUiState()
 
-    private fun getUpTopRatedMovies() =
+            _upComingMoviesState.value = moviesUiState
+        }
+    }
+
+    private fun updateTopRatedMovies() {
         viewModelScope.launch(Dispatchers.IO) {
-            val movies =
-                interactor.invoke(GetMoviesWithTypeInteractor.MovieType.TopRated).invoke(1).results
-            _topRatedMoviesState.value = movies.map { MovieUiDto(it, false) }
+            val moviesUiState =
+                interactor(GetMoviesWithTypeInteractor.MovieType.TopRated).invoke(1)
+                    .mapToOtherType { it -> it.results.map { MovieUiDto(it, false) } }
+                    .toUiState()
+            _topRatedMoviesState.value = moviesUiState
         }
+    }
 
-    private fun getUpPopularMovies() =
+    private fun updatePopularMovies() {
         viewModelScope.launch(Dispatchers.IO) {
-            val movies =
-                interactor.invoke(GetMoviesWithTypeInteractor.MovieType.Popular).invoke(1).results
-            _popularMoviesState.value = movies.map { MovieUiDto(it, false) }
+            val moviesUiState =
+                interactor.invoke(GetMoviesWithTypeInteractor.MovieType.Popular).invoke(1)
+                    .mapToOtherType { it -> it.results.map { MovieUiDto(it, false) } }
+                    .toUiState()
+            _popularMoviesState.value = moviesUiState
         }
+    }
 
 
+    fun isErrorState(): Boolean {
+        return _nowPlayingMoviesState.value is UiState.Failure &&
+                _upComingMoviesState.value is UiState.Failure &&
+                _topRatedMoviesState.value is UiState.Failure &&
+                _popularMoviesState.value is UiState.Failure
+
+    }
 }

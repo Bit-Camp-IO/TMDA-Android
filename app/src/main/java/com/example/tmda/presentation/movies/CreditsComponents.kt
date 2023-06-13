@@ -35,7 +35,7 @@ import com.example.tmda.presentation.shared.NoDataComponent
 import com.example.tmda.presentation.shared.UiState
 import com.example.tmda.presentation.shared.mainShape
 import com.example.tmda.ui.theme.BlackTransparent60
-import com.example.tmda.ui.theme.PineGreen
+import com.example.tmda.ui.theme.PineGreenDark
 import com.example.tmda.ui.theme.WhiteTransparent60
 
 @Composable
@@ -58,7 +58,7 @@ fun CreditsComponent(
             Divider(
                 modifier = Modifier
                     .height(20.dp)
-                    .width(5.dp), thickness = 1.dp, color = PineGreen
+                    .width(5.dp), thickness = 1.dp, color = PineGreenDark
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(text = title, style = MaterialTheme.typography.titleMedium)
@@ -66,7 +66,7 @@ fun CreditsComponent(
         TextButton(onClick = { /*TODO*/ }, contentPadding = PaddingValues(0.dp)) {
             Text(
                 text = "See All",
-                color = PineGreen,
+                color = PineGreenDark,
                 style = MaterialTheme.typography.titleSmall
             )
 
@@ -104,7 +104,7 @@ fun CreditsComponent(
     )
 }
 
-val mainShape= mainShape()
+
 @Composable
 fun CreditItemsCard(creditItem: CreditItem) {
     Box(

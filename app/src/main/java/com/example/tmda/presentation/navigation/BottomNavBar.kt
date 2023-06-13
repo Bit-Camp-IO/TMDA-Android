@@ -16,7 +16,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.tmda.R
 import com.example.tmda.ui.theme.GreyMetallic
-import com.example.tmda.ui.theme.PineGreen
+import com.example.tmda.ui.theme.PineGreenDark
 import com.example.tmda.ui.theme.WhiteTransparent60
 
 
@@ -36,7 +36,7 @@ fun BottomNavBar(navController: NavController) {
                 modifier = Modifier.padding(top=8.dp),
                 selected = selected,
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = PineGreen,
+                    selectedIconColor = PineGreenDark,
                     unselectedIconColor = WhiteTransparent60,
                     indicatorColor = GreyMetallic
                 ),
