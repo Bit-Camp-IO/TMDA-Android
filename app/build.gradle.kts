@@ -44,7 +44,7 @@ android {
     }
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -87,6 +87,7 @@ dependencies {
 
 
     api(project(":movies"))
+    api(project(":authentication"))
 //    implementation(project(":authentication"))
 //    implementation(project(":account"))
     //endregion
@@ -125,10 +126,13 @@ dependencies {
 
     //Paging
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha20")
+    implementation("androidx.paging:paging-compose:3.2.0-beta01")
 
     //Coil
     implementation("io.coil-kt:coil-compose:2.4.0")
+    //Lottie
+    implementation ("com.airbnb.android:lottie-compose:6.0.0")
+
     //Testing
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

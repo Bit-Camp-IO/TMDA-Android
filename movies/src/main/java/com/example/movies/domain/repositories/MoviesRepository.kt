@@ -1,38 +1,38 @@
 package com.example.movies.domain.repositories
 
-import androidx.paging.PagingData
-import com.example.movies.data.dto.account.MovieAccountStatesDto
-import com.example.movies.data.dto.credits.CreditsDto
 import com.example.movies.data.dto.image.ImageCollectionDto
 import com.example.movies.data.dto.movies.LatestMovieDto
 import com.example.movies.data.dto.videos.VideoContainerDto
-import com.example.movies.domain.enities.Movie
-import com.example.movies.domain.enities.MovieDetails
-import kotlinx.coroutines.flow.Flow
+import com.example.movies.domain.enities.credits.Credits
+import com.example.movies.domain.enities.movie.MovieDetails
+import com.example.movies.domain.enities.movie.MoviesPage
+import com.example.movies.domain.enities.review.Review
 
 interface MoviesRepository {
-    suspend fun getMovieDetails(id: Int): MovieDetails
+    suspend fun getMovieDetails(movieId: Int): MovieDetails
 
     //
-    suspend fun getRecommendMovies(id: Int, page: Int = 1): List<Movie>
-    suspend fun getSimilarMovies(id: Int, page: Int = 1): List<Movie>
-    suspend fun getNowPlayingMovies(page: Int = 1): List<Movie>
-    suspend fun getPopularMovies(page: Int = 1): List<Movie>
-    suspend fun getTopRatedMovies(page: Int = 1): List<Movie>
-    suspend fun getUpComingMovies(page: Int = 1): List<Movie>
-    suspend fun getTrendingMovies(): List<Movie>
+    suspend fun getRecommendMovies(movieId: Int, page: Int = 1): MoviesPage
+    suspend fun getSimilarMovies(movieId: Int, page: Int = 1): MoviesPage
+    suspend fun getNowPlayingMovies(page: Int = 1): MoviesPage
+    suspend fun getPopularMovies(page: Int = 1): MoviesPage
+    suspend fun getTopRatedMovies(page: Int = 1): MoviesPage
+    suspend fun getUpComingMovies(page: Int = 1): MoviesPage
+    suspend fun getTrendingMovies(): MoviesPage
+    suspend fun getMovieReviews(movieId: Int): List<Review>
 
     //
-    suspend fun getMovieAccountStates(id: Int, sessionId: String): MovieAccountStatesDto
-    suspend fun getMovieCredits(id: Int): CreditsDto
-    suspend fun getMovieImages(id: Int, languageCode: String? = null): ImageCollectionDto
+    suspend fun getMovieSavedState(movieId: Int, sessionId: String): Boolean
+    suspend fun getMovieCredits(movieId: Int): Credits
+    suspend fun getMovieImages(movieId: Int, languageCode: String? = null): ImageCollectionDto
     suspend fun getLatestMovie(): LatestMovieDto
-    suspend fun getMovieVideos(id: Int): VideoContainerDto
-    fun getMoviesStream(movieId: Int): Flow<PagingData<Movie>>
+    suspend fun getMovieVideos(movieId: Int): VideoContainerDto
+    suspend fun addMovieToWatchList(
+        accountId: Int,
+        sessionId: String,
+        movieId: Int,
+        isSaveRequest: Boolean
+    )
 
 
-    fun getNowPlayingMoviesStream(movieId: Int): Flow<PagingData<Movie>>
-    fun getPopularMoviesStream(movieId: Int): Flow<PagingData<Movie>>
-    fun getUpComingMoviesStream(movieId: Int): Flow<PagingData<Movie>>
-    fun getTopRatedMoviesStream(movieId: Int): Flow<PagingData<Movie>>
 }

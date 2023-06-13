@@ -1,8 +1,8 @@
 package com.example.tmda.presentation.movies.moviesHome
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -26,12 +26,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.example.movies.domain.enities.Movie
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import com.example.movies.domain.enities.movie.Movie
 import com.example.tmda.R
+import com.example.tmda.presentation.movies.getTmdbImageLink
+import com.example.tmda.presentation.movies.moviesList.ScreenType
+import com.example.tmda.presentation.navigation.navigateToMovieDetails
+import com.example.tmda.presentation.navigation.navigateToMovieListScreen
 import com.example.tmda.presentation.shared.ImageCard
 import com.example.tmda.presentation.shared.ItemsLazyRowComponent
 import com.example.tmda.ui.theme.PineGreen
@@ -39,32 +45,49 @@ import com.example.tmda.ui.theme.WhiteTransparent60
 import kotlin.math.ceil
 import kotlin.math.floor
 
-@Preview
+
 @Composable
-fun MoviesHomeScreen() {
+fun MoviesHomeScreen(navController: NavController) {
+    val viewModel = hiltViewModel<MoviesHomeViewModel>()
+
     LazyColumn {
-        item { NowPlayingHeader() }
+        item { NowPlayingHeader(viewModel.nowPlayingMoviesState.value) }
         item {
-            ItemsLazyRowComponent<Movie>(
-                title = "New Movies",
-                onSeeAllClicked = { /*TODO*/ },
-                items = listOf()
-            ) { MovieHomeCard(movie = it) }
+            ItemsLazyRowComponent(
+                title = "Popular",
+                onSeeAllClicked = {
+                    navController.navigateToMovieListScreen(
+                        "Popular Movies",
+                        ScreenType.Popular
+                    )
+                },
+                items = viewModel.popularMoviesState.value
+            ) { MovieHomeCard(movie = it, navController::navigateToMovieDetails,200.dp,270.dp) }
         }
         item {
-            ItemsLazyRowComponent<Movie>(
+            ItemsLazyRowComponent(
                 title = "Upcoming",
-                onSeeAllClicked = { /*TODO*/ },
-                items = listOf()
-            ) { MovieHomeCard(movie = it) }
+                onSeeAllClicked = {
+                    navController.navigateToMovieListScreen(
+                        "Upcoming Movies",
+                        ScreenType.Upcoming
+                    )
+                },
+                items = viewModel.upComingMoviesState.value
+            ) { MovieHomeCard(movie = it, onClick = navController::navigateToMovieDetails,200.dp,270.dp) }
         }
         item {
-            ItemsLazyRowComponent<Movie>(
+            ItemsLazyRowComponent(
                 title = "Top Rated",
                 hasBottomDivider = false,
-                onSeeAllClicked = { /*TODO*/ },
-                items = listOf()
-            ) { MovieHomeCard(movie = it) }
+                onSeeAllClicked = {
+                    navController.navigateToMovieListScreen(
+                        "Top Rated Movies",
+                        ScreenType.TopRated
+                    )
+                },
+                items = viewModel.topRatedMoviesState.value
+            ) { MovieHomeCard(movie = it, onClick = navController::navigateToMovieDetails,200.dp,270.dp) }
         }
 
     }
@@ -72,10 +95,13 @@ fun MoviesHomeScreen() {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun NowPlayingHeader() {
-    val pagerState = rememberPagerState(initialPage = 0, initialPageOffsetFraction = 0f) { 5 }
+fun NowPlayingHeader(moviesList: List<Movie>) {
+    val pagerState =
+        rememberPagerState(initialPage = 0, initialPageOffsetFraction = 0f) { moviesList.size }
     Column(Modifier.background(Color.Transparent)) {
-        HorizontalPager(state = pagerState) { NowPlayingCard() }
+        HorizontalPager(state = pagerState) {
+            NowPlayingCard(moviesList[it])
+        }
         Spacer(Modifier.height(8.dp))
         DotsIndicator(totalDots = pagerState.pageCount, currentIndex = pagerState.currentPage)
 
@@ -84,36 +110,37 @@ fun NowPlayingHeader() {
 }
 
 @Composable
-fun NowPlayingCard() {
+fun NowPlayingCard(movie: Movie) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(400.dp),
         contentAlignment = Alignment.BottomStart
     ) {
-        Image(
-            modifier = Modifier.fillMaxSize(),
-            painter = painterResource(id = R.drawable.doctor_strange),
-            contentScale = ContentScale.FillBounds,
-            contentDescription = "movie poster"
+        AsyncImage(
+            model = getTmdbImageLink(movie.posterPath!!),
+            contentDescription = movie.title + "image",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier.fillMaxSize()
         )
+
         Column(modifier = Modifier.padding(start = 16.dp)) {
             Text(
                 text = "Marvel Studios",
                 style = MaterialTheme.typography.bodySmall,
                 color = PineGreen
             )
-            Text(text = "Doctor Strange", style = MaterialTheme.typography.titleLarge)
-            Text(
-                text = "In The Multiverse Of  Madness",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold
-            )
+            Text(text = movie.title, style = MaterialTheme.typography.titleLarge)
+//            Text(
+//                text = "In The Multiverse Of  Madness",
+//                style = MaterialTheme.typography.titleMedium,
+//                fontWeight = FontWeight.Bold
+//            )
             Spacer(modifier = Modifier.height(8.dp))
-            TotalRatingIcons(rating = 7f, iconSize = 24.dp)
+            TotalRatingIcons(rating = movie.voteAverage.toFloat(), iconSize = 24.dp)
             Spacer(modifier = Modifier.height(2.dp))
             Text(
-                text = "From 324 users",
+                text = "From ${movie.voteCount} users",
                 style = MaterialTheme.typography.bodySmall,
                 color = WhiteTransparent60
             )
@@ -171,39 +198,47 @@ fun TotalRatingIcons(
 fun DotsIndicator(totalDots: Int, currentIndex: Int) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
         for (i in 0 until totalDots) {
-            val currentShape =
-                if (i == currentIndex)
-                    Icon(
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp),
-                        painter = painterResource(id = R.drawable.ic_round_rectangle),
-                        contentDescription = null,
-                        tint = Color.Unspecified
-                    )
-                else
-                    Icon(
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp),
-                        painter = painterResource(id = R.drawable.ic_dot),
-                        contentDescription = null,
-                        tint = Color.Unspecified
-                    )
+            if (i == currentIndex)
+                Icon(
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp),
+                    painter = painterResource(id = R.drawable.ic_round_rectangle),
+                    contentDescription = null,
+                    tint = Color.Unspecified
+                )
+            else
+                Icon(
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp),
+                    painter = painterResource(id = R.drawable.ic_dot),
+                    contentDescription = null,
+                    tint = Color.Unspecified
+                )
         }
     }
 }
 
 
 @Composable
-fun MovieHomeCard(movie: Movie?) {
-    Box(contentAlignment = Alignment.BottomCenter) {
-        ImageCard(movie?.posterPath)
-        Column(verticalArrangement = Arrangement.Center) {
+fun MovieHomeCard(movie: Movie, onClick: (Int) -> Unit, width: Dp, height: Dp) {
+    Box(
+        contentAlignment = Alignment.BottomCenter,
+        modifier = Modifier.clickable { onClick(movie.id) }.size(width, height )) {
+        ImageCard(movie.posterPath ?: movie.backdropPath, movie.title, width, height)
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .width(170.dp)
+                .padding(bottom = 8.dp)
+        ) {
             Text(
-                text = movie?.title ?: "No Time To Die",
-                style = MaterialTheme.typography.bodySmall
+                text = movie.title,
+                style = MaterialTheme.typography.bodySmall,
+                maxLines = 1,
+                overflow = TextOverflow.Clip
             )
             Text(
-                text = movie?.title ?: "2022 ‧ Sci-fi/Action",
+                text = getMoviesYearAndGenres(movie),
                 style = MaterialTheme.typography.labelSmall
             )
             Row(
@@ -211,11 +246,11 @@ fun MovieHomeCard(movie: Movie?) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = (movie?.voteAverage ?: 9.8).toString(),
+                    text = movie.voteAverage.toString(),
                     style = MaterialTheme.typography.labelSmall
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-                TotalRatingIcons(rating = (movie?.voteAverage ?: 9.8).toFloat(), iconSize = 16.dp)
+                TotalRatingIcons(rating = movie.voteAverage.toFloat(), iconSize = 16.dp)
             }
         }
 
@@ -224,7 +259,8 @@ fun MovieHomeCard(movie: Movie?) {
 }
 
 fun getMoviesYearAndGenres(movie: Movie): String {
-    val genresName = movie.genres.take(2).map { it.name }.reduce { l, r -> "$l/ $r" }
-    return movie.releaseDate.subSequence(0, 4).toString() + "." + genresName
+    val genresName = movie.genres.take(2).map { it.name }.reduce { l, r -> "$l / $r" }
+    return movie.releaseDate.subSequence(0, 4).toString() + " . " + genresName
 
 }
+

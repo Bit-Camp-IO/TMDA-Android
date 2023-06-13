@@ -11,8 +11,8 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class MovieDetailsDto(
     @Json(name = "adult") val isAdult: Boolean,
-    @Json(name = "backdrop_path") val backdropPath: String,
-    @Json(name = "belongs_to_collection") val movieCollectionDetailsDto: MovieCollectionDetailsDto,
+    @Json(name = "backdrop_path") val backdropPath: String?,
+    @Json(name = "belongs_to_collection") val movieCollectionDetailsDto: MovieCollectionDetailsDto?,
     @Json(name = "original_language") val originalLanguage: String,
     @Json(name = "original_title") val originalTitle: String,
     @Json(name = "poster_path") val posterPath: String,
@@ -25,7 +25,7 @@ data class MovieDetailsDto(
     val title: String,
     val genres: List<GenreDto>,
     val id: Int,
-    @Json(name = "imdb_id") val imdbId: String,
+    @Json(name = "imdb_id") val imdbId: String?,
     @Json(name = "production_companies") val productionCompanies: List<ProductionCompanyDto>,
     @Json(name = "production_countries") val productionCountries: List<ProductionCountryDto>,
     @Json(name = "spoken_languages") val spokenLanguages: List<SpokenLanguageDto>,

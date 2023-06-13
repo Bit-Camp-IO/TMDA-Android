@@ -7,35 +7,48 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.Dp
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
-import com.example.tmda.R
+import com.example.tmda.presentation.movies.getTmdbImageLink
+import com.example.tmda.ui.theme.WhiteTransparent20
 
-//@Preview(showBackground = false, showSystemUi = false)
 
 @Composable
-fun ImageCard(imageUrl: String?) {
-    val mainShape = remember { mainShape() }
+fun ImageCard(imagePath: String?, title: String,width:Dp,height:Dp) {
+    val mainShape = remember {
+        mainShape()
+    }
     Surface(
         shape = mainShape,
         modifier = Modifier
-            .width(200.dp)
-            .height(270.dp), color = Color.Black
+            .width(width)
+            .height(height  )
     ) {
+
         AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(imageUrl)
-                .crossfade(true)
-                .build(),
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.FillBounds,
-            contentDescription = "Image Card",
-        )
+            model = getTmdbImageLink(imagePath) ,
+            contentDescription = "$title image",
+            modifier = Modifier
+                .graphicsLayer { alpha = 0.99f }
+                .drawWithContent {
+                    val colors = listOf(Color.Black, WhiteTransparent20)
+                    drawContent()
+                    drawRect(
+                        brush = Brush.verticalGradient(colors),
+                        blendMode = BlendMode.DstIn
+                    )
+                }
+                .fillMaxSize(),
+            contentScale = ContentScale.Crop,
+
+            )
+
     }
 }
 

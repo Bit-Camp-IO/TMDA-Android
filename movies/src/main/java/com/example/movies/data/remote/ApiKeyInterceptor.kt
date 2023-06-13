@@ -22,7 +22,6 @@ class ApiKeyInterceptor private constructor(private val apiKey: String, private 
     }
 
     override fun intercept(chain: Interceptor.Chain): Response {
-
         val originalRequest = chain.request()
         val originalUrl = originalRequest.url()
         val modifiedUrl: HttpUrl = originalUrl.newBuilder()

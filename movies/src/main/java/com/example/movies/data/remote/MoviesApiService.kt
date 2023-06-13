@@ -6,9 +6,13 @@ import com.example.movies.data.dto.image.ImageCollectionDto
 import com.example.movies.data.dto.movies.LatestMovieDto
 import com.example.movies.data.dto.movies.MovieDetailsDto
 import com.example.movies.data.dto.movies.MoviesBriefWrapperDto
+import com.example.movies.data.dto.review.ReviewsWrapperDto
 import com.example.movies.data.dto.shared.GenreDto
 import com.example.movies.data.dto.videos.VideoContainerDto
+import okhttp3.RequestBody
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -32,6 +36,9 @@ interface MoviesApiService {
         @Path("movie_id") id: Int,
         @Query("ISO-639-1") languageCode: String? = null
     ): ImageCollectionDto
+
+    @GET("movie/{movie_id}/reviews")
+    suspend fun getMovieReviews(@Path("movie_id") id: Int): ReviewsWrapperDto
 
     @GET("movie/latest")
     suspend fun getLatestMovie(): LatestMovieDto
@@ -70,4 +77,11 @@ interface MoviesApiService {
 
     @GET("genre/movie/list")
     suspend fun getAllMovieGenres(): List<GenreDto>
+
+    @POST("account/{account_id}/watchlist")
+    suspend fun postMovieToWatchList(
+        @Path("account_id") accountId: Int,
+        @Query("session_id") sessionId: String,
+        @Body body: RequestBody
+    )
 }
