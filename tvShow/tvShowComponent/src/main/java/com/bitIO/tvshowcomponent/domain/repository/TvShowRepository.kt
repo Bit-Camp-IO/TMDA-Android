@@ -14,6 +14,7 @@ interface TvShowRepository {
      suspend fun getPopularHomeTvShows(): Flow<List<TvShowDto>>
 
      suspend fun getOnTheAirHomeTvShows(): Flow<List<TvShowDto>>
+     suspend fun getSimilarTvShows(tvShowId: Int): Flow<List<TvShowDto>>
      suspend fun getTvShowDetails(tvShowId: Int) : Flow<TvShowDetailsResponse>
 
      suspend fun getCredits(tvShowId: Int) : Flow<CreditsResponse>

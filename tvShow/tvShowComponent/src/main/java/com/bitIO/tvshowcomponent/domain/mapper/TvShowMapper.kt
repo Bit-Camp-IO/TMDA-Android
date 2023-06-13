@@ -5,7 +5,7 @@ import com.bitIO.tvshowcomponent.domain.entity.TvShow
 import com.bitIO.tvshowcomponent.domain.entity.TvShowGenre
 
 
-internal fun TvShowDto.toHomeDomain(): TvShow {
+internal fun TvShowDto.toDomain(): TvShow {
     return TvShow(
         id = this.id!!,
         adult = this.adult ?: false,
@@ -18,8 +18,7 @@ internal fun TvShowDto.toHomeDomain(): TvShow {
         popularity = this.popularity ?: 0.0,
         posterPath = if (this.posterPath != null) { "https://image.tmdb.org/t/p/w500" + this.posterPath } else null,
         voteAverage = this.voteAverage ?: 0.0,
-        voteCount = this.voteCount ?: 0
-        )
+        voteCount = this.voteCount ?: 0)
 }
 
 internal fun Int?.toGenre() = this?.let { TvShowGenre(it, genres[it]) }

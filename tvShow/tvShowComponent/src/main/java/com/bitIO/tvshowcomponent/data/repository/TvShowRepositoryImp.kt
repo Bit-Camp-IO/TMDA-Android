@@ -40,6 +40,10 @@ class TvShowRepositoryImp @Inject constructor(private val api: TvShowApiService)
     override suspend fun getOnTheAirHomeTvShows(): Flow<List<TvShowDto>> =
         flowOf(api.getOnTheAirTvShows(null).results?.shuffled()?.take(5)!!)
 
+    override suspend fun getSimilarTvShows(tvShowId: Int): Flow<List<TvShowDto>> =
+        flowOf(api.getSimilarTvShows(tvShowId).results?.shuffled()?.take(5)!!)
+
+
     override suspend fun getPopularHomeTvShows(): Flow<List<TvShowDto>> =
         flowOf(api.getPopularTvShows(null).results?.shuffled()?.take(5)!!)
 

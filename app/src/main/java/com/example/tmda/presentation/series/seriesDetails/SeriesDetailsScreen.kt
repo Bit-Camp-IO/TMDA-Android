@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -26,10 +27,12 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,19 +41,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintSet
+import androidx.constraintlayout.compose.Dimension
+import androidx.constraintlayout.compose.MotionLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.bitIO.tvshowcomponent.domain.entity.Cast
 import com.bitIO.tvshowcomponent.domain.entity.TvShowDetails
 import com.example.tmda.R
+import com.example.tmda.presentation.series.seriesHome.TvShowInfo
+import com.example.tmda.presentation.shared.AppToolBar
 import com.example.tmda.presentation.shared.BackGround
-import com.example.tmda.presentation.shared.MotionLayoutAppBar
+import com.example.tmda.presentation.shared.ServicesBox
+import com.example.tmda.ui.theme.BlackTransparent37
 import com.example.tmda.ui.theme.BlackTransparent60
 import com.example.tmda.ui.theme.GoldenYellow
 import com.example.tmda.ui.theme.PineGreen
@@ -63,8 +73,12 @@ fun SeriesDetailsScreen(
     modifier: Modifier = Modifier,
     viewModel: SeriesDetailsViewModel = hiltViewModel()
 ) {
-    viewModel.getTvShowDetails(tvShowId)
-    viewModel.getTvShowCast(tvShowId)
+    LaunchedEffect(key1 = tvShowId) {
+        viewModel.getTvShowDetails(tvShowId)
+        viewModel.getTvShowCast(tvShowId)
+        viewModel.getSimilarTvShows(tvShowId)
+
+    }
     val detailsUiState by viewModel.detailsUiState.collectAsState()
     SeriesDetailsScreen(detailsUiState, modifier)
 }
@@ -74,22 +88,24 @@ fun SeriesDetailsScreen(
 fun SeriesDetailsScreen(detailsUiState: DetailsUiState, modifier: Modifier) {
     val scrollState = rememberLazyListState()
     val progress = calculateProgress(scrollState)
-    Box {
+    Box(modifier = modifier) {
         BackGround()
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.Transparent), state = scrollState
         ) {
-            stickyHeader { MotionLayoutAppBar(progress = progress.value,
-                imageUrl = detailsUiState.tvShowDetails.imageURL,
-                voteCount = detailsUiState.tvShowDetails.voteCount,
-                voteAvg = detailsUiState.tvShowDetails.voteAverage) }
+            stickyHeader {
+                MotionLayoutAppBar(
+                    progress = progress.value,
+                    imageUrl = detailsUiState.tvShowDetails.imageURL,
+                    voteCount = detailsUiState.tvShowDetails.voteCount,
+                    voteAvg = detailsUiState.tvShowDetails.voteAverage
+                )
+            }
             item { PreviewSection(detailsUiState.tvShowDetails) }
             item { CastsRow(items = detailsUiState.cast) {} }
-            item { SimilarShowsRow {} }
-            item { SimilarShowsRow {} }
-            item { SimilarShowsRow {} }
+            item { SimilarShowsRow(items = detailsUiState.similarTvShows) {} }
         }
 
     }
@@ -161,8 +177,7 @@ fun DetailsColumn(title: String, content: String) {
 }
 
 @Composable
-fun CastsRow(title: String = "Casts", items: List<Cast>, onSeeAllClicked: () -> Unit) {
-
+fun CastsRow(items: List<Cast>, onSeeAllClicked: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -177,7 +192,7 @@ fun CastsRow(title: String = "Casts", items: List<Cast>, onSeeAllClicked: () -> 
                     .width(5.dp), thickness = 1.dp, color = PineGreen
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(text = title, style = MaterialTheme.typography.titleMedium)
+            Text(text = "Casts", style = MaterialTheme.typography.titleMedium)
         }
         TextButton(onClick = { /*TODO*/ }, contentPadding = PaddingValues(0.dp)) {
             Text(
@@ -212,10 +227,11 @@ fun ActorCard(cast: Cast) {
             .clip(RoundedCornerShape(10.dp)),
         contentAlignment = Alignment.BottomCenter
     ) {
-        AsyncImage(model = ImageRequest.Builder(LocalContext.current)
-            .data(cast.photo)
-            .crossfade(true)
-            .build(),
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(cast.photo)
+                .crossfade(true)
+                .build(),
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.FillBounds,
             contentDescription = "actor image"
@@ -236,7 +252,7 @@ fun ActorCard(cast: Cast) {
 }
 
 @Composable
-fun SimilarShowsRow(title: String = "", onSeeAllClicked: () -> Unit) {
+fun SimilarShowsRow(items: List<TvShowInfo>, onSeeAllClicked: () -> Unit) {
 
     Row(
         modifier = Modifier
@@ -252,7 +268,7 @@ fun SimilarShowsRow(title: String = "", onSeeAllClicked: () -> Unit) {
                     .width(5.dp), thickness = 1.dp, color = PineGreen
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text(text = title, style = MaterialTheme.typography.titleMedium)
+            Text(text = "More like this", style = MaterialTheme.typography.titleMedium)
         }
         TextButton(onClick = { /*TODO*/ }, contentPadding = PaddingValues(0.dp)) {
             Text(
@@ -265,9 +281,9 @@ fun SimilarShowsRow(title: String = "", onSeeAllClicked: () -> Unit) {
     }
 
     LazyRow {
-        /*   items(items.) {
-               SimilarMovieCard()
-           }*/
+        items(items) {
+            SimilarShowCard(it)
+        }
     }
     Divider(
         modifier = Modifier
@@ -277,7 +293,7 @@ fun SimilarShowsRow(title: String = "", onSeeAllClicked: () -> Unit) {
 }
 
 @Composable
-fun SimilarShowCard() {
+fun SimilarShowCard(tvShowInfo: TvShowInfo) {
     Box(
         modifier = Modifier
             .padding(horizontal = 8.dp)
@@ -286,11 +302,14 @@ fun SimilarShowCard() {
             .clip(RoundedCornerShape(10.dp)),
         contentAlignment = Alignment.BottomCenter
     ) {
-        Image(
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(tvShowInfo.tvShow?.posterPath ?: tvShowInfo.tvShow?.backdropPath)
+                .crossfade(true)
+                .build(),
             modifier = Modifier.fillMaxSize(),
-            painter = painterResource(id = R.drawable.movie_image),
             contentScale = ContentScale.FillBounds,
-            contentDescription = "actor image"
+            contentDescription = "similar show image"
         )
         Column(
             modifier = Modifier
@@ -305,12 +324,251 @@ fun SimilarShowCard() {
                     tint = GoldenYellow,
                     contentDescription = null
                 )
-                Text(text = "6.8")
+                Text(text = "${tvShowInfo.tvShow?.voteAverage}")
             }
-            Text(text = "movieName", fontSize = 10.sp)
-            Text(text = "movieName", fontSize = 8.sp, color = WhiteTransparent60)
+            Text(text = "${tvShowInfo.tvShow?.name}", fontSize = 10.sp)
+            Text(
+                text = "${tvShowInfo.tvShow?.releaseDate?.take(4)}  S${tvShowInfo.tvShowDetails?.lastSeason?.toString()}  ${tvShowInfo.tvShowDetails?.lastEpisode?.toString()} episodes",
+                fontSize = 8.sp, color = WhiteTransparent60
+            )
 
         }
     }
 
+}
+
+
+@Composable
+fun UserReviews(items: List<Cast>, onSeeAllClicked: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row {
+            Divider(
+                modifier = Modifier
+                    .height(20.dp)
+                    .width(5.dp), thickness = 1.dp, color = PineGreen
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = "User reviews", style = MaterialTheme.typography.titleMedium)
+        }
+        TextButton(onClick = { /*TODO*/ }, contentPadding = PaddingValues(0.dp)) {
+            Text(
+                text = "See All",
+                color = PineGreen,
+                style = MaterialTheme.typography.titleSmall
+            )
+
+        }
+    }
+
+    LazyRow {
+
+        items(items) {
+            ActorCard(it)
+        }
+
+    }
+    Divider(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp, horizontal = 32.dp)
+    )
+}
+
+
+@SuppressLint("ModifierParameter")
+@Composable
+fun MotionLayoutAppBar(
+    modifier: Modifier = Modifier.background(Color.Transparent),
+    imageUrl: String,
+    voteCount: Int,
+    voteAvg: Double,
+    progress: Float
+) {
+    MotionLayout(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(Color.Transparent),
+        start = startConstraintSet(),
+        end = endConstraintSet(),
+        progress = progress
+    ) {
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(imageUrl)
+                .crossfade(true)
+                .build(),
+            modifier = Modifier
+                .layoutId(MotionLayoutAppBarItem.Image)
+                .background(Color.Transparent)
+                .clip(
+                    RoundedCornerShape(
+                        bottomEnd = 120.dp,
+                        bottomStart = 120.dp
+                    )
+                ),
+            contentScale = ContentScale.FillBounds,
+            contentDescription = null
+        )
+
+        AppToolBar(modifier = Modifier.layoutId(MotionLayoutAppBarItem.MainAppBar)) {
+            IconButton(
+                modifier = Modifier
+                    .background(color = BlackTransparent37, shape = RoundedCornerShape(8.dp))
+                    .size(40.dp, 40.dp),
+                onClick = { }, content = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_more),
+                        contentDescription = "",
+                        tint = WhiteTransparent60
+                    )
+                })
+        }
+        ServicesBox(
+            modifier = Modifier.layoutId(MotionLayoutAppBarItem.ServicesBox),
+            voteAvg,
+            voteCount
+        )
+
+
+    }
+}
+
+@Composable
+fun ServicesBox(modifier: Modifier, voteAvg: Double, voteCount: Int) {
+    val sharedModifier = Modifier
+        .background(Color.Transparent)
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(Color.Transparent)
+            .padding(horizontal = 24.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Column(
+            modifier = sharedModifier,
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(20.dp))
+            Icon(
+                painter = painterResource(id = R.drawable.ic_star),
+                contentDescription = "rateIcon",
+                tint = GoldenYellow,
+                modifier = Modifier.size(30.dp)
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(text = "$voteAvg/10")
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(text = "$voteCount")
+        }
+        Column(
+            modifier = sharedModifier,
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            TextButton(onClick = { /*TODO*/ }) {
+
+                Image(
+                    modifier = Modifier.size(60.dp),
+                    painter = painterResource(id = R.drawable.play_button),
+                    contentDescription = "play trailer"
+                )
+
+            }
+
+        }
+        Column(
+            modifier = sharedModifier,
+            verticalArrangement = Arrangement.Top,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Spacer(modifier = Modifier.height(20.dp))
+            Icon(
+                painterResource(id = R.drawable.ic_bookmark),
+                contentDescription = null,
+                tint = PineGreen,
+                modifier = Modifier.size(30.dp)
+            )
+            Text(text = "Add")
+
+        }
+
+    }
+
+}
+
+private fun startConstraintSet() = ConstraintSet {
+    val mainAppBar = createRefFor(MotionLayoutAppBarItem.MainAppBar)
+    val image = createRefFor(MotionLayoutAppBarItem.Image)
+    val servicesBox = createRefFor(MotionLayoutAppBarItem.ServicesBox)
+
+    constrain(mainAppBar) {
+        top.linkTo(parent.top, 40.dp)
+        start.linkTo(parent.start, 16.dp)
+        end.linkTo(parent.end, 16.dp)
+    }
+
+    constrain(image) {
+        this.width = Dimension.fillToConstraints
+        this.height = Dimension.value(360.dp)
+        top.linkTo(parent.top, 0.dp)
+        start.linkTo(parent.start)
+        end.linkTo(parent.end)
+
+    }
+
+    constrain(servicesBox) {
+
+        width = Dimension.matchParent
+        height = Dimension.wrapContent
+        top.linkTo(parent.top, 320.dp)
+        start.linkTo(parent.start)
+        end.linkTo(parent.end)
+
+    }
+}
+
+private fun endConstraintSet() = ConstraintSet {
+    val mainAppBar = createRefFor(MotionLayoutAppBarItem.MainAppBar)
+    val image = createRefFor(MotionLayoutAppBarItem.Image)
+    val servicesBox = createRefFor(MotionLayoutAppBarItem.ServicesBox)
+
+    constrain(mainAppBar) {
+        width = Dimension.fillToConstraints
+        top.linkTo(parent.top, 24.dp)
+        start.linkTo(parent.start, 24.dp)
+        end.linkTo(parent.end, 24.dp)
+
+    }
+    constrain(image) {
+        alpha = 0f
+        height = Dimension.value(0.dp)
+        width = Dimension.fillToConstraints
+        top.linkTo(parent.top, 0.dp)
+        start.linkTo(parent.start)
+        end.linkTo(parent.end)
+
+    }
+    constrain(servicesBox) {
+        alpha = 0f
+        height = Dimension.value(0.dp)
+
+
+        top.linkTo(parent.top)
+        start.linkTo(parent.start)
+        end.linkTo(parent.end)
+
+    }
+}
+
+private enum class MotionLayoutAppBarItem {
+    MainAppBar,
+    Image,
+    ServicesBox;
 }
