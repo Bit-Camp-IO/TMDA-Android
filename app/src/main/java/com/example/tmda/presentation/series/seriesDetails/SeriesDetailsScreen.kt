@@ -59,7 +59,6 @@ import com.example.tmda.R
 import com.example.tmda.presentation.series.seriesHome.TvShowInfo
 import com.example.tmda.presentation.shared.AppToolBar
 import com.example.tmda.presentation.shared.BackGround
-import com.example.tmda.presentation.shared.ServicesBox
 import com.example.tmda.ui.theme.BlackTransparent37
 import com.example.tmda.ui.theme.BlackTransparent60
 import com.example.tmda.ui.theme.GoldenYellow
