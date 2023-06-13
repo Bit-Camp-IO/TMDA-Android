@@ -32,6 +32,7 @@ import com.example.tmda.presentation.shared.ImageCard
 import com.example.tmda.presentation.shared.LoadingScreen
 import com.example.tmda.presentation.shared.NoDataComponent
 import com.example.tmda.presentation.shared.UiState
+import com.example.tmda.presentation.shared.imageCardModifier
 import com.example.tmda.presentation.shared.mainShape
 import com.example.tmda.ui.theme.GoldenYellow
 import com.example.tmda.ui.theme.PineGreenDark
@@ -110,8 +111,7 @@ fun SimilarMovieCard(movie: Movie, onCardItemClicked: (Int) -> Unit) {
         ImageCard(
             imagePath = getTmdbImageLink(movie.backdropPath ?: movie.posterPath),
             title = movie.title,
-            width = 140.dp,
-            height = 180.dp
+          modifier = similarMovieCardModifier
         )
         Column(
             modifier = Modifier
@@ -140,3 +140,4 @@ fun SimilarMovieCard(movie: Movie, onCardItemClicked: (Int) -> Unit) {
     }
 
 }
+val similarMovieCardModifier =Modifier.imageCardModifier(140.dp,180.dp)

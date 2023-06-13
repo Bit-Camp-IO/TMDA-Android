@@ -17,7 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.movies.domain.enities.movie.Movie
 import com.example.tmda.presentation.movies.moviesList.MovieUiDto
 import com.example.tmda.ui.theme.PineGreenDark
 
@@ -68,7 +67,7 @@ fun ItemsLazyRowComponent(
                 item { Spacer(modifier = Modifier.width(16.dp)) }
                 items(movies.size,
                     key = { movies[it].id },
-                    contentType = { Movie::class }
+                    contentType = { MovieUiDto::class }
 
                 ) { contentCard(movies[it]) }
                 item { Spacer(modifier = Modifier.width(16.dp)) }
@@ -79,6 +78,7 @@ fun ItemsLazyRowComponent(
                     .padding(vertical = 16.dp, horizontal = 32.dp)
             ) else Spacer(modifier = Modifier.height(16.dp))
         }
+
     }
 
 }
