@@ -1,17 +1,19 @@
 package com.bitIO.tvshowcomponent.data.remote.response
 
 
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@Serializable
+@JsonClass(generateAdapter = true)
 data class Network(
-    @SerialName("id")
+    @Json(name = "id")
     val id: Int?,
-    @SerialName("logo_path")
+    @Json(name = "logo_path")
     val logoPath: String?,
-    @SerialName("name")
+    @Json(name = "name")
     val name: String?,
-    @SerialName("origin_country")
+    @Json(name = "origin_country")
     val originCountry: String?
 )

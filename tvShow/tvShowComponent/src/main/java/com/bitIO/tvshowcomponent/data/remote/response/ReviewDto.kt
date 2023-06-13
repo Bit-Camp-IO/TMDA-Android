@@ -1,23 +1,25 @@
 package com.bitIO.tvshowcomponent.data.remote.response
 
 
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@Serializable
+@JsonClass(generateAdapter = true)
 data class ReviewDto(
-    @SerialName("author")
+    @Json(name = "author")
     val author: String?,
-    @SerialName("author_details")
+    @Json(name = "author_details")
     val authorDetails: AuthorDetails?,
-    @SerialName("content")
+    @Json(name = "content")
     val content: String?,
-    @SerialName("created_at")
+    @Json(name = "created_at")
     val createdAt: String?,
-    @SerialName("id")
+    @Json(name = "id")
     val id: String?,
-    @SerialName("updated_at")
+    @Json(name = "updated_at")
     val updatedAt: String?,
-    @SerialName("url")
+    @Json(name = "url")
     val url: String?
 )
