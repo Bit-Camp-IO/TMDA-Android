@@ -11,6 +11,9 @@ import com.example.tmda.presentation.movies.movieDetails.MovieDetailsScreen
 import com.example.tmda.presentation.movies.moviesHome.MoviesHomeScreen
 import com.example.tmda.presentation.movies.moviesList.MoviesListScreen
 import com.example.tmda.presentation.movies.moviesList.ScreenType
+import com.example.tmda.presentation.series.seriesDetails.SeriesDetailsScreen
+import com.example.tmda.presentation.series.seriesHome.SeriesHomeScreen
+import com.example.tmda.presentation.series.seriesList.SeriesListScreen
 
 
 @Composable
@@ -58,14 +61,27 @@ fun NavigationHost(navController: NavHostController) {
             startDestination = Destinations.SERIES_HOME_SCREEN
         ) {
             composable(Destinations.SERIES_HOME_SCREEN) {
-                MoviesListScreen(
-                    it.arguments!!.getString(MOVIE_LIST_SCREEN_TITLE)!!,
-                    navController,
-                    it.savedStateHandle
-                )
+                SeriesHomeScreen(onSeeAllClick = {
+                    navController.navigateToShowsListScreen(it)
+                }, onTvShowClick = {
+                    navController.navigateToTvShowDetailsScreen(it)
+                })
             }
-            composable(Destinations.SERIES_DETAILS_SCREEN) {}
-            composable(Destinations.SERIES_LIST_SCREEN) {}
+            composable(
+                TvShowsList.routeWithArgs,
+                arguments = TvShowsList.arguments
+            ) {
+                val id = it.arguments?.getInt(TvShowsList.tvShowTypeArg)!!
+                SeriesListScreen(id)
+            }
+            composable(
+                TvShowDetails.routeWithArgs,
+                arguments = TvShowDetails.arguments
+            ) {
+                val id = it.arguments?.getInt(TvShowDetails.tvShowIdArg)!!
+                SeriesDetailsScreen(id)
+            }
+
         }
         navigation(
             route = Destinations.SEARCH_ROUTE,

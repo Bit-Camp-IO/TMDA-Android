@@ -3,6 +3,7 @@ package com.example.tmda.di
 import android.app.Application
 import androidx.room.Room
 import com.bitIO.tvshowcomponent.data.local.abstractions.TvShowDao
+import com.bitIO.tvshowcomponent.data.remote.TvShowApiService
 import com.example.authentication.data.local.UserDao
 import com.example.authentication.data.remote.UserApiServices
 import com.example.movies.data.local.MoviesDao
@@ -66,11 +67,11 @@ object AppModule {
     }
 
 
-//    @Provides
-//    @Singleton
-//    fun provideTvShowApiService(): TvShowApiService {
-//        return TmdaRemoteDataSource.tmdaService
-//    }
+    @Provides
+    @Singleton
+    fun provideTvShowApiService(): TvShowApiService {
+        return TmdaRemoteDataSource.tmdbService
+    }
 
 //    @Provides
 //    @Singleton

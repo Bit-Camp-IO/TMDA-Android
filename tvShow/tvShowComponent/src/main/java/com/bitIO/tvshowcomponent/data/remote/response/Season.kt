@@ -1,23 +1,25 @@
 package com.bitIO.tvshowcomponent.data.remote.response
 
 
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@Serializable
+@JsonClass(generateAdapter = true)
 data class Season(
-    @SerialName("air_date")
+    @Json(name = "air_date")
     val airDate: String?,
-    @SerialName("episode_count")
+    @Json(name = "episode_count")
     val episodeCount: Int?,
-    @SerialName("id")
+    @Json(name = "id")
     val id: Int?,
-    @SerialName("name")
+    @Json(name = "name")
     val name: String?,
-    @SerialName("overview")
+    @Json(name = "overview")
     val overview: String?,
-    @SerialName("poster_path")
+    @Json(name = "poster_path")
     val posterPath: Any?,
-    @SerialName("season_number")
+    @Json(name = "season_number")
     val seasonNumber: Int?
 )

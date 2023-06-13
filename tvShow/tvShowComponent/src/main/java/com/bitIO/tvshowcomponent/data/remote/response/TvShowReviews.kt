@@ -1,19 +1,19 @@
 package com.bitIO.tvshowcomponent.data.remote.response
 
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
-@Serializable
+@JsonClass(generateAdapter = true)
 data class TvShowReviews(
-    @SerialName("id")
+    @Json(name = "id")
     val id: Int?,
-    @SerialName("page")
+    @Json(name = "page")
     val page: Int?,
-    @SerialName("results")
+    @Json(name = "results")
     val results: List<ReviewDto>?,
-    @SerialName("total_pages")
+    @Json(name = "total_pages")
     val totalPages: Int?,
-    @SerialName("total_results")
+    @Json(name = "total_results")
     val totalResults: Int?
 )

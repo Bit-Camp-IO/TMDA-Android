@@ -1,15 +1,17 @@
 package com.bitIO.tvshowcomponent.data.remote.response
 
 
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-@Serializable
+@JsonClass(generateAdapter = true)
 data class SpokenLanguage(
-    @SerialName("english_name")
+    @Json(name = "english_name")
     val englishName: String?,
-    @SerialName("iso_639_1")
+    @Json(name = "iso_639_1")
     val iso6391: String?,
-    @SerialName("name")
+    @Json(name = "name")
     val name: String?
 )
