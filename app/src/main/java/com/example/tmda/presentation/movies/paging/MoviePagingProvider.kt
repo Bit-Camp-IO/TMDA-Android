@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 
-class MoviePageProvider(
+class MoviePagingProvider(
     private val coroutineScope: CoroutineScope,
     private val moviePageProvider: suspend (String, Int) -> MoviesPage,
 ) {
@@ -43,7 +43,7 @@ class MoviePageProvider(
                 page = moviePage.page,
                 results = moviePage.results,
                 totalPages = moviePage.totalPages,
-                totalResults = moviePage.totalResults
+                isError = false
             )
 
         }.await()

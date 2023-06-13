@@ -44,7 +44,7 @@ fun MovieCard(
     movie: MovieUiDto,
     hasBookMarkIcon: Boolean,
     onCardClicked: (Int) -> Unit,
-    onSaveItemClicked: suspend (Int, Boolean) -> Unit
+    onSaveItemClicked: suspend (Int, Boolean) -> Boolean
 ) {
 
     var isSavedState by remember { movie.isSaved }
@@ -90,10 +90,10 @@ fun MovieCard(
                             .size(24.dp)
                             .clickable {
                                 coroutineScope.launch {
-                                    onSaveItemClicked(movie.id, movie.isSaved.value)
+                                  if ( onSaveItemClicked(movie.id, movie.isSaved.value)){
                                     movie.isSaved.value = !movie.isSaved.value
                                     isSavedState = movie.isSaved.value
-                                }
+                                }}
                             },
                         isSavedState = isSavedState.toSuccessState()
                     )

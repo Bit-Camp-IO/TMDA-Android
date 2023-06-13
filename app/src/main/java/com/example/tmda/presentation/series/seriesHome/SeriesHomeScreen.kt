@@ -1,5 +1,6 @@
 package com.example.tmda.presentation.series.seriesHome
 
+//import com.example.tmda.presentation.shared.ItemsLazyRowComponent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -7,6 +8,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,20 +18,24 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -42,14 +48,18 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.tmda.R
 import com.example.tmda.presentation.shared.ImageCard
-import com.example.tmda.presentation.shared.ItemsLazyRowComponent
+import com.example.tmda.presentation.shared.imageCardModifier
+import com.example.tmda.presentation.shared.mainShape
+import com.example.tmda.ui.theme.PineGreenDark
 import com.example.tmda.ui.theme.WhiteTransparent60
 import kotlin.math.ceil
 import kotlin.math.floor
 
 @Composable
-fun SeriesHomeScreen(viewModel: SeriesHomeViewModel = hiltViewModel(), onSeeAllClick: (Int) -> Unit,
-                     onTvShowClick: (Int) -> Unit) {
+fun SeriesHomeScreen(
+    viewModel: SeriesHomeViewModel = hiltViewModel(), onSeeAllClick: (Int) -> Unit,
+    onTvShowClick: (Int) -> Unit
+) {
     val seriesUiState by viewModel.seriesUiState.collectAsState()
 
     SeriesHomeScreen(seriesUiState, onSeeAllClick = {
@@ -283,8 +293,16 @@ fun SeriesHomeCard(tvShowInfo: TvShowInfo, onTvShowClick: (Int) -> Unit) {
                 tvShowInfo.tvShowDetails?.lastSeason?.let { "\nS$it  " } +
                 tvShowInfo.tvShowDetails?.lastEpisode?.let { "$it Episodes" }
     Box(contentAlignment = Alignment.BottomCenter,
-        modifier = Modifier.clickable(MutableInteractionSource(), null) { onTvShowClick(tvShowInfo.tvShow?.id!!) }) {
-        ImageCard(tvShowInfo.tvShow?.backdropPath ?: tvShowInfo.tvShow?.posterPath,"",200.dp,200.dp)
+        modifier = Modifier.clickable(
+            MutableInteractionSource(),
+            null
+        ) { onTvShowClick(tvShowInfo.tvShow?.id!!) }) {
+        ImageCard(
+            tvShowInfo.tvShow?.backdropPath ?: tvShowInfo.tvShow?.posterPath,
+            "",
+            HomeCardModifier
+
+        )
         Column(verticalArrangement = Arrangement.Center) {
             Text(
                 text = tvShowInfo.tvShow?.name!!,
@@ -309,3 +327,54 @@ fun SeriesHomeCard(tvShowInfo: TvShowInfo, onTvShowClick: (Int) -> Unit) {
         }
     }
 }
+
+@Composable
+fun <T> ItemsLazyRowComponent(
+    title: String = "More like this",
+    hasBottomDivider: Boolean = true,
+    onSeeAllClicked: () -> Unit,
+    items: List<T>,
+    contentCard: @Composable (T) -> Unit
+) {
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row {
+            Divider(
+                modifier = Modifier
+                    .height(20.dp)
+                    .width(5.dp), thickness = 1.dp, color = PineGreenDark
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(text = title, style = MaterialTheme.typography.titleMedium)
+        }
+        TextButton(onClick = onSeeAllClicked, contentPadding = PaddingValues(0.dp)) {
+            Text(
+                text = "See All",
+                color = PineGreenDark,
+                style = MaterialTheme.typography.titleSmall
+            )
+
+        }
+    }
+
+    LazyRow {
+        item { Spacer(modifier = Modifier.width(16.dp)) }
+        items(items.size) { contentCard(items[it]) }
+        item { Spacer(modifier = Modifier.width(16.dp)) }
+    }
+    if (hasBottomDivider) Divider(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp, horizontal = 32.dp)
+    ) else Spacer(modifier = Modifier.height(16.dp))
+}
+val HomeCardModifier= Modifier
+    .size(200.dp, 270.dp)
+    .clip(mainShape)
+val imageCardModifier = Modifier.imageCardModifier(200.dp, 270.dp)

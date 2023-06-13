@@ -27,7 +27,6 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -94,9 +93,6 @@ fun DetailsScreenLoaded(
     navController: NavController
 ) {
     val scrollState = rememberLazyListState()
-    val motionLayoutState = remember {
-        mutableFloatStateOf(0f)
-    }
     val progress =  calculateProgress( scrollState)
     Box {
         LazyColumn(
@@ -106,7 +102,6 @@ fun DetailsScreenLoaded(
         ) {
 
             stickyHeader {
-
                 MotionLayoutAppBar(
                     progress = progress.value,
                     movieDetailsState = stateHolder.movieDetails.value,

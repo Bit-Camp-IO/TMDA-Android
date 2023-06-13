@@ -5,13 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.authentication.domain.entities.User
 import com.example.authentication.domain.interactors.GetCurrentUserUseCase
-import com.example.movies.domain.interactors.AddMovieToWatchListUseCase
-import com.example.movies.domain.interactors.GetMovieCreditsUseCase
-import com.example.movies.domain.interactors.GetMovieDetailsInteractor
-import com.example.movies.domain.interactors.GetMovieReviewsUseCase
-import com.example.movies.domain.interactors.GetMovieSavedStateUseCase
-import com.example.movies.domain.interactors.GetMovieVideosUseCase
-import com.example.movies.domain.interactors.GetMoviesWithTypeInteractor
+import com.example.movies.domain.useCases.AddMovieToWatchListUseCase
+import com.example.movies.domain.useCases.GetMovieCreditsUseCase
+import com.example.movies.domain.useCases.GetMovieDetailsInteractor
+import com.example.movies.domain.useCases.GetMovieReviewsUseCase
+import com.example.movies.domain.useCases.GetMovieSavedStateUseCase
+import com.example.movies.domain.useCases.GetMovieVideosUseCase
+import com.example.movies.domain.useCases.MovieUseCaseFactory
 import com.example.tmda.presentation.navigation.MOVIE_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -21,7 +21,7 @@ import javax.inject.Inject
 class DetailsViewModel @Inject constructor(
     private val detailsUseCase: GetMovieDetailsInteractor,
     private val creditsUseCase: GetMovieCreditsUseCase,
-    private val movieUseCase: GetMoviesWithTypeInteractor,
+    private val movieUseCase: MovieUseCaseFactory,
     private val reviewsUseCase: GetMovieReviewsUseCase,
     private val videosUseCase: GetMovieVideosUseCase,
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
@@ -50,17 +50,17 @@ class DetailsViewModel @Inject constructor(
         isMovieSavedProvider = ::isMovieSavedProvider,
         movieVideosProvider = videosUseCase::invoke,
         movieCreditsProvider = creditsUseCase::invoke,
-        similarMoviesProvider = invokeGetMovieUseCase(GetMoviesWithTypeInteractor.MovieTypeWithId.Similar)::invoke,
-        recommendedMoviesProvider = invokeGetMovieUseCase(useCaseType = GetMoviesWithTypeInteractor.MovieTypeWithId.Recommended)::invoke,
+        similarMoviesProvider = invokeGetMovieUseCase(MovieUseCaseFactory.MovieTypeWithId.Similar)::invoke,
+        recommendedMoviesProvider = invokeGetMovieUseCase(useCaseType = MovieUseCaseFactory.MovieTypeWithId.Recommended)::invoke,
         reviewsProvider = reviewsUseCase::invoke,
         changeSavedStateProvider = ::addOrRemoveToSaveListProvider
     )
 
-    private fun invokeGetMovieUseCase(useCaseType: GetMoviesWithTypeInteractor.MovieTypeWithId):
-            GetMoviesWithTypeInteractor.MovieUseCaseWithId =
+    private fun invokeGetMovieUseCase(useCaseType: MovieUseCaseFactory.MovieTypeWithId):
+            MovieUseCaseFactory.MovieUseCaseWithId =
         movieUseCase.invoke(useCaseType, movieId)
 
-    private suspend fun isMovieSavedProvider(movieId: Int): Boolean {
+    private suspend fun isMovieSavedProvider(movieId: Int):Result< Boolean> {
         return getMovieSavedStateUseCase.invoke(movieId, user.sessionId)
     }
 

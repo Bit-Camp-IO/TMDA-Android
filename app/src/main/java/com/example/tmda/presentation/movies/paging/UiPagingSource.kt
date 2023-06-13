@@ -19,8 +19,10 @@ class UiPagingSource<T : Any>(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, T> {
         return try {
+
             val pageIndex = params.key ?: 1
             val response = responseGetter(pageIndex)
+            if (response.isError)return LoadResult.Error(Throwable())
             val page = response.results
             val nextKey = if (response.totalPages <= pageIndex) null else response.page + 1
             val prevKey = if (pageIndex <= 1) null else response.page - 1

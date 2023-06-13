@@ -20,14 +20,14 @@ import kotlinx.coroutines.launch
 class DetailsScreenStateHolder(
     val movieId: Int,
     private val coroutineScope: CoroutineScope,
-    private val movieDetailsProvider: suspend (Int) -> MovieDetails,
-    private val isMovieSavedProvider: suspend (Int) -> Boolean,
-    private val movieVideosProvider: suspend (Int) -> List<Video>,
-    private val movieCreditsProvider: suspend (Int) -> Credits,
+    private val movieDetailsProvider: suspend (Int) -> Result<MovieDetails>,
+    private val isMovieSavedProvider: suspend (Int) -> Result<Boolean>,
+    private val movieVideosProvider: suspend (Int) -> Result<List<Video>>,
+    private val movieCreditsProvider: suspend (Int) ->Result<Credits>,
     private val similarMoviesProvider: suspend (Int) -> Result<MoviesPage>,
     private val recommendedMoviesProvider: suspend (Int) -> Result<MoviesPage>,
-    private val reviewsProvider: suspend (Int) -> List<Review>,
-    private val changeSavedStateProvider: suspend (Int, Boolean) -> Unit
+    private val reviewsProvider: suspend (Int) -> Result<List<Review>>,
+    private val changeSavedStateProvider: suspend (Int, Boolean) -> Result<Unit>
 ) {
     //
     private val _movieDetails: MutableState<UiState<MovieDetails>> =
@@ -82,22 +82,22 @@ class DetailsScreenStateHolder(
 
     private fun updateDetails() =
         coroutineScope.launch(Dispatchers.IO) {
-            _movieDetails.value = movieDetailsProvider(movieId).toSuccessState()
+            _movieDetails.value = movieDetailsProvider(movieId).toUiState()
         }
 
     private fun updateVideos() =
         coroutineScope.launch(Dispatchers.IO) {
-            _movieVideos.value = movieVideosProvider(movieId).toSuccessState()
+            _movieVideos.value = movieVideosProvider(movieId).toUiState()
         }
 
     fun updateIsSaved() =
         coroutineScope.launch(Dispatchers.IO) {
-            _isSaved.value = isMovieSavedProvider(movieId).toSuccessState()
+            _isSaved.value = isMovieSavedProvider(movieId).toUiState()
         }
 
     private fun updateCredits() {
         coroutineScope.launch(Dispatchers.IO) {
-            _movieCredits.value = movieCreditsProvider(movieId).toSuccessState()
+            _movieCredits.value = movieCreditsProvider(movieId).toUiState()
         }
     }
 
@@ -117,7 +117,7 @@ class DetailsScreenStateHolder(
 
     private fun updateReviews() {
         coroutineScope.launch(Dispatchers.IO) {
-            _reviews.value = reviewsProvider(movieId).toSuccessState()
+            _reviews.value = reviewsProvider(movieId).toUiState()
         }
     }
 
@@ -131,8 +131,6 @@ class DetailsScreenStateHolder(
                     _isSaved.value = (!isSaved.data).toSuccessState()
                 }
             }
-
-
         }
     }
 

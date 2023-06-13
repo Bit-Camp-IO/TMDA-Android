@@ -1,11 +1,11 @@
-package com.example.movies.domain.interactors
+package com.example.movies.domain.useCases
 
 import com.example.movies.domain.enities.movie.MoviesPage
 import com.example.movies.domain.repositories.MoviesRepository
 import javax.inject.Inject
 
 
-class GetMoviesWithTypeInteractor @Inject constructor(
+class MovieUseCaseFactory @Inject constructor(
     private val repo: MoviesRepository
 ) {
 

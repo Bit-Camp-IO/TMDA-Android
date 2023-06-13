@@ -12,6 +12,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.Alignment
@@ -23,7 +27,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -31,25 +34,22 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.tmda.presentation.movies.MovieCard
 import com.example.tmda.presentation.navigation.navigateToMovieDetails
 import com.example.tmda.presentation.shared.AppToolBar
+import com.example.tmda.presentation.shared.ErrorScreen
 import com.example.tmda.presentation.shared.LoadingScreen
+import com.example.tmda.ui.theme.PineGreenMedium
 
 
 @Composable
 fun MoviesListScreen(
     title: String,
     navController: NavController,
-    savedStateHandle: SavedStateHandle,
     lifecycleOwner: LifecycleOwner = LocalLifecycleOwner.current,
 ) {
-
     val viewModel = hiltViewModel<MoviesListViewModel>()
     val movies: LazyPagingItems<MovieUiDto> =
         viewModel.getPagesStream().collectAsLazyPagingItems()
     val lazyListState = rememberLazyListState()
-
-
     DisposableEffect(lifecycleOwner) {
-
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
                 val priorityStart = lazyListState.firstVisibleItemIndex
@@ -60,7 +60,6 @@ fun MoviesListScreen(
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
-
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
 
     }
@@ -69,7 +68,8 @@ fun MoviesListScreen(
         contentAlignment = Alignment.TopStart
     ) {
         when (movies.loadState.refresh) {
-            is LoadState.Error -> {}
+            is LoadState.Error -> ErrorScreen { movies.retry() }
+
             is LoadState.Loading -> LoadingScreen()
             else -> {
                 MovieList(
@@ -90,12 +90,11 @@ fun MoviesListScreen(
 
 @Composable
 fun MovieList(
-
     navController: NavController,
-    listState: LazyListState= rememberLazyListState(),
+    listState: LazyListState = rememberLazyListState(),
     movies: LazyPagingItems<MovieUiDto>,
     hasBookMark: Boolean,
-    addOrRemoveMovieToSavedList: (Int, Boolean) -> Unit= { _, _ -> }
+    addOrRemoveMovieToSavedList:suspend (Int, Boolean) -> Boolean = { _, _ -> false}
 
 ) {
     LazyColumn(
@@ -105,7 +104,7 @@ fun MovieList(
         state = listState
     ) {
 
-        item { Spacer(modifier = Modifier.height(64.dp)) }
+        item { Spacer(modifier = Modifier.height(80.dp)) }
         items(
             count = movies.itemSnapshotList.size,
             contentType = { MovieUiDto::class },
@@ -121,9 +120,9 @@ fun MovieList(
             )
         }
 
-        when (val state = movies.loadState.append) {
+        when (movies.loadState.append) {
             is LoadState.Error -> {
-
+                item { ErrorComponent {movies.retry()} }
             }
 
             is LoadState.Loading -> {
@@ -135,20 +134,24 @@ fun MovieList(
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center,
                     ) {
-
                         LoadingScreen()
                     }
                 }
             }
 
-            else -> {}
+          //  else -> {}
+            is LoadState.NotLoading -> {}
         }
     }
 }
-
-
-
-
-
-
-
+@Composable
+fun ErrorComponent(onTryAgain:()->Unit){
+    Button(
+        onClick = onTryAgain,
+        modifier = Modifier.height(160.dp).fillMaxWidth(),
+        shape = RoundedCornerShape(10.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = PineGreenMedium)
+    ) {
+        Text(text = "Try Again")
+    }
+}

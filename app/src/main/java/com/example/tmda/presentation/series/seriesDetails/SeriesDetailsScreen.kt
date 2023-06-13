@@ -63,7 +63,7 @@ import com.example.tmda.presentation.shared.BackGround
 import com.example.tmda.ui.theme.BlackTransparent37
 import com.example.tmda.ui.theme.BlackTransparent60
 import com.example.tmda.ui.theme.GoldenYellow
-import com.example.tmda.ui.theme.PineGreen
+import com.example.tmda.ui.theme.PineGreenDark
 import com.example.tmda.ui.theme.WhiteTransparent60
 
 
@@ -189,7 +189,7 @@ fun CastsRow(items: List<Cast>, onSeeAllClicked: () -> Unit) {
             Divider(
                 modifier = Modifier
                     .height(20.dp)
-                    .width(5.dp), thickness = 1.dp, color = PineGreen
+                    .width(5.dp), thickness = 1.dp, color = PineGreenDark
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(text = "Casts", style = MaterialTheme.typography.titleMedium)
@@ -197,7 +197,7 @@ fun CastsRow(items: List<Cast>, onSeeAllClicked: () -> Unit) {
         TextButton(onClick = { /*TODO*/ }, contentPadding = PaddingValues(0.dp)) {
             Text(
                 text = "See All",
-                color = PineGreen,
+                color = PineGreenDark,
                 style = MaterialTheme.typography.titleSmall
             )
 
@@ -265,7 +265,7 @@ fun SimilarShowsRow(items: List<TvShowInfo>, onSeeAllClicked: () -> Unit) {
             Divider(
                 modifier = Modifier
                     .height(20.dp)
-                    .width(5.dp), thickness = 1.dp, color = PineGreen
+                    .width(5.dp), thickness = 1.dp, color = PineGreenDark
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(text = "More like this", style = MaterialTheme.typography.titleMedium)
@@ -273,7 +273,7 @@ fun SimilarShowsRow(items: List<TvShowInfo>, onSeeAllClicked: () -> Unit) {
         TextButton(onClick = { /*TODO*/ }, contentPadding = PaddingValues(0.dp)) {
             Text(
                 text = "See All",
-                color = PineGreen,
+                color = PineGreenDark,
                 style = MaterialTheme.typography.titleSmall
             )
 
@@ -351,7 +351,7 @@ fun UserReviews(items: List<Cast>, onSeeAllClicked: () -> Unit) {
             Divider(
                 modifier = Modifier
                     .height(20.dp)
-                    .width(5.dp), thickness = 1.dp, color = PineGreen
+                    .width(5.dp), thickness = 1.dp, color = PineGreenDark
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(text = "User reviews", style = MaterialTheme.typography.titleMedium)
@@ -359,7 +359,7 @@ fun UserReviews(items: List<Cast>, onSeeAllClicked: () -> Unit) {
         TextButton(onClick = { /*TODO*/ }, contentPadding = PaddingValues(0.dp)) {
             Text(
                 text = "See All",
-                color = PineGreen,
+                color = PineGreenDark,
                 style = MaterialTheme.typography.titleSmall
             )
 
@@ -492,7 +492,7 @@ fun ServicesBox(modifier: Modifier, voteAvg: Double, voteCount: Int) {
             Icon(
                 painterResource(id = R.drawable.ic_bookmark),
                 contentDescription = null,
-                tint = PineGreen,
+                tint = PineGreenDark,
                 modifier = Modifier.size(30.dp)
             )
             Text(text = "Add")

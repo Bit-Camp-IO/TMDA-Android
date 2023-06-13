@@ -11,6 +11,7 @@ import com.example.tmda.presentation.movies.movieDetails.MovieDetailsScreen
 import com.example.tmda.presentation.movies.moviesHome.MoviesHomeScreen
 import com.example.tmda.presentation.movies.moviesList.MoviesListScreen
 import com.example.tmda.presentation.movies.moviesList.ScreenType
+import com.example.tmda.presentation.movies.search.SearchScreen
 import com.example.tmda.presentation.series.seriesDetails.SeriesDetailsScreen
 import com.example.tmda.presentation.series.seriesHome.SeriesHomeScreen
 import com.example.tmda.presentation.series.seriesList.SeriesListScreen
@@ -50,7 +51,6 @@ fun NavigationHost(navController: NavHostController) {
                 MoviesListScreen(
                     it.arguments!!.getString(MOVIE_LIST_SCREEN_TITLE)!!,
                     navController,
-                    it.savedStateHandle,
 
 
                     )
@@ -87,17 +87,14 @@ fun NavigationHost(navController: NavHostController) {
             route = Destinations.SEARCH_ROUTE,
             startDestination = Destinations.SEARCH_SCREEN
         ) {
-            composable(Destinations.SEARCH_SCREEN) {}
+            composable(Destinations.SEARCH_SCREEN) { SearchScreen(navController = navController)}
             composable(Destinations.MOVIES_DETAILS_SCREEN) { MovieDetailsScreen(navController) }
             composable(Destinations.MOVIES_LIST_SCREEN) {
                 MoviesListScreen(
                     it.arguments!!.getString(MOVIE_LIST_SCREEN_TITLE)!!,
-                    navController,
-                    it.savedStateHandle
+                    navController
                 )
             }
-            composable(Destinations.SERIES_DETAILS_SCREEN) {}
-            composable(Destinations.SERIES_LIST_SCREEN) {}
         }
         navigation(
             route = Destinations.ACCOUNT_ROUTE,
@@ -108,8 +105,7 @@ fun NavigationHost(navController: NavHostController) {
             composable(Destinations.MOVIES_LIST_SCREEN) {
                 MoviesListScreen(
                     it.arguments!!.getString(MOVIE_LIST_SCREEN_TITLE)!!,
-                    navController,
-                    it.savedStateHandle
+                    navController
                 )
             }
             composable(Destinations.SERIES_DETAILS_SCREEN) {}

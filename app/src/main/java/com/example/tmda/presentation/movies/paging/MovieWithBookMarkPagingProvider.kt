@@ -10,15 +10,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 
-class MovieWithBookMarkPageProvider(
+class MovieWithBookMarkPagingProvider(
     private val coroutineScope: CoroutineScope,
-    private val moviePageProvider: suspend (Int) -> MoviesPage,
+    private val moviePageProvider: suspend (Int) -> Result<MoviesPage>,
     private val isMovieSavedProvider: suspend (Int) -> Boolean = { false },
-
-    ) {
+) {
 
     fun createPager(): Pager<Int, MovieUiDto> {
-
         return Pager(
             initialKey = 1,
             config = PagingConfig(
@@ -32,25 +30,32 @@ class MovieWithBookMarkPageProvider(
     }
 
     private suspend fun getMovieDtoPage(pageIndex: Int): UiPage<MovieUiDto> {
-        val moviesPage = coroutineScope.async { moviePageProvider(pageIndex) }.await()
+
+        val moviesPage = coroutineScope.async { moviePageProvider(pageIndex) }.await().getOrNull()
         val isSavedCorrespondingList =
             coroutineScope.async(Dispatchers.IO) { getIsSavedCorrespondingList(moviesPage) }.await()
-        val moviesUiDtoList = moviesPage.results.mapIndexed { index, movie ->
+                ?: return UiPage(
+                    page = pageIndex,
+                    results = listOf(),
+                    totalPages = Int.MAX_VALUE,
+                    isError = true
+                )
+
+        val moviesUiDtoList = moviesPage!!.results.mapIndexed { index, movie ->
             MovieUiDto(movie, isSavedCorrespondingList[index])
         }
-
         return UiPage(
             page = pageIndex, results = moviesUiDtoList,
             totalPages = moviesPage.totalPages,
-            totalResults = moviesPage.totalResults,
+            isError = moviesPage.totalPages == -1
         )
     }
-
-    private suspend fun getIsSavedCorrespondingList(moviesPage: MoviesPage): List<Boolean> {
-        return moviesPage.results.map { movie ->
+    private suspend fun getIsSavedCorrespondingList(moviesPage: MoviesPage?): List<Boolean>? {
+        return moviesPage?.results?.map { movie ->
             coroutineScope.async(Dispatchers.IO) {
                 isMovieSavedProvider(movie.id)
             }
-        }.awaitAll()
+        }?.awaitAll()
+
     }
 }

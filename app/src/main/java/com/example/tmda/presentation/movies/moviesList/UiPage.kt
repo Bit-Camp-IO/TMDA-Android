@@ -1,8 +1,9 @@
 package com.example.tmda.presentation.movies.moviesList
 
-data class UiPage<T:Any> (
+data class UiPage<T : Any>(
     val page: Int,
     val results: List<T>,
     val totalPages: Int,
-    val totalResults: Int
+    //  val totalResults: Int
+    val isError: Boolean
 )

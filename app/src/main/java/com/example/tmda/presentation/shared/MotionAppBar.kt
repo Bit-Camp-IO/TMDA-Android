@@ -58,10 +58,7 @@ fun MotionLayoutAppBar(
 ) {
     when (movieDetailsState) {
         is UiState.Failure -> {}
-        is UiState.Loading -> {
-            LoadingScreen()
-        }
-
+        is UiState.Loading -> { LoadingScreen() }
         is UiState.Success -> {
             val movieDetails = movieDetailsState.data
             MotionLayout(

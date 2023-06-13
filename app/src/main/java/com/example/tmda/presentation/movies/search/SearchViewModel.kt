@@ -8,8 +8,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.movies.domain.enities.movie.Movie
-import com.example.movies.domain.interactors.SearchMoviesUseCase
-import com.example.tmda.presentation.movies.paging.MoviePageProvider
+import com.example.movies.domain.enities.movie.MoviesPage
+import com.example.movies.domain.useCases.SearchMoviesUseCase
+import com.example.tmda.presentation.movies.paging.MoviePagingProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -23,30 +24,43 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(private val searchMoviesUseCase: SearchMoviesUseCase) :
     ViewModel() {
 
-    private val moviePageProvider = MoviePageProvider(viewModelScope, searchMoviesUseCase::invoke)
+    private val moviePagingProvider = MoviePagingProvider(viewModelScope, ::moviePageProvider)
     var pageStream: Flow<PagingData<Movie>> =
-        moviePageProvider.currentPager.flow.cachedIn(viewModelScope)
+        moviePagingProvider.currentPager.flow.cachedIn(viewModelScope)
         private set
     private val movieActionsStream = MutableSharedFlow<String>()
-     private val actionStreamDebounced=  movieActionsStream.debounce(1000)
+    private val actionStreamDebounced = movieActionsStream.debounce(1000)
     val currentKeyword = mutableStateOf("")
 
     init {
         observeKeyword()
     }
 
+    private suspend fun moviePageProvider(keyword: String, page: Int): MoviesPage {
+        val result = searchMoviesUseCase.invoke(keyword, page)
+        return if (result.isSuccess) {
+            result.getOrNull()!!
+        } else {
+            MoviesPage(
+                page,
+                results = listOf(),
+                totalPages = Int.MAX_VALUE,
+                totalResults = Int.MAX_VALUE
+            )
+        }
+    }
 
     fun updateKeyword(keyword: String) {
-        currentKeyword.value=keyword
+        currentKeyword.value = keyword
         viewModelScope.launch {
             movieActionsStream.emit(keyword)
         }
     }
 
-    private fun observeKeyword(){
+    private fun observeKeyword() {
         viewModelScope.launch(Dispatchers.Unconfined) {
-            actionStreamDebounced.collect{
-                moviePageProvider.changeKeyword(it)
+            actionStreamDebounced.collect {
+                moviePagingProvider.changeKeyword(it)
             }
         }
 
