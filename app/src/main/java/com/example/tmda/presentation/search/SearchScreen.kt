@@ -1,4 +1,4 @@
-package com.example.tmda.presentation.movies.search
+package com.example.tmda.presentation.search
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,12 +21,14 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,6 +55,7 @@ import com.example.tmda.presentation.shared.LoadingScreen
 import com.example.tmda.presentation.shared.mainShape
 import com.example.tmda.ui.theme.BlackTransparent28
 import com.example.tmda.ui.theme.BlackTransparent37
+import com.example.tmda.ui.theme.PineGreenMedium
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,8 +67,8 @@ fun SearchScreen(
     val movies = viewModel.pageStream.collectAsLazyPagingItems()
     val listState = rememberLazyListState()
 
-    LaunchedEffect(key1 = viewModel.currentKeyword.value ){
-        listState.scrollToItem(0,0)
+    LaunchedEffect(key1 = viewModel.currentKeyword.value) {
+        listState.scrollToItem(0, 0)
     }
 
     Box(contentAlignment = Alignment.TopCenter) {
@@ -75,11 +78,12 @@ fun SearchScreen(
             movies = movies,
         )
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Spacer(modifier = Modifier
-                    .height(60.dp)
-                    .fillMaxWidth()
-                    .clickable(enabled = false) {})
-            SearchBar(modifier = Modifier.height(60.dp),
+            Spacer(modifier = Modifier
+                .height(60.dp)
+                .fillMaxWidth()
+                .clickable(enabled = false) {})
+            SearchBar(
+                modifier = Modifier.height(60.dp),
                 query = viewModel.currentKeyword.value,
                 onQueryChange = viewModel::updateKeyword,
                 onSearch = {},
@@ -106,14 +110,55 @@ fun SearchScreen(
                 },
                 shape = RoundedCornerShape(10.dp),
                 onActiveChange = {},
-                windowInsets = WindowInsets(0.dp,0.dp,0.dp,0.dp),
+                windowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
                 colors = SearchBarDefaults.colors(containerColor = BlackTransparent37)
-            ) {
-
-            }
-
-
+            ) {}
+            Spacer(modifier = Modifier.height(24.dp))
+            ChipRow(typeState = viewModel.searchType, onClick = viewModel::changeSearchType)
         }
+
+
+    }
+}
+
+
+@Composable
+fun ChipRow(typeState: State<SearchType>, onClick: (SearchType) -> Unit) {
+    Row {
+        ChipItem(
+            type = SearchType.Movie,
+            isSelected = typeState.value == SearchType.Movie,
+            onClick
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        ChipItem(
+            type = SearchType.Series,
+            isSelected = typeState.value == SearchType.Series,
+            onClick
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        ChipItem(
+            type = SearchType.Actors,
+            isSelected = typeState.value == SearchType.Actors,
+            onClick
+        )
+
+
+    }
+}
+
+@Composable
+fun ChipItem(type: SearchType, isSelected: Boolean, onClick: (SearchType) -> Unit) {
+    val color = if (isSelected) PineGreenMedium else Color.Transparent
+    Box(modifier = Modifier.clip(RoundedCornerShape(20.dp))
+        .background(color)
+        .clickable { onClick(type) }, contentAlignment = Alignment.Center) {
+
+        Text(
+            text = type.title,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
+        )
     }
 }
 

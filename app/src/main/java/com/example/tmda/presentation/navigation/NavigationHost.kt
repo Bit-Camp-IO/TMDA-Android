@@ -11,7 +11,7 @@ import com.example.tmda.presentation.movies.movieDetails.MovieDetailsScreen
 import com.example.tmda.presentation.movies.moviesHome.MoviesHomeScreen
 import com.example.tmda.presentation.movies.moviesList.MoviesListScreen
 import com.example.tmda.presentation.movies.moviesList.MoviesScreenType
-import com.example.tmda.presentation.movies.search.SearchScreen
+import com.example.tmda.presentation.search.SearchScreen
 import com.example.tmda.presentation.series.seriesDetails.SeriesDetailsScreen
 import com.example.tmda.presentation.series.seriesHome.SeriesHomeScreen
 import com.example.tmda.presentation.series.seriesList.SeriesListScreen

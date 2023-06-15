@@ -27,8 +27,6 @@ class SeriesHomeViewModel @Inject constructor(
    private val nowPlayingUseCase = factory.getUseCase(TvShowUseCaseFactory.SeriesType.NowPlaying)
     private val topRatedUseCase = factory.getUseCase(TvShowUseCaseFactory.SeriesType.TopRated)
     private val popularUseCase = factory.getUseCase(TvShowUseCaseFactory.SeriesType.Popular)
-  //  private val onTheAirUseCase = factory.getUseCase(TvShowUseCaseFactory.SeriesType.OnTheAir)
-
 
     private val _trendingUiState: MutableState<UiState<List<TvShowUiModel>>> =
         mutableStateOf(UiState.Loading())
@@ -75,7 +73,6 @@ class SeriesHomeViewModel @Inject constructor(
             _topRatedUiState.value =
                 topRatedUseCase.invoke(1)
                     .mapToOtherType { it -> it.results.map { it.toTvShowUIModel() } }.toUiState()
-
         }
 
     }

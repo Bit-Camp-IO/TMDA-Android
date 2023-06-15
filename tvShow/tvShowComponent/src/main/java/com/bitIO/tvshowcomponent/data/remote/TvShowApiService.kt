@@ -43,7 +43,7 @@ interface TvShowApiService {
 
     //
     @GET("trending/tv/{time_window}")
-    suspend fun getTrendyTvShows(@Path("time_window")timeWindow:String="day"): TvShowDtoPage
+    suspend fun getTrendyTvShows(@Path("time_window") timeWindow: String = "day"): TvShowDtoPage
 
     //tvShowDetails
     @GET("tv/{series_id}")
@@ -67,7 +67,8 @@ interface TvShowApiService {
     suspend fun getCredits(@Path("series_id") tvShowId: Int): CreditsDto
 
     @GET("tv/{series_id}/videos")
-   suspend fun getTvVideos(@Path("series_id") tvShowId: Int): VideoContainerDto
+    suspend fun getTvVideos(@Path("series_id") tvShowId: Int): VideoContainerDto
+
 
 
 }

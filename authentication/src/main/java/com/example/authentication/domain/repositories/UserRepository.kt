@@ -9,4 +9,8 @@ interface UserRepository {
     suspend fun deleteSession(): Boolean
     suspend fun getCurrentUser(): User
     fun getUserState(): Flow<User?>
+
+    suspend fun addSeriesToWatchList(seriesId:Int,isAddRequest:Boolean): Unit
+    suspend fun addMovieToWatchList(movieId:Int,isAddRequest:Boolean): Unit
+    suspend fun getTvSavedState(seriesId: Int): Boolean
 }

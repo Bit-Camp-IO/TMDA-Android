@@ -21,6 +21,7 @@ class UserRepositoryImpl @Inject constructor(
 ) : UserRepository {
     private val userState: MutableStateFlow<User?> = MutableStateFlow(cachedUser)
 
+
     init {
         CoroutineScope(Dispatchers.IO).launch(context = Dispatchers.IO) {
             if (cachedUser == null) {
@@ -60,6 +61,27 @@ class UserRepositoryImpl @Inject constructor(
         return isSessionDeleted
     }
 
+    override suspend fun addSeriesToWatchList(seriesId: Int, isAddRequest: Boolean) {
+        userApiServices.postToWatchList(
+            accountId = ACCOUNT_ID,
+            sessionId = cachedUser!!.sessionId,
+            body = makePostToWatchListBody(type = "tv", mediaId = seriesId, isAddRequest)
+        )
+    }
+
+    override suspend fun addMovieToWatchList(movieId: Int, isAddRequest: Boolean) {
+        userApiServices.postToWatchList(
+            accountId = ACCOUNT_ID,
+            sessionId = cachedUser!!.sessionId,
+            body = makePostToWatchListBody(type = "movie", mediaId = movieId, isAddRequest)
+        )
+    }
+
+    override suspend fun getTvSavedState(seriesId: Int): Boolean {
+        return userApiServices.getTvSavedState(seriesId, cachedUser!!.sessionId).watchList
+    }
+
+
     //Helpers
     private suspend fun getActiveToken(
         userName: String,
@@ -83,7 +105,20 @@ class UserRepositoryImpl @Inject constructor(
 
     }
 
+    private fun makePostToWatchListBody(
+        type: String,
+        mediaId: Int,
+        isSaveRequest: Boolean
+    ): RequestBody {
+        val mediaType = MediaType.parse("application/json")
+        return RequestBody.create(
+            mediaType,
+            "{\"media_type\":\"$type\",\"media_id\":\"$mediaId\",\"watchlist\":$isSaveRequest}"
+        )
+    }
+
     companion object {
         private var cachedUser: User? = null
+        private const val ACCOUNT_ID = 16874876
     }
 }

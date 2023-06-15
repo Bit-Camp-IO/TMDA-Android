@@ -22,6 +22,6 @@ fun NavController.navigateToShowsListScreen(seriesScreenType: SeriesScreenType, 
     navigate("${Destinations.SERIES_LIST_SCREEN}/$seriesScreenType/$id")
 }
 
-fun NavController.navigateToTvShowDetailsScreen(movieId: Int) {
-    navigate("${TvShowDetails.route}/$movieId")
+fun NavController.navigateToTvShowDetailsScreen(seriesId: Int) {
+    navigate("${TvShowDetails.route}/$seriesId")
 }

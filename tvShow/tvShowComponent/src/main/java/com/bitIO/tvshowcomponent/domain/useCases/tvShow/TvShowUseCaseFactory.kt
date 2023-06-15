@@ -26,12 +26,12 @@ class TvShowUseCaseFactory @Inject constructor(private val repository: TvShowRep
         Recommended
     }
 
- sealed class TvShowUseCase(
+    sealed class TvShowUseCase(
         protected val repo: TvShowRepository,
         protected val tvShowId: Int = -1
     ) {
 
-       internal class GetNowPlayingTvShowsUseCase(repo: TvShowRepository) : TvShowUseCase(repo) {
+        internal class GetNowPlayingTvShowsUseCase(repo: TvShowRepository) : TvShowUseCase(repo) {
             override suspend operator fun invoke(pageIndex: Int): Result<TvShowPage> {
                 return try {
                     Result.success(repo.getAiringTodayTvShows(pageIndex))
@@ -42,7 +42,7 @@ class TvShowUseCaseFactory @Inject constructor(private val repository: TvShowRep
 
         }
 
-        class GetOnTheAirTvShowsUseCase(repo: TvShowRepository) : TvShowUseCase(repo) {
+        internal class GetOnTheAirTvShowsUseCase(repo: TvShowRepository) : TvShowUseCase(repo) {
             override suspend operator fun invoke(pageIndex: Int): Result<TvShowPage> {
                 return try {
                     Result.success(repo.getOnTheAirTvShows(pageIndex))
@@ -54,7 +54,7 @@ class TvShowUseCaseFactory @Inject constructor(private val repository: TvShowRep
             }
         }
 
-        class GetTopRatedTvShowsUseCase(repo: TvShowRepository) : TvShowUseCase(repo) {
+        internal class GetTopRatedTvShowsUseCase(repo: TvShowRepository) : TvShowUseCase(repo) {
             override suspend operator fun invoke(pageIndex: Int): Result<TvShowPage> {
                 return try {
                     Result.success(repo.getTopRatedTvShows(pageIndex))
@@ -65,7 +65,7 @@ class TvShowUseCaseFactory @Inject constructor(private val repository: TvShowRep
 
         }
 
-        class GetPopularTvShowsUseCase(repo: TvShowRepository) : TvShowUseCase(repo) {
+        internal class GetPopularTvShowsUseCase(repo: TvShowRepository) : TvShowUseCase(repo) {
             override suspend operator fun invoke(pageIndex: Int): Result<TvShowPage> {
                 return try {
                     Result.success(repo.getPopularTvShows(pageIndex))
@@ -76,7 +76,7 @@ class TvShowUseCaseFactory @Inject constructor(private val repository: TvShowRep
 
         }
 
-        class GetSimilarTvShowsUseCase(repo: TvShowRepository, tvShowId: Int) :
+        internal class GetSimilarTvShowsUseCase(repo: TvShowRepository, tvShowId: Int) :
             TvShowUseCase(repo, tvShowId) {
             override suspend operator fun invoke(pageIndex: Int): Result<TvShowPage> {
                 return try {
@@ -90,6 +90,6 @@ class TvShowUseCaseFactory @Inject constructor(private val repository: TvShowRep
 
         }
 
-     abstract suspend operator fun invoke(pageIndex: Int): Result<TvShowPage>
+        abstract suspend operator fun invoke(pageIndex: Int): Result<TvShowPage>
     }
 }

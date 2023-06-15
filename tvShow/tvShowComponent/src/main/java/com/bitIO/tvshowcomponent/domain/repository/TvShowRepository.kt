@@ -13,13 +13,13 @@ interface TvShowRepository {
     suspend fun getTvShowDetails(tvShowId: Int): TvShowDetails
     suspend fun getCredits(tvShowId: Int): Credits
 
-
     suspend fun getAiringTodayTvShows(pageIndex: Int): TvShowPage
     suspend fun getTrendingTvShows(): TvShowPage
     suspend fun getPopularTvShows(pageIndex: Int): TvShowPage
     suspend fun getOnTheAirTvShows(pageIndex: Int): TvShowPage
     suspend fun getTopRatedTvShows(pageIndex: Int): TvShowPage
     suspend fun getSimilarTvShows(tvShowId: Int, pageIndex: Int): TvShowPage
-    suspend fun geSeriestVideos(tvShowId: Int):List<Video>
+    suspend fun getSeriesVideos(tvShowId: Int):List<Video>
+
 
 }

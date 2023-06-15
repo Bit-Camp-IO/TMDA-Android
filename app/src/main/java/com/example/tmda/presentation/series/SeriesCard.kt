@@ -1,5 +1,6 @@
 package com.example.tmda.presentation.series
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,39 +26,36 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.bitIO.tvshowcomponent.domain.entity.TvShow
-import com.bitIO.tvshowcomponent.domain.entity.TvShowGenre
 import com.example.tmda.R
+import com.example.tmda.presentation.movies.getTmdbImageLink
 import com.example.tmda.presentation.movies.moviesCardShape
-import com.example.tmda.presentation.series.uiDto.TvShowUiModel
+import com.example.tmda.presentation.series.uiDto.TvShowBookMarkUiModel
+import com.example.tmda.presentation.shared.SavedItemIcon
 import com.example.tmda.presentation.shared.mainShape
+import com.example.tmda.presentation.shared.toSuccessState
 import com.example.tmda.ui.theme.BlackTransparent28
-import com.example.tmda.ui.theme.PineGreenDark
+import kotlinx.coroutines.launch
 
 val seriesCardShape = mainShape(cornerRadiusDegree = 100f, slopeLength = 30f)
 
 @Composable
-fun SeriesCard(show: TvShowUiModel, onBookmarkClick: (TvShow) -> Unit) {
-//    val genres = StringBuilder()
-//    show.genres?.forEach {
-//        it?.let {
-//            if (it != show.genres?.last()) {
-//                genres.append(it.name).append("/")
-//            } else {
-//                genres.append(it.name).append(" . ")
-//            }
-//        }
-//    }
+fun SeriesCard(
+    tvShowBookMark: TvShowBookMarkUiModel,
+    onCardClick: (Int) -> Unit,
+    onBookmarkClick: suspend (Int, Boolean) -> Boolean
+) {
+    val show = tvShowBookMark.tvShowUiModel
     Surface(
         shape = seriesCardShape, color = BlackTransparent28,
         modifier = Modifier
             .fillMaxWidth()
             .height(160.dp)
-            .padding(vertical = 8.dp)
+            .padding(vertical = 8.dp).clickable {
+                onCardClick(show.id)
+            }
 
     ) {
         Row(
@@ -63,8 +65,7 @@ fun SeriesCard(show: TvShowUiModel, onBookmarkClick: (TvShow) -> Unit) {
                 .padding(all = 8.dp)
         ) {
             AsyncImage(
-                //placeholder = painterResource(id = R.drawable.series_image),
-                model = show.posterPath ?: show.backdropPath,
+                model = getTmdbImageLink(show.posterPath ?: show.backdropPath),
                 contentDescription = show.title + " image",
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
@@ -114,7 +115,7 @@ fun SeriesCard(show: TvShowUiModel, onBookmarkClick: (TvShow) -> Unit) {
                         )
                     }
                     Text(
-                        text = show.voteCount.toString() ,
+                        text = show.voteCount.toString(),
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Light,
                         color = Color.White
@@ -122,39 +123,23 @@ fun SeriesCard(show: TvShowUiModel, onBookmarkClick: (TvShow) -> Unit) {
 
                 }
             }
-            Icon(
-                painterResource(id = R.drawable.ic_bookmark),
-                contentDescription = null,
-                tint = PineGreenDark,
-                modifier = Modifier.size(30.dp)
-            )
+            val coroutineScope = rememberCoroutineScope()
+            var isSavedState by remember { tvShowBookMark.bookMarkState }
+            SavedItemIcon(modifier = Modifier.clickable {
+                coroutineScope.launch {
+                    if (onBookmarkClick(
+                            tvShowBookMark.tvShowUiModel.id,
+                            tvShowBookMark.bookMarkState.value
+                        )
+                    ) {
+                        tvShowBookMark.bookMarkState.value = !tvShowBookMark.bookMarkState.value
+                        isSavedState = tvShowBookMark.bookMarkState.value
+                    }
+                }
+            }, isSavedState = isSavedState.toSuccessState())
+
         }
 
 
     }
 }
-
-@Preview
-@Composable
-fun PreviewTvSeriesCard() {
-    val tv = TvShow(
-        1,
-        true,
-        "",
-        "2012",
-        listOf(
-            TvShowGenre(1, "Horror"),
-            TvShowGenre(2, "Drama")
-        ),
-        "The Last Of Us",
-        "en",
-        "bla bla bla",
-        12.0,
-        "",
-        8.9,
-        11752
-    )
-
-  //  SeriesCard(show = tv, {})
-}
-

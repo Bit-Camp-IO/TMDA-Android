@@ -1,7 +1,8 @@
-@file:OptIn(FlowPreview::class)
+@file:OptIn(FlowPreview::class, FlowPreview::class)
 
-package com.example.tmda.presentation.movies.search
+package com.example.tmda.presentation.search
 
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -23,13 +24,19 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(private val searchMoviesUseCase: SearchMoviesUseCase) :
     ViewModel() {
+    private val _searchType = mutableStateOf(SearchType.Movie)
+    val searchType: State<SearchType>
+        get() = _searchType
+
 
     private val moviePagingProvider = MoviePagingProvider(viewModelScope, ::moviePageProvider)
     var pageStream: Flow<PagingData<Movie>> =
         moviePagingProvider.currentPager.flow.cachedIn(viewModelScope)
         private set
+
+
     private val movieActionsStream = MutableSharedFlow<String>()
-    private val actionStreamDebounced = movieActionsStream.debounce(1000)
+    private val actionStreamDebounced = movieActionsStream.debounce(700)
     val currentKeyword = mutableStateOf("")
 
     init {
@@ -66,5 +73,16 @@ class SearchViewModel @Inject constructor(private val searchMoviesUseCase: Searc
 
     }
 
+    fun changeSearchType(type: SearchType) {
+        if (_searchType.value == type) return
+        _searchType.value = type
+    }
 
+
+}
+
+enum class SearchType(val title: String) {
+    Movie("Movies"),
+    Series("Tv Shows"),
+    Actors("Actors")
 }
