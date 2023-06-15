@@ -74,10 +74,9 @@ fun CreditsComponent(
     }
 
     when (creditItemsState) {
-        is UiState.Failure -> TODO()
-        is UiState.Loading -> {
-            LoadingScreen()
-        }
+        is UiState.Failure -> {}
+        is UiState.Loading -> LoadingScreen()
+
 
         is UiState.Success -> {
             val creditItems = creditItemsState.data

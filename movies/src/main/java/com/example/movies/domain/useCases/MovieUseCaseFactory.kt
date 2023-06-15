@@ -9,12 +9,12 @@ class MovieUseCaseFactory @Inject constructor(
     private val repo: MoviesRepository
 ) {
 
-    operator fun invoke(movieType: MovieType): MovieUseCase {
+    fun getUseCase(movieType: MovieType): MovieUseCase {
         return getMovieUseCase(movieType)
     }
 
-    fun invoke(movieTypeWithId: MovieTypeWithId, movieId: Int): MovieUseCaseWithId {
-        return getMovieWithIdUseCase(movieTypeWithId, movieId)
+    fun getUseCase(movieType: MovieTypeWithId, movieId: Int): MovieUseCaseWithId {
+        return getMovieWithIdUseCase(movieType, movieId)
     }
 
     interface BaseUseCase {
@@ -74,7 +74,6 @@ class MovieUseCaseFactory @Inject constructor(
         NowPlaying,
         TopRated,
         Popular,
-
     }
 
     private fun getMovieUseCase(movieType: MovieType) = when (movieType) {

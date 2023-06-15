@@ -10,7 +10,7 @@ import androidx.navigation.navigation
 import com.example.tmda.presentation.movies.movieDetails.MovieDetailsScreen
 import com.example.tmda.presentation.movies.moviesHome.MoviesHomeScreen
 import com.example.tmda.presentation.movies.moviesList.MoviesListScreen
-import com.example.tmda.presentation.movies.moviesList.ScreenType
+import com.example.tmda.presentation.movies.moviesList.MoviesScreenType
 import com.example.tmda.presentation.movies.search.SearchScreen
 import com.example.tmda.presentation.series.seriesDetails.SeriesDetailsScreen
 import com.example.tmda.presentation.series.seriesHome.SeriesHomeScreen
@@ -34,51 +34,41 @@ fun NavigationHost(navController: NavHostController) {
                 )
             ) { MovieDetailsScreen(navController) }
             composable(
-                "${Destinations.MOVIES_LIST_SCREEN}/{$MOVIE_LIST_SCREEN_TITLE}/{$MOVIES_LIST_SCREEN_ID}/{$MOVIE_ID}",
+                "${Destinations.MOVIES_LIST_SCREEN}/{$MOVIE_LIST_SCREEN_TITLE}/{$MOVIES_LIST_SCREEN_TYPE}/{$MOVIE_ID}",
                 arguments = listOf(
                     navArgument(MOVIE_LIST_SCREEN_TITLE) {
                         type = NavType.StringType
                     },
-                    navArgument(MOVIES_LIST_SCREEN_ID) {
-                        type = NavType.EnumType(ScreenType::class.java)
+                    navArgument(MOVIES_LIST_SCREEN_TYPE) {
+                        type = NavType.EnumType(MoviesScreenType::class.java)
                     },
                     navArgument(MOVIE_ID) {
                         type = NavType.IntType
                         defaultValue = -1
                     })
             ) {
-
                 MoviesListScreen(
                     it.arguments!!.getString(MOVIE_LIST_SCREEN_TITLE)!!,
                     navController,
-
-
-                    )
+                )
             }
         }
         navigation(
             route = Destinations.SERIES_ROUTE,
             startDestination = Destinations.SERIES_HOME_SCREEN
         ) {
-            composable(Destinations.SERIES_HOME_SCREEN) {
-                SeriesHomeScreen(onSeeAllClick = {
-                    navController.navigateToShowsListScreen(it)
-                }, onTvShowClick = {
-                    navController.navigateToTvShowDetailsScreen(it)
-                })
-            }
+            composable(Destinations.SERIES_HOME_SCREEN) { SeriesHomeScreen(navController) }
             composable(
-                TvShowsList.routeWithArgs,
+                "${Destinations.SERIES_LIST_SCREEN}/{$SERIES_LIST_SCREEN_TYPE}/{$SERIES_ID}",
                 arguments = TvShowsList.arguments
             ) {
-                val id = it.arguments?.getInt(TvShowsList.tvShowTypeArg)!!
-                SeriesListScreen(id)
+                SeriesListScreen(navController)
             }
             composable(
                 TvShowDetails.routeWithArgs,
                 arguments = TvShowDetails.arguments
             ) {
-                val id = it.arguments?.getInt(TvShowDetails.tvShowIdArg)!!
+                val id = it.arguments!!.getInt(TvShowDetails.tvShowIdArg)
                 SeriesDetailsScreen(id)
             }
 
@@ -87,7 +77,7 @@ fun NavigationHost(navController: NavHostController) {
             route = Destinations.SEARCH_ROUTE,
             startDestination = Destinations.SEARCH_SCREEN
         ) {
-            composable(Destinations.SEARCH_SCREEN) { SearchScreen(navController = navController)}
+            composable(Destinations.SEARCH_SCREEN) { SearchScreen(navController = navController) }
             composable(Destinations.MOVIES_DETAILS_SCREEN) { MovieDetailsScreen(navController) }
             composable(Destinations.MOVIES_LIST_SCREEN) {
                 MoviesListScreen(

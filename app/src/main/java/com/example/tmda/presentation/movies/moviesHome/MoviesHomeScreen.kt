@@ -6,7 +6,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.tmda.presentation.movies.moviesHome.components.MovieHomeCard
 import com.example.tmda.presentation.movies.moviesHome.components.NowPlayingHeader
-import com.example.tmda.presentation.movies.moviesList.ScreenType
+import com.example.tmda.presentation.movies.moviesList.MoviesScreenType
 import com.example.tmda.presentation.navigation.navigateToMovieDetails
 import com.example.tmda.presentation.navigation.navigateToMovieListScreen
 import com.example.tmda.presentation.shared.ErrorScreen
@@ -25,7 +25,7 @@ fun MoviesHomeScreen(navController: NavController) {
                     onSeeAllClicked = {
                         navController.navigateToMovieListScreen(
                             "Popular Movies",
-                            ScreenType.Popular
+                            MoviesScreenType.Popular
                         )
                     },
                     moviesUiState = viewModel.popularMoviesState.value
@@ -42,7 +42,7 @@ fun MoviesHomeScreen(navController: NavController) {
                     onSeeAllClicked = {
                         navController.navigateToMovieListScreen(
                             "Upcoming Movies",
-                            ScreenType.Upcoming
+                            MoviesScreenType.Upcoming
                         )
                     },
                     moviesUiState = viewModel.upComingMoviesState.value
@@ -61,7 +61,7 @@ fun MoviesHomeScreen(navController: NavController) {
                     onSeeAllClicked = {
                         navController.navigateToMovieListScreen(
                             "Top Rated Movies",
-                            ScreenType.TopRated
+                            MoviesScreenType.TopRated
                         )
                     },
                     moviesUiState = viewModel.topRatedMoviesState.value
@@ -75,8 +75,3 @@ fun MoviesHomeScreen(navController: NavController) {
             }
         }
 }
-
-
-
-
-

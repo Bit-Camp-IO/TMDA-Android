@@ -72,10 +72,8 @@ fun SimilarMoviesRow(
         }
     }
     when (moviesState) {
-        is UiState.Failure -> TODO()
-        is UiState.Loading -> {
-            LoadingScreen(Modifier.height(180.dp))
-        }
+        is UiState.Failure -> {}
+        is UiState.Loading -> LoadingScreen(Modifier.height(180.dp))
 
         is UiState.Success -> {
             if (moviesState.data.isEmpty())

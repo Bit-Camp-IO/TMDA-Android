@@ -8,9 +8,11 @@ data class TvShowDetails(
     val overview: String = "",
     val lastEpisode: Int = 0,
     val lastSeason: Int = 0,
-    val network: String = "",
-    val genres: List<TvShowGenre> = emptyList(),
-    val date: String = "",
-    val originCountry: String = "",
-    val voteAverage: Double = 0.0,
+    val network: String ,
+    val genres: List<TvShowGenre> ,
+    val date: String ,
+    val originCountry: String ,
+    val voteAverage: Double ,
+    val seasonCount:Int,
+    val episodesCount:Int
 )

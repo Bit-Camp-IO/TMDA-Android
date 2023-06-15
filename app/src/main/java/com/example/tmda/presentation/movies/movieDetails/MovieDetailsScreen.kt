@@ -25,11 +25,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.State
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -45,9 +40,10 @@ import androidx.navigation.NavController
 import com.example.movies.domain.enities.Genre
 import com.example.movies.domain.enities.movie.MovieDetails
 import com.example.tmda.presentation.movies.CreditsComponent
-import com.example.tmda.presentation.movies.moviesList.ScreenType
+import com.example.tmda.presentation.movies.moviesList.MoviesScreenType
 import com.example.tmda.presentation.navigation.navigateToMovieDetails
 import com.example.tmda.presentation.navigation.navigateToMovieListScreen
+import com.example.tmda.presentation.shared.ErrorScreen
 import com.example.tmda.presentation.shared.LoadingScreen
 import com.example.tmda.presentation.shared.MotionLayoutAppBar
 import com.example.tmda.presentation.shared.UiState
@@ -75,12 +71,15 @@ fun MovieDetailsScreen(
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
+    when (stateHolder.isError.value) {
+        true -> ErrorScreen { stateHolder.updateAll() }
 
-    DetailsScreenLoaded(
-        stateHolder = stateHolder,
-        viewModel::addOrRemoveMovieToSavedList,
-        navController
-    )
+        false -> DetailsScreenLoaded(
+            stateHolder = stateHolder,
+            viewModel::addOrRemoveMovieToSavedList,
+            navController
+        )
+    }
 
 
 }
@@ -93,7 +92,7 @@ fun DetailsScreenLoaded(
     navController: NavController
 ) {
     val scrollState = rememberLazyListState()
-    val progress =  calculateProgress( scrollState)
+    val progress = calculateProgress(scrollState)
     Box {
         LazyColumn(
             modifier = Modifier
@@ -128,7 +127,7 @@ fun DetailsScreenLoaded(
                 ) {
                     navController.navigateToMovieListScreen(
                         "Similar Movies",
-                        ScreenType.Similar,
+                        MoviesScreenType.Similar,
                         stateHolder.movieId
                     )
                 }
@@ -141,7 +140,7 @@ fun DetailsScreenLoaded(
                 ) {
                     navController.navigateToMovieListScreen(
                         "Related",
-                        ScreenType.Recommended,
+                        MoviesScreenType.Recommended,
                         stateHolder.movieId
                     )
                 }
@@ -159,18 +158,6 @@ private fun calculateProgress(
 ): State<Float> {
 
     val targetOffset = 50f
-  //  var targetValue=0f
-   // val isLastItemVisible = scrollState.layoutInfo.visibleItemsInfo.lastIndex==4
-//    if (scrollState.isScrollingUp()){
-//        if (scrollState.firstVisibleItemIndex==0&&scrollState.firstVisibleItemScrollOffset>50f){
-//            targetValue=1f
-//        }
-//    }
-//    if (!scrollState.isScrollingUp()){
-//        if (scrollState.firstVisibleItemIndex==0&&scrollState.firstVisibleItemScrollOffset>50f){
-//            targetValue=1f
-//        }
-//    }
     val targetValue =
         when {
             scrollState.firstVisibleItemIndex != 0 -> 1f
@@ -182,33 +169,14 @@ private fun calculateProgress(
         animationSpec = tween(1000, easing = LinearEasing), label = ""
     )
 }
-@Composable
-private fun LazyListState.isScrollingUp(): Boolean {
-    var previousIndex by remember(this) { mutableIntStateOf(firstVisibleItemIndex) }
-    var previousScrollOffset by remember(this) { mutableIntStateOf(firstVisibleItemScrollOffset) }
-    return remember(this) {
-        derivedStateOf {
-            if (previousIndex != firstVisibleItemIndex) {
-                previousIndex > firstVisibleItemIndex
-            } else {
-                previousScrollOffset >= firstVisibleItemScrollOffset
-            }.also {
-                previousIndex = firstVisibleItemIndex
-                previousScrollOffset = firstVisibleItemScrollOffset
-            }
-        }
-    }.value
-}
+
 
 @Composable
 fun PreviewSection(movieDetailsState: UiState<MovieDetails>) {
 
     when (movieDetailsState) {
-        is UiState.Failure -> TODO()
-        is UiState.Loading -> {
-            LoadingScreen(Modifier.height(180.dp))
-        }
-
+        is UiState.Failure -> {}
+        is UiState.Loading -> LoadingScreen(Modifier.height(180.dp))
         is UiState.Success -> {
             val movieDetails = movieDetailsState.data
             Column(horizontalAlignment = Alignment.CenterHorizontally) {

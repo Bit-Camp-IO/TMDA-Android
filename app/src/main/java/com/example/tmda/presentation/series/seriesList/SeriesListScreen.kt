@@ -1,6 +1,5 @@
 package com.example.tmda.presentation.series.seriesList
 
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,41 +11,31 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.paging.LoadState
-import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.bitIO.tvshowcomponent.domain.entity.TvShow
 import com.example.tmda.presentation.series.SeriesCard
-import kotlinx.coroutines.flow.flowOf
+import com.example.tmda.presentation.series.uiDto.TvShowUiModel
 
 
 @Composable
 fun SeriesListScreen(
-    type : Int,
-    modifier: Modifier = Modifier,
-    seriesViewModel: SeriesListViewModel = hiltViewModel()
+   navController: NavController
 ) {
-    Log.d("TAG", "SeriesListScreen: $type")
-    seriesViewModel.getPagingData(type)
-    val pagingData = seriesViewModel.pagingTvShows?.collectAsLazyPagingItems()
-    if(pagingData != null) {
-        SeriesListScreen(pagingData, modifier) {
-
-        }
-    }
-
+    val viewModel = hiltViewModel<SeriesListViewModel>()
+    val pagingData = viewModel.getTvShowStream().collectAsLazyPagingItems()
+         SeriesListScreen(pagingData, Modifier) {}
 }
 
 @Composable
 fun SeriesListScreen(
-    seriesData: LazyPagingItems<TvShow>,
+    seriesData: LazyPagingItems<TvShowUiModel>,
     modifier: Modifier = Modifier,
     onBookmarkClick: (TvShow) -> Unit,
 ) {
@@ -86,7 +75,7 @@ fun SeriesListScreen(
             is LoadState.NotLoading -> {}
         }
 
-        items(seriesData.itemCount) {
+        items(seriesData.itemCount) { it ->
             seriesData[it]?.let { tvShow ->
                 SeriesCard(tvShow) { onBookmarkClick(it) }
             }
@@ -97,112 +86,3 @@ fun SeriesListScreen(
 
 }
 
-
-@Preview
-@Composable
-fun PreviewSeriesListScreen() {
-    SeriesListScreen(flowOf(
-        PagingData.from(
-            listOf(
-                TvShow(
-                    id = 1,
-                    adult = false,
-                    backdropPath = "null",
-                    releaseDate = "T",
-                    genres = listOf(),
-                    name = "T",
-                    originalLanguage = "T",
-                    overview = "",
-                    popularity = 0.0,
-                    posterPath = "null",
-                    voteAverage = 0.0,
-                    voteCount = 0
-                ),
-                TvShow(
-                    id = 1,
-                    adult = false,
-                    backdropPath = "null",
-                    releaseDate = "T",
-                    genres = listOf(),
-                    name = "T",
-                    originalLanguage = "T",
-                    overview = "",
-                    popularity = 0.0,
-                    posterPath = "null",
-                    voteAverage = 0.0,
-                    voteCount = 0
-                ),
-                TvShow(
-                    id = 1,
-                    adult = false,
-                    backdropPath = "null",
-                    releaseDate = "T",
-                    genres = listOf(),
-                    name = "T",
-                    originalLanguage = "T",
-                    overview = "",
-                    popularity = 0.0,
-                    posterPath = "null",
-                    voteAverage = 0.0,
-                    voteCount = 0
-                ),
-                TvShow(
-                    id = 1,
-                    adult = false,
-                    backdropPath = "null",
-                    releaseDate = "T",
-                    genres = listOf(),
-                    name = "T",
-                    originalLanguage = "T",
-                    overview = "",
-                    popularity = 0.0,
-                    posterPath = "null",
-                    voteAverage = 0.0,
-                    voteCount = 0
-                ),
-                TvShow(
-                    id = 1,
-                    adult = false,
-                    backdropPath = "null",
-                    releaseDate = "T",
-                    genres = listOf(),
-                    name = "T",
-                    originalLanguage = "T",
-                    overview = "",
-                    popularity = 0.0,
-                    posterPath = "null",
-                    voteAverage = 0.0,
-                    voteCount = 0
-                ),
-                TvShow(
-                    id = 1,
-                    adult = false,
-                    backdropPath = "null",
-                    releaseDate = "T",
-                    genres = listOf(),
-                    name = "T",
-                    originalLanguage = "T",
-                    overview = "",
-                    popularity = 0.0,
-                    posterPath = "null",
-                    voteAverage = 0.0,
-                    voteCount = 0
-                ),
-                TvShow(
-                    id = 1,
-                    adult = false,
-                    backdropPath = "null",
-                    releaseDate = "T",
-                    genres = listOf(),
-                    name = "T",
-                    originalLanguage = "T",
-                    overview = "",
-                    popularity = 0.0,
-                    posterPath = "null",
-                    voteAverage = 0.0,
-                    voteCount = 0
-                ),
-            )
-        )
-    ).collectAsLazyPagingItems(), onBookmarkClick = {})
-}

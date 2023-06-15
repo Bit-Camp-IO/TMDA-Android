@@ -27,3 +27,4 @@ include(":tvShow:tvShowComponent")
 include(":authentication")
 
 
+include(":shared")

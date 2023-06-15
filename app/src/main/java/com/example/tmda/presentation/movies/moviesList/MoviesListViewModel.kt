@@ -11,7 +11,7 @@ import com.example.movies.domain.useCases.AddMovieToWatchListUseCase
 import com.example.movies.domain.useCases.GetMovieSavedStateUseCase
 import com.example.movies.domain.useCases.MovieUseCaseFactory
 import com.example.tmda.presentation.movies.paging.MovieWithBookMarkPagingProvider
-import com.example.tmda.presentation.navigation.MOVIES_LIST_SCREEN_ID
+import com.example.tmda.presentation.navigation.MOVIES_LIST_SCREEN_TYPE
 import com.example.tmda.presentation.navigation.MOVIE_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +29,7 @@ class MoviesListViewModel @Inject constructor(
     private val addMovieToWatchListUseCase: AddMovieToWatchListUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val screenType: ScreenType = savedStateHandle[MOVIES_LIST_SCREEN_ID]!!
+    private val moviesScreenType: MoviesScreenType = savedStateHandle[MOVIES_LIST_SCREEN_TYPE]!!
     private val movieId: Int? = savedStateHandle[MOVIE_ID]
     private lateinit var user: User
     private var moviesUseCase: MovieUseCaseFactory.BaseUseCase
@@ -37,14 +37,13 @@ class MoviesListViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) { user = userUseCase.invoke() }
-        moviesUseCase = screenType.toUseCase()
+        moviesUseCase = moviesScreenType.toUseCase()
     }
 
     fun getPagesStream(): Flow<PagingData<MovieUiDto>> {
         if (pagesStream == null) {
             val movieWithBookMarkPagingProvider = MovieWithBookMarkPagingProvider(
                 viewModelScope,
-                // ::moviePageProvider
                 moviesUseCase::invoke
             ) { handleUpdateSavedError(getMovieSavedStateUseCase.invoke(it, user.sessionId)) }
             pagesStream =
@@ -89,18 +88,18 @@ class MoviesListViewModel @Inject constructor(
 
     }
 
-    private fun ScreenType.toUseCase() = when (this) {
+    private fun MoviesScreenType.toUseCase() = when (this) {
 
-        ScreenType.Upcoming -> interactor.invoke(MovieUseCaseFactory.MovieType.Upcoming)
-        ScreenType.NowPlaying -> interactor.invoke(MovieUseCaseFactory.MovieType.NowPlaying)
-        ScreenType.TopRated -> interactor.invoke(MovieUseCaseFactory.MovieType.TopRated)
-        ScreenType.Popular -> interactor.invoke(MovieUseCaseFactory.MovieType.Popular)
-        ScreenType.Recommended -> interactor.invoke(
+        MoviesScreenType.Upcoming -> interactor.getUseCase(MovieUseCaseFactory.MovieType.Upcoming)
+        MoviesScreenType.NowPlaying -> interactor.getUseCase(MovieUseCaseFactory.MovieType.NowPlaying)
+        MoviesScreenType.TopRated -> interactor.getUseCase(MovieUseCaseFactory.MovieType.TopRated)
+        MoviesScreenType.Popular -> interactor.getUseCase(MovieUseCaseFactory.MovieType.Popular)
+        MoviesScreenType.Recommended -> interactor.getUseCase(
             MovieUseCaseFactory.MovieTypeWithId.Recommended,
             movieId!!
         )
 
-        ScreenType.Similar -> interactor.invoke(
+        MoviesScreenType.Similar -> interactor.getUseCase(
             MovieUseCaseFactory.MovieTypeWithId.Similar,
             movieId!!
         )

@@ -3,13 +3,13 @@ package com.bitIO.tvshowcomponent.data.paging
 import androidx.paging.PagingSource
 import androidx.paging.PagingSource.LoadResult.Page
 import androidx.paging.PagingState
-import com.bitIO.tvshowcomponent.data.remote.response.BaseTvShowResponse
-import com.bitIO.tvshowcomponent.data.remote.response.TvShowDto
+import com.bitIO.tvshowcomponent.data.remote.dto.tvShow.TvShowDtoPage
+import com.bitIO.tvshowcomponent.data.remote.dto.tvShow.TvShowDto
 import java.io.IOException
 
 private const val INITIAL_KEY = 1
 
-class TvShowsPagingSource(private val request: suspend (Int) -> BaseTvShowResponse) : PagingSource<Int, TvShowDto>() {
+class TvShowsPagingSource(private val request: suspend (Int) -> TvShowDtoPage) : PagingSource<Int, TvShowDto>() {
     override fun getRefreshKey(state: PagingState<Int, TvShowDto>): Int? {
         return state.anchorPosition?.let {
             state.closestPageToPosition(it)?.nextKey?.minus(1) ?:

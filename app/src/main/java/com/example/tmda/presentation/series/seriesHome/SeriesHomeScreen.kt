@@ -1,6 +1,6 @@
 package com.example.tmda.presentation.series.seriesHome
 
-//import com.example.tmda.presentation.shared.ItemsLazyRowComponent
+
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,126 +21,99 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.example.tmda.R
+import com.example.tmda.presentation.movies.getTmdbImageLink
+import com.example.tmda.presentation.movies.moviesList.ErrorComponent
+import com.example.tmda.presentation.navigation.navigateToShowsListScreen
+import com.example.tmda.presentation.navigation.navigateToTvShowDetailsScreen
+import com.example.tmda.presentation.series.seriesList.SeriesScreenType
+import com.example.tmda.presentation.series.uiDto.TvShowUiModel
+import com.example.tmda.presentation.shared.ErrorScreen
 import com.example.tmda.presentation.shared.ImageCard
+import com.example.tmda.presentation.shared.LoadingScreen
+import com.example.tmda.presentation.shared.UiState
 import com.example.tmda.presentation.shared.imageCardModifier
 import com.example.tmda.presentation.shared.mainShape
 import com.example.tmda.ui.theme.PineGreenDark
 import com.example.tmda.ui.theme.WhiteTransparent60
 import kotlin.math.ceil
 import kotlin.math.floor
-
 @Composable
 fun SeriesHomeScreen(
-    viewModel: SeriesHomeViewModel = hiltViewModel(), onSeeAllClick: (Int) -> Unit,
-    onTvShowClick: (Int) -> Unit
+    navController: NavController
 ) {
-    val seriesUiState by viewModel.seriesUiState.collectAsState()
+    val viewModel = hiltViewModel<SeriesHomeViewModel>()
+    when (viewModel.isErrorState()) {
+        true -> ErrorScreen(viewModel::updateAll)
+        false -> LazyColumn {
+                item {
+                    when (val nowPlaying = viewModel.trendingUiState.value) {
+                        is UiState.Failure -> ErrorComponent {}
+                        is UiState.Loading -> LoadingScreen(Modifier.height(400.dp))
+                        is UiState.Success -> {
+                            NowPlayingHeader(nowPlaying.data)
+                        }
+                    }
 
-    SeriesHomeScreen(seriesUiState, onSeeAllClick = {
-        onSeeAllClick(it)
+                }
 
-    }, onTvShowClick = {
-        onTvShowClick(it)
-    })
-}
-
-@Composable
-fun SeriesHomeScreen(
-    seriesUiState: SeriesUiState,
-    modifier: Modifier = Modifier,
-    onSeeAllClick: (Int) -> Unit,
-    onTvShowClick: (Int) -> Unit
-) {
-    LazyColumn(modifier) {
-        item {
-            if (seriesUiState.isNowPlayingLoading) {
-                Box(Modifier.size(400.dp)) {
-                    CircularProgressIndicator(
-                        modifier
-                            .size(80.dp)
-                            .align(Alignment.Center)
-                    )
+                item {
+                    ItemsLazyRowComponent(
+                        title = "Popular",
+                        itemsState = viewModel.popularUiState,
+                        onSeeAllClicked = { navController.navigateToShowsListScreen(SeriesScreenType.Popular)}
+                    ) {
+                        SeriesHomeCard(tvShow = it, onTvShowClick = navController::navigateToTvShowDetailsScreen)
+                    }
+                }
+                item {
+                    ItemsLazyRowComponent(
+                        title = "On The Air",
+                        itemsState = viewModel.onTheAirUiState,
+                        onSeeAllClicked =  { navController.navigateToShowsListScreen(SeriesScreenType.OnTheAir)}
+                    ) {
+                        SeriesHomeCard(tvShow = it, onTvShowClick =navController::navigateToTvShowDetailsScreen)
+                    }
+                }
+                item {
+                    ItemsLazyRowComponent(
+                        title = "Top Rated",
+                        hasBottomDivider = false,
+                        itemsState = viewModel.topRatedUiState,
+                        onSeeAllClicked =  { navController.navigateToShowsListScreen(SeriesScreenType.TopRated)}
+                    ) {
+                        SeriesHomeCard(tvShow = it, onTvShowClick = navController::navigateToTvShowDetailsScreen )
+                    }
                 }
             }
-            if (seriesUiState.nowPlayingErrorMsg != null) {
-                Column(
-                    Modifier.size(400.dp),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Warning,
-                        contentDescription = "Error icon"
-                    )
-                    Text(
-                        text = seriesUiState.nowPlayingErrorMsg!!,
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
-            NowPlayingHeader(seriesUiState.tvShowInfo)
-        }
-        item {
-            ItemsLazyRowComponent(
-                title = "Popular",
-                items = seriesUiState.popularTvShows,
-                onSeeAllClicked = { onSeeAllClick(0) }
-            ) {
-                SeriesHomeCard(tvShowInfo = it, onTvShowClick = { onTvShowClick(it) })
-            }
-        }
-        item {
-            ItemsLazyRowComponent(
-                title = "On The Air",
-                items = seriesUiState.onTheAirTvShows,
-                onSeeAllClicked = { onSeeAllClick(1) }
-            ) {
-                SeriesHomeCard(tvShowInfo = it, onTvShowClick = { onTvShowClick(it) })
-            }
-        }
-        item {
-            ItemsLazyRowComponent(
-                title = "Top Rated",
-                hasBottomDivider = false,
-                items = seriesUiState.topRatedTvShows,
-                onSeeAllClicked = { onSeeAllClick(2) }
-            ) {
-                SeriesHomeCard(tvShowInfo = it!!, onTvShowClick = { onTvShowClick(it) })
-            }
-        }
+
     }
+
 }
 
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun NowPlayingHeader(tvShows: List<TvShowInfo>) {
+fun NowPlayingHeader(tvShows: List<TvShowUiModel>) {
     val pagerState = rememberPagerState(
         initialPage = 0,
         initialPageOffsetFraction = 0f
@@ -157,8 +130,8 @@ fun NowPlayingHeader(tvShows: List<TvShowInfo>) {
 }
 
 @Composable
-fun NowPlayingCard(tvShow: TvShowInfo) {
-    val date = tvShow.tvShow?.releaseDate?.let { "$it . " }
+fun NowPlayingCard(tvShow: TvShowUiModel) {
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -166,33 +139,30 @@ fun NowPlayingCard(tvShow: TvShowInfo) {
         contentAlignment = Alignment.BottomStart
     ) {
         AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(tvShow.tvShow?.backdropPath ?: tvShow.tvShow?.posterPath)
-                .crossfade(true)
-                .build(),
+            model = getTmdbImageLink(tvShow.backdropPath?:tvShow.posterPath),
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.FillBounds,
             contentDescription = "Series poster",
         )
         Column(modifier = Modifier.padding(start = 24.dp)) {
             Text(
-                text = tvShow.tvShow?.name!!,
+                text = tvShow.title,
                 color = Color.White,
                 style = MaterialTheme.typography.headlineLarge,
             )
             Row {
                 Text(
-                    text = date + tvShow.tvShow.genres?.get(0)?.name,
+                    text = tvShow.releaseDate + "." + tvShow.genres,
                     color = WhiteTransparent60
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Text(
-                    text = "S${tvShow.tvShowDetails?.lastSeason?.toString()} ${tvShow.tvShowDetails?.lastEpisode?.toString()} Episodes",
+                    text = tvShow.originalLanguage,
                     color = WhiteTransparent60
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
-            TotalRatingIcons(rating = tvShow.tvShow.voteAverage.toFloat(), iconSize = 14.dp)
+            TotalRatingIcons(rating = tvShow.voteAverage.toFloat(), iconSize = 14.dp)
             Spacer(modifier = Modifier.height(2.dp))
             Text(
                 modifier = Modifier.alpha(0f),
@@ -276,41 +246,27 @@ fun DotsIndicator(totalDots: Int, currentIndex: Int) {
 
 
 @Composable
-fun SeriesHomeCard(tvShowInfo: TvShowInfo, onTvShowClick: (Int) -> Unit) {
-    val genres = StringBuilder()
-    val gen = tvShowInfo.tvShow?.genres?.take(2)
-    gen?.forEach {
-        if (it != null) {
-            if (it != gen.last()) {
-                genres.append(it.name).append("/")
-            } else {
-                genres.append(it.name)
-            }
-        }
-    }
-    val subTitle =
-        tvShowInfo.tvShow?.releaseDate?.let { "${it.take(4)} . " } + genres +
-                tvShowInfo.tvShowDetails?.lastSeason?.let { "\nS$it  " } +
-                tvShowInfo.tvShowDetails?.lastEpisode?.let { "$it Episodes" }
+fun SeriesHomeCard(tvShow: TvShowUiModel, onTvShowClick: (Int) -> Unit) {
+
     Box(contentAlignment = Alignment.BottomCenter,
         modifier = Modifier.clickable(
             MutableInteractionSource(),
             null
-        ) { onTvShowClick(tvShowInfo.tvShow?.id!!) }) {
+        ) { onTvShowClick(tvShow.id) }) {
         ImageCard(
-            tvShowInfo.tvShow?.backdropPath ?: tvShowInfo.tvShow?.posterPath,
-            "",
+            tvShow.backdropPath ?: tvShow.posterPath,
+            tvShow.title,
             HomeCardModifier
 
         )
         Column(verticalArrangement = Arrangement.Center) {
             Text(
-                text = tvShowInfo.tvShow?.name!!,
+                text = tvShow.title,
                 Modifier.padding(end = 24.dp),
                 style = MaterialTheme.typography.bodySmall
             )
             Text(
-                text = subTitle,
+                text = tvShow.releaseDate + "." + tvShow.genres,
                 style = MaterialTheme.typography.labelSmall
             )
             Row(
@@ -318,11 +274,11 @@ fun SeriesHomeCard(tvShowInfo: TvShowInfo, onTvShowClick: (Int) -> Unit) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = tvShowInfo.tvShow.voteAverage.toString(),
+                    text = tvShow.voteAverage.toString(),
                     style = MaterialTheme.typography.labelSmall
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-                TotalRatingIcons(rating = tvShowInfo.tvShow.voteAverage.toFloat(), iconSize = 16.dp)
+                TotalRatingIcons(rating = tvShow.voteAverage.toFloat(), iconSize = 16.dp)
             }
         }
     }
@@ -333,48 +289,58 @@ fun <T> ItemsLazyRowComponent(
     title: String = "More like this",
     hasBottomDivider: Boolean = true,
     onSeeAllClicked: () -> Unit,
-    items: List<T>,
+    itemsState: State<UiState<List<T>>>,
     contentCard: @Composable (T) -> Unit
 ) {
+    when (val items = itemsState.value) {
+        is UiState.Failure -> ErrorComponent {}
+        is UiState.Loading -> LoadingScreen(modifier = Modifier.height(360.dp))
+        is UiState.Success -> {
+            val data = items.data
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row {
-            Divider(
+            Row(
                 modifier = Modifier
-                    .height(20.dp)
-                    .width(5.dp), thickness = 1.dp, color = PineGreenDark
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = title, style = MaterialTheme.typography.titleMedium)
-        }
-        TextButton(onClick = onSeeAllClicked, contentPadding = PaddingValues(0.dp)) {
-            Text(
-                text = "See All",
-                color = PineGreenDark,
-                style = MaterialTheme.typography.titleSmall
-            )
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row {
+                    Divider(
+                        modifier = Modifier
+                            .height(20.dp)
+                            .width(5.dp), thickness = 1.dp, color = PineGreenDark
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = title, style = MaterialTheme.typography.titleMedium)
+                }
+                TextButton(onClick = onSeeAllClicked, contentPadding = PaddingValues(0.dp)) {
+                    Text(
+                        text = "See All",
+                        color = PineGreenDark,
+                        style = MaterialTheme.typography.titleSmall
+                    )
 
+                }
+            }
+
+            LazyRow {
+                item { Spacer(modifier = Modifier.width(16.dp)) }
+                items(data.size) { contentCard(data[it]) }
+                item { Spacer(modifier = Modifier.width(16.dp)) }
+            }
+            if (hasBottomDivider) Divider(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp, horizontal = 32.dp)
+            ) else Spacer(modifier = Modifier.height(16.dp))
         }
     }
 
-    LazyRow {
-        item { Spacer(modifier = Modifier.width(16.dp)) }
-        items(items.size) { contentCard(items[it]) }
-        item { Spacer(modifier = Modifier.width(16.dp)) }
-    }
-    if (hasBottomDivider) Divider(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp, horizontal = 32.dp)
-    ) else Spacer(modifier = Modifier.height(16.dp))
+
 }
-val HomeCardModifier= Modifier
+
+val HomeCardModifier = Modifier
     .size(200.dp, 270.dp)
     .clip(mainShape)
 val imageCardModifier = Modifier.imageCardModifier(200.dp, 270.dp)

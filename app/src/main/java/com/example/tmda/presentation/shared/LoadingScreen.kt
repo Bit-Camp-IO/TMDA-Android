@@ -22,7 +22,6 @@ fun LoadingScreen(modifier: Modifier=Modifier){
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-
         LottieAnimation(modifier=Modifier.fillMaxSize(),
             composition = composition,
             progress = { progress },

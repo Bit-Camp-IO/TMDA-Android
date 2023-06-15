@@ -48,7 +48,7 @@ class MoviesHomeViewModel @Inject constructor(private val interactor: MovieUseCa
 
     private fun updateNowPlayingMovies() {
         viewModelScope.launch(Dispatchers.IO) {
-            val movies = interactor.invoke(MovieUseCaseFactory.MovieType.NowPlaying)
+            val movies = interactor.getUseCase(MovieUseCaseFactory.MovieType.NowPlaying)
                 .invoke(1).mapToOtherType { it.results.take(5) }.toUiState()
             _nowPlayingMoviesState.value = movies
 
@@ -58,7 +58,7 @@ class MoviesHomeViewModel @Inject constructor(private val interactor: MovieUseCa
     private fun updateUpComingMovies() {
         viewModelScope.launch(Dispatchers.IO) {
             val moviesUiState =
-                interactor(MovieUseCaseFactory.MovieType.Upcoming)
+                interactor.getUseCase(MovieUseCaseFactory.MovieType.Upcoming)
                     .invoke(1).mapToOtherType { it -> it.results.map { MovieUiDto(it, false) } }
                     .toUiState()
 
@@ -69,7 +69,7 @@ class MoviesHomeViewModel @Inject constructor(private val interactor: MovieUseCa
     private fun updateTopRatedMovies() {
         viewModelScope.launch(Dispatchers.IO) {
             val moviesUiState =
-                interactor(MovieUseCaseFactory.MovieType.TopRated).invoke(1)
+                interactor.getUseCase(MovieUseCaseFactory.MovieType.TopRated).invoke(1)
                     .mapToOtherType { it -> it.results.map { MovieUiDto(it, false) } }
                     .toUiState()
             _topRatedMoviesState.value = moviesUiState
@@ -79,7 +79,7 @@ class MoviesHomeViewModel @Inject constructor(private val interactor: MovieUseCa
     private fun updatePopularMovies() {
         viewModelScope.launch(Dispatchers.IO) {
             val moviesUiState =
-                interactor.invoke(MovieUseCaseFactory.MovieType.Popular).invoke(1)
+                interactor.getUseCase(MovieUseCaseFactory.MovieType.Popular).invoke(1)
                     .mapToOtherType { it -> it.results.map { MovieUiDto(it, false) } }
                     .toUiState()
             _popularMoviesState.value = moviesUiState

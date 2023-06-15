@@ -1,185 +1,109 @@
 package com.example.tmda.presentation.series.seriesHome
 
-import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bitIO.tvshowcomponent.domain.entity.TvShow
-import com.bitIO.tvshowcomponent.domain.entity.TvShowDetails
-import com.bitIO.tvshowcomponent.domain.useCases.GetNowPlayingHomeTvShowsUseCase
-import com.bitIO.tvshowcomponent.domain.useCases.GetOnTheAirHomeTvShowsUseCase
-import com.bitIO.tvshowcomponent.domain.useCases.GetPopularHomeTvShowsUseCase
-import com.bitIO.tvshowcomponent.domain.useCases.GetTopRatedHomeTvShowsUseCase
 import com.bitIO.tvshowcomponent.domain.useCases.GetTvShowDetailsUseCase
+import com.bitIO.tvshowcomponent.domain.useCases.tvShow.GetTrendingTvShowUseCase
+import com.bitIO.tvshowcomponent.domain.useCases.tvShow.TvShowUseCaseFactory
+import com.example.tmda.presentation.series.uiDto.TvShowUiModel
+import com.example.tmda.presentation.series.uiDto.toTvShowUIModel
+import com.example.tmda.presentation.shared.UiState
+import com.example.tmda.presentation.shared.mapToOtherType
+import com.example.tmda.presentation.shared.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SeriesHomeViewModel @Inject constructor(
-    private val getTopRatedHomeTvShowsUseCase: GetTopRatedHomeTvShowsUseCase,
-    private val getNowPlayingHomeTvShowsUseCase: GetNowPlayingHomeTvShowsUseCase,
-    private val getPopularHomeTvShowsUseCase: GetPopularHomeTvShowsUseCase,
-    private val getOnTheAirHomeTvShowsUseCase: GetOnTheAirHomeTvShowsUseCase,
-    private val getTvShowDetailsUseCase: GetTvShowDetailsUseCase
+    factory: TvShowUseCaseFactory,
+    private val getTvShowDetailsUseCase: GetTvShowDetailsUseCase,
+    private val  trendingTvShowUseCase: GetTrendingTvShowUseCase
 ) : ViewModel() {
-    private var _seriesUiState = MutableStateFlow(SeriesUiState())
-    val seriesUiState = _seriesUiState.asStateFlow()
+   private val nowPlayingUseCase = factory.getUseCase(TvShowUseCaseFactory.SeriesType.NowPlaying)
+    private val topRatedUseCase = factory.getUseCase(TvShowUseCaseFactory.SeriesType.TopRated)
+    private val popularUseCase = factory.getUseCase(TvShowUseCaseFactory.SeriesType.Popular)
+  //  private val onTheAirUseCase = factory.getUseCase(TvShowUseCaseFactory.SeriesType.OnTheAir)
 
+
+    private val _trendingUiState: MutableState<UiState<List<TvShowUiModel>>> =
+        mutableStateOf(UiState.Loading())
+    val trendingUiState: State<UiState<List<TvShowUiModel>>>
+        get() = _trendingUiState
+
+    private val _topRatedUiState: MutableState<UiState<List<TvShowUiModel>>> =
+        mutableStateOf(UiState.Loading())
+    val topRatedUiState: State<UiState<List<TvShowUiModel>>>
+        get() = _topRatedUiState
+
+    private val _popularUiState: MutableState<UiState<List<TvShowUiModel>>> =
+        mutableStateOf(UiState.Loading())
+    val popularUiState: State<UiState<List<TvShowUiModel>>>
+        get() = _popularUiState
+
+    private val _onTheAirUiState: MutableState<UiState<List<TvShowUiModel>>> =
+        mutableStateOf(UiState.Loading())
+    val onTheAirUiState: State<UiState<List<TvShowUiModel>>>
+        get() = _onTheAirUiState
 
     init {
-        getNowPlayingTvShows()
-        getTopRatedTvShows()
-        getPopularTvShows()
-        getOnTheAirTvShows()
+        updateAll()
     }
 
-    private fun getNowPlayingTvShows() {
-        viewModelScope.launch {
-            try {
-                val showDetails = arrayListOf<TvShowInfo>()
-                _seriesUiState.update { it.copy(isNowPlayingLoading = true) }
-                getNowPlayingHomeTvShowsUseCase().collectLatest { tvShows ->
-                    Log.d("getNowPlayingTvShows", "getNowPlayingTvShows: $tvShows")
-                    tvShows.forEach { tvShow ->
-                        tvShow?.id?.let {
-                            getTvShowDetailsUseCase(it).collectLatest { tvShowDetails ->
-                                showDetails.add(TvShowInfo(tvShow, tvShowDetails))
-                            }
+    fun updateAll() {
+        updateTrending()
+        updateTopRatedTvShows()
+        updatePopularTvShows()
+        updateOnTheAirTvShows()
+    }
 
-                        }
-                    }
-                    _seriesUiState.update {
-                        it.copy(
-                            isNowPlayingLoading = false,
-                            tvShowInfo = showDetails
-                        )
-                    }
-
-                }
-            } catch (e: Exception) {
-                _seriesUiState.update { it.copy(isNowPlayingLoading = false, nowPlayingErrorMsg = e.message!!) }
-            }
+    private fun updateTrending() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _trendingUiState.value =
+                trendingTvShowUseCase.invoke()
+                    .mapToOtherType { it -> it.results.take(5).map { it.toTvShowUIModel() } }.toUiState()
 
         }
     }
 
-    private fun getTopRatedTvShows() {
-        viewModelScope.launch {
-            try {
-                val showDetails = arrayListOf<TvShowInfo>()
-                _seriesUiState.update { it.copy(isTopRatedLoading = true) }
-                getTopRatedHomeTvShowsUseCase().collectLatest { tvShows ->
-                    tvShows.forEach { tvShow ->
-                        Log.d("getTopRatedTvShows", "getTopRatedTvShows: $tvShows")
-                        tvShow.id.let {
-                            getTvShowDetailsUseCase(it).collectLatest { tvShowDetails ->
-                                showDetails.add(TvShowInfo(tvShow, tvShowDetails))
-                            }
-
-                        }
-                    }
-                    _seriesUiState.update {
-                        it.copy(
-                            isTopRatedLoading = false,
-                            topRatedTvShows = showDetails
-                        )
-                    }
-
-                }
-            } catch (e: Exception) {
-                _seriesUiState.update { it.copy(isTopRatedLoading = false, topRatedErrorMsg = e.message!!) }
-            }
+    private fun updateTopRatedTvShows() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _topRatedUiState.value =
+                topRatedUseCase.invoke(1)
+                    .mapToOtherType { it -> it.results.map { it.toTvShowUIModel() } }.toUiState()
 
         }
 
     }
 
-    private fun getPopularTvShows() {
-        viewModelScope.launch {
-            try {
-                val showDetails = arrayListOf<TvShowInfo>()
-                _seriesUiState.update { it.copy(isPopularLoading = true) }
-                getPopularHomeTvShowsUseCase().collectLatest { tvShows ->
-                    Log.d("getPopularTvShows", "getPopularTvShows: $tvShows")
-                    tvShows.forEach { tvShow ->
-                        tvShow?.id?.let {
-                            getTvShowDetailsUseCase(it).collectLatest { tvShowDetails ->
-                                showDetails.add(TvShowInfo(tvShow, tvShowDetails))
-                            }
-
-                        }
-                    }
-                    _seriesUiState.update {
-                        it.copy(
-                            isPopularLoading = false,
-                            popularTvShows = showDetails
-                        )
-                    }
-
-                }
-            } catch (e: Exception) {
-                _seriesUiState.update { it.copy(isPopularLoading = false, popularErrorMsg = e.message!!) }
-            }
+    private fun updatePopularTvShows() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _popularUiState.value =
+                popularUseCase.invoke(1)
+                    .mapToOtherType { it -> it.results.map { it.toTvShowUIModel() } }.toUiState()
 
         }
 
     }
 
-    private fun getOnTheAirTvShows() {
-        viewModelScope.launch {
-            try {
-                val showDetails = arrayListOf<TvShowInfo>()
-                _seriesUiState.update { it.copy(isOnTheAirLoading = true) }
-                getOnTheAirHomeTvShowsUseCase().collectLatest { tvShows ->
-                    tvShows.forEach { tvShow ->
-                        tvShow?.id?.let {
-                            getTvShowDetailsUseCase(it).collectLatest { tvShowDetails ->
-                                showDetails.add(TvShowInfo(tvShow, tvShowDetails))
-                            }
-
-                        }
-                    }
-                    _seriesUiState.update {
-                        it.copy(
-                            isOnTheAirLoading = false,
-                            onTheAirTvShows = showDetails
-                        )
-                    }
-
-                }
-            } catch (e: Exception) {
-                _seriesUiState.update { it.copy(isOnTheAirLoading = false, onTheAirErrorMsg = e.message!!) }
-            }
-
+    private fun updateOnTheAirTvShows() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _onTheAirUiState.value =
+                nowPlayingUseCase.invoke(1)
+                    .mapToOtherType { it -> it.results.map { it.toTvShowUIModel() } }.toUiState()
         }
+
+    }
+
+    fun isErrorState(): Boolean {
+        return _trendingUiState.value is UiState.Failure &&
+                _topRatedUiState.value is UiState.Failure &&
+                _popularUiState.value is UiState.Failure &&
+                _onTheAirUiState.value is UiState.Failure
 
     }
 }
-
-
-data class SeriesUiState(
-    var isNowPlayingLoading: Boolean = false,
-    var nowPlayingErrorMsg: String? = null,
-    var tvShowInfo: List<TvShowInfo> = emptyList(),
-
-    var isTopRatedLoading: Boolean = false,
-    var topRatedErrorMsg: String? = null,
-    var topRatedTvShows: List<TvShowInfo> = emptyList(),
-
-    var isPopularLoading: Boolean = false,
-    var popularErrorMsg: String? = null,
-    var popularTvShows: List<TvShowInfo> = emptyList(),
-
-    var isOnTheAirLoading: Boolean = false,
-    var onTheAirErrorMsg: String? = null,
-    var onTheAirTvShows: List<TvShowInfo> = emptyList(),
-)
-
-data class TvShowInfo(
-    val tvShow: TvShow? = null,
-    val tvShowDetails: TvShowDetails? = null,
-)

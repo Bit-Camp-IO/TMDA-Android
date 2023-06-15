@@ -1,85 +1,122 @@
 package com.example.tmda.presentation.series.seriesDetails
 
+import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bitIO.tvshowcomponent.domain.entity.Cast
 import com.bitIO.tvshowcomponent.domain.entity.TvShowDetails
-import com.bitIO.tvshowcomponent.domain.useCases.GetSimilarTvShowsUseCase
-import com.bitIO.tvshowcomponent.domain.useCases.GetTvShowCastUseCase
+import com.bitIO.tvshowcomponent.domain.entity.TvShowPage
+import com.bitIO.tvshowcomponent.domain.useCases.GetTvShowCreditsUseCase
 import com.bitIO.tvshowcomponent.domain.useCases.GetTvShowDetailsUseCase
-import com.example.tmda.presentation.series.seriesHome.TvShowInfo
+import com.bitIO.tvshowcomponent.domain.useCases.GetTvVideosUseCase
+import com.bitIO.tvshowcomponent.domain.useCases.tvShow.TvShowUseCaseFactory
+import com.example.shared.entities.Video
+import com.example.shared.entities.credits.Credits
+import com.example.tmda.presentation.navigation.SERIES_ID
+import com.example.tmda.presentation.series.seriesDetails.uiDto.OverView
+import com.example.tmda.presentation.series.seriesDetails.uiDto.makeOverView
+import com.example.tmda.presentation.shared.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+typealias DResult<T> = Deferred<Result<T>>
+
 
 @HiltViewModel
 class SeriesDetailsViewModel @Inject constructor(
     private val detailsUseCase: GetTvShowDetailsUseCase,
-    private val castUseCase: GetTvShowCastUseCase,
-    private val similarTvShowsUseCase: GetSimilarTvShowsUseCase
+    private val creditsUseCase: GetTvShowCreditsUseCase,
+    private val videosUseCase: GetTvVideosUseCase,
+    tvShowUseCaseFactory: TvShowUseCaseFactory,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private var _detailsUiState = MutableStateFlow(DetailsUiState())
-    val detailsUiState = _detailsUiState.asStateFlow()
+    private val movieId = savedStateHandle.get<Int>(SERIES_ID)!!
+    private val tvShowUseCase =
+        tvShowUseCaseFactory.getUseCase(TvShowUseCaseFactory.SeriesType.Similar, movieId = movieId)
 
+    //
+    private val _overView: MutableState<UiState<OverView>> =
+        mutableStateOf(UiState.Loading())
+    val overView: State<UiState<OverView>>
+        get() = _overView
 
-    fun getTvShowDetails(id: Int) {
+    init {
+        updateOverView()
+    }
+
+    private fun updateOverView() {
         viewModelScope.launch {
-            _detailsUiState.update { it.copy(isDetailsLoading = true) }
-            detailsUseCase(id).catch { throwable ->
-                _detailsUiState.update { it.copy(isDetailsLoading = false, tvShowError = throwable.message) }
-            }.collectLatest { tvShowDetails ->
-                _detailsUiState.update { it.copy(isDetailsLoading = false, tvShowDetails = tvShowDetails) }
-            }
+            val detailsDeferred = getTvShowDetails()
+            val creditsDeferred = getTvShowCredits(movieId)
+            val similarDeferred = getSimilarTvShows()
+            val videosDeferred = getTvShowVideos(movieId)
+            joinAll(
+                detailsDeferred, creditsDeferred,
+                similarDeferred, videosDeferred
+            )
+            updateOverView(detailsDeferred, creditsDeferred, similarDeferred, videosDeferred)
+
         }
     }
 
+    @OptIn(ExperimentalCoroutinesApi::class)
+    fun updateOverView(
+        detailsDef: DResult<TvShowDetails>,
+        creditsDef: DResult<Credits>,
+        similarDef: DResult<TvShowPage>,
+        videosDef: DResult<List<Video>>
+    ) {
+        _overView.value =
+            try {
+                val details = detailsDef.getCompleted().getOrThrow()
+                val credits = creditsDef.getCompleted().getOrThrow()
 
-    fun getTvShowCast(id: Int) {
-        viewModelScope.launch {
-            _detailsUiState.update { it.copy(isCastLoading = true) }
-            castUseCase(id).catch { throwable ->
-                _detailsUiState.update { it.copy(isCastLoading = false, castError = throwable.message) }
-            }.collectLatest { tvShowCast ->
-                _detailsUiState.update { it.copy(isCastLoading = false, cast = tvShowCast) }
+                val similar = similarDef.getCompleted().getOrThrow().results
+                Log.d("xxxx",movieId.toString())
+                val videos = videosDef.getCompleted().getOrThrow()
+
+                UiState.Success(makeOverView(details, videos, credits, similar))
+            } catch (e: Throwable) {
+                throw  e
+                UiState.Failure(e.message ?: "Unknown Error")
             }
+
+    }
+
+    private fun getTvShowDetails(): Deferred<Result<TvShowDetails>> {
+        return viewModelScope.async(Dispatchers.IO) {
+            detailsUseCase.invoke(13)
+        }
+
+    }
+
+    private fun getTvShowCredits(id: Int): Deferred<Result<Credits>> {
+        return viewModelScope.async(Dispatchers.IO) {
+            creditsUseCase.invoke(id)
         }
     }
 
-    fun getSimilarTvShows(id: Int) {
-        val showDetails = arrayListOf<TvShowInfo>()
-        viewModelScope.launch {
-            _detailsUiState.update { it.copy(isSimilarLoading = true) }
-            similarTvShowsUseCase(id).catch { throwable ->
-                _detailsUiState.update { it.copy(isSimilarLoading = false, similarError = throwable.message) }
-            }.collectLatest { tvShows ->
-                tvShows.forEach { tvShow ->
-                    detailsUseCase(tvShow?.id!!).collectLatest { tvShowDetails ->
-                        showDetails.add(TvShowInfo(tvShow, tvShowDetails))
-                    }
-                }
-                _detailsUiState.update { it.copy(isSimilarLoading = false, similarTvShows = showDetails) }
-            }
+    private fun getSimilarTvShows(): Deferred<Result<TvShowPage>> {
+        return viewModelScope.async(Dispatchers.IO) {
+            tvShowUseCase.invoke(1)
+        }
+
+    }
+
+    private fun getTvShowVideos(id: Int): Deferred<Result<List<Video>>> {
+        return viewModelScope.async {
+            videosUseCase.invoke(id)
         }
     }
 }
 
-data class DetailsUiState(
-    var isDetailsLoading: Boolean = false,
-    var tvShowDetails: TvShowDetails = TvShowDetails(),
-    var tvShowError: String? = null,
 
-    var isCastLoading: Boolean = false,
-    var cast: List<Cast> = emptyList(),
-    var castError: String? = null,
-
-    var similarTvShows: List<TvShowInfo> = emptyList(),
-    var isSimilarLoading: Boolean = false,
-    var similarError: String? = null,
-
-
-)

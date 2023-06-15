@@ -2,6 +2,7 @@ package com.example.tmda.presentation.navigation
 
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.example.tmda.presentation.series.seriesList.SeriesScreenType
 
 
 object Destinations {
@@ -20,20 +21,31 @@ object Destinations {
 }
 
 //movie list screen arguments names
-const val MOVIES_LIST_SCREEN_ID = "movieListScreenType"
+const val MOVIES_LIST_SCREEN_TYPE = "movieListScreenType"
 const val MOVIE_ID = "movieId"
 const val MOVIE_LIST_SCREEN_TITLE = "movieListScreenTitle"
+//series list screen args
+const val SERIES_LIST_SCREEN_TYPE ="seriesListScreenType"
+const val SERIES_ID ="SeriesId"
+
 
 
 object TvShowsList {
-    const val route = "tvshows"
-    const val tvShowTypeArg = "tvshow_type"
-    const val routeWithArgs = "$route/{$tvShowTypeArg}"
-    val arguments = listOf(navArgument(tvShowTypeArg) { type = NavType.IntType })
+   // const val route = "tvshows"
+  //  const val tvShowTypeArg = "tvshow_type"
+//  const val routeWithArgs = "$route/{$tvShowTypeArg}"
+    val arguments = listOf(
+        navArgument(SERIES_LIST_SCREEN_TYPE) {
+            type = NavType.EnumType(SeriesScreenType::class.java)
+        },
+        navArgument(SERIES_ID) {
+            type = NavType.IntType
+            defaultValue = -1
+        })
 }
 object TvShowDetails {
     const val route = "tvshow_details"
     const val tvShowIdArg = "tvshow_id"
-    const val routeWithArgs = "$route/{$tvShowIdArg}"
-    val arguments = listOf(navArgument(tvShowIdArg) { type = NavType.IntType })
+    const val routeWithArgs = "$route/{$SERIES_ID}"
+    val arguments = listOf(navArgument(SERIES_ID) { type = NavType.IntType })
 }

@@ -32,10 +32,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -54,12 +51,14 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.bitIO.tvshowcomponent.domain.entity.Cast
-import com.bitIO.tvshowcomponent.domain.entity.TvShowDetails
+import com.bitIO.tvshowcomponent.domain.entity.TvShow
+import com.example.movies.domain.enities.review.Review
+import com.example.shared.entities.credits.CastMember
 import com.example.tmda.R
-import com.example.tmda.presentation.series.seriesHome.TvShowInfo
+import com.example.tmda.presentation.series.seriesDetails.uiDto.OverView
 import com.example.tmda.presentation.shared.AppToolBar
 import com.example.tmda.presentation.shared.BackGround
+import com.example.tmda.presentation.shared.UiState
 import com.example.tmda.ui.theme.BlackTransparent37
 import com.example.tmda.ui.theme.BlackTransparent60
 import com.example.tmda.ui.theme.GoldenYellow
@@ -71,44 +70,49 @@ import com.example.tmda.ui.theme.WhiteTransparent60
 fun SeriesDetailsScreen(
     tvShowId: Int,
     modifier: Modifier = Modifier,
-    viewModel: SeriesDetailsViewModel = hiltViewModel()
-) {
-    LaunchedEffect(key1 = tvShowId) {
-        viewModel.getTvShowDetails(tvShowId)
-        viewModel.getTvShowCast(tvShowId)
-        viewModel.getSimilarTvShows(tvShowId)
 
-    }
-    val detailsUiState by viewModel.detailsUiState.collectAsState()
-    SeriesDetailsScreen(detailsUiState, modifier)
+    ) {
+    val viewModel = hiltViewModel<SeriesDetailsViewModel>()
+
+    //  val detailsUiState by viewModel.detailsUiState.collectAsState()
+    SeriesDetailsScreen(viewModel.overView.value, modifier)
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SeriesDetailsScreen(detailsUiState: DetailsUiState, modifier: Modifier) {
-    val scrollState = rememberLazyListState()
-    val progress = calculateProgress(scrollState)
-    Box(modifier = modifier) {
-        BackGround()
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.Transparent), state = scrollState
-        ) {
-            stickyHeader {
-                MotionLayoutAppBar(
-                    progress = progress.value,
-                    imageUrl = detailsUiState.tvShowDetails.imageURL,
-                    voteCount = detailsUiState.tvShowDetails.voteCount,
-                    voteAvg = detailsUiState.tvShowDetails.voteAverage
-                )
-            }
-            item { PreviewSection(detailsUiState.tvShowDetails) }
-            item { CastsRow(items = detailsUiState.cast) {} }
-            item { SimilarShowsRow(items = detailsUiState.similarTvShows) {} }
-        }
+fun SeriesDetailsScreen(overViewState: UiState<OverView>, modifier: Modifier) {
+    when (overViewState) {
+        is UiState.Failure -> {}
+        is UiState.Loading -> {}
+        is UiState.Success -> {
+            val overView = overViewState.data
+            val scrollState = rememberLazyListState()
+            val progress = calculateProgress(scrollState)
+            Box(modifier = modifier) {
+                BackGround()
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.Transparent), state = scrollState
+                ) {
+                    stickyHeader {
+                        MotionLayoutAppBar(
+                            progress = progress.value,
+                            imageUrl = overView.image,
+                            rating = overView.rating,
+                            totalVotes = overView.voteCount
+                        )
+                    }
+                    item { PreviewSection(overView) }
+                    item { CastsRow(items = overView.cast) {} }
+                    item { SimilarShowsRow(items = overView.similarSeries) {} }
+                }
 
+            }
+        }
     }
+
+
 }
 
 @SuppressLint("FrequentlyChangedStateReadInComposition")
@@ -128,35 +132,28 @@ private fun calculateProgress(scrollState: LazyListState): State<Float> {
 
 
 @Composable
-fun PreviewSection(tvShowDetails: TvShowDetails) {
-    val genres = StringBuilder()
-    val gen = tvShowDetails.genres.take(2)
-    gen.forEach {
-        if (it != gen.last()) {
-            genres.append(it.name).append("/")
-        } else {
-            genres.append(it.name)
-        }
-    }
+fun PreviewSection(overView: OverView) {
+
+
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Divider(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp, horizontal = 32.dp)
         )
-        Text(text = tvShowDetails.title, style = MaterialTheme.typography.titleLarge)
+        Text(text = overView.title, style = MaterialTheme.typography.titleLarge)
         Spacer(modifier = Modifier.height(8.dp))
-        Text(text = genres.toString(), style = MaterialTheme.typography.bodySmall)
+        Text(text = overView.genres, style = MaterialTheme.typography.bodySmall)
         Spacer(modifier = Modifier.height(24.dp))
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-            DetailsColumn(title = "Year", content = tvShowDetails.date)
-            DetailsColumn(title = "Country", content = tvShowDetails.originCountry)
-            DetailsColumn(title = "From", content = tvShowDetails.network)
+            DetailsColumn(title = "Year", content = overView.releaseYear)
+            DetailsColumn(title = "Country", content = overView.country)
+            DetailsColumn(title = "From", content = overView.company)
         }
         Spacer(modifier = Modifier.height(24.dp))
         Text(
             modifier = Modifier.padding(horizontal = 52.dp),
-            text = tvShowDetails.overview,
+            text = overView.overView,
             style = MaterialTheme.typography.bodySmall,
             textAlign = TextAlign.Center
         )
@@ -177,7 +174,7 @@ fun DetailsColumn(title: String, content: String) {
 }
 
 @Composable
-fun CastsRow(items: List<Cast>, onSeeAllClicked: () -> Unit) {
+fun CastsRow(items: List<CastMember>, onSeeAllClicked: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -218,7 +215,7 @@ fun CastsRow(items: List<Cast>, onSeeAllClicked: () -> Unit) {
 }
 
 @Composable
-fun ActorCard(cast: Cast) {
+fun ActorCard(cast: CastMember) {
     Box(
         modifier = Modifier
             .padding(horizontal = 8.dp)
@@ -229,7 +226,7 @@ fun ActorCard(cast: Cast) {
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data(cast.photo)
+                .data(cast.profilePath)
                 .crossfade(true)
                 .build(),
             modifier = Modifier.fillMaxSize(),
@@ -243,8 +240,8 @@ fun ActorCard(cast: Cast) {
                 .background(color = BlackTransparent60)
                 .padding(8.dp)
         ) {
-            Text(text = cast.name!!, fontSize = 10.sp)
-            Text(text = cast.character!!, fontSize = 10.sp, color = WhiteTransparent60)
+            Text(text = cast.name, fontSize = 10.sp)
+            Text(text = cast.character, fontSize = 10.sp, color = WhiteTransparent60)
 
         }
     }
@@ -252,7 +249,7 @@ fun ActorCard(cast: Cast) {
 }
 
 @Composable
-fun SimilarShowsRow(items: List<TvShowInfo>, onSeeAllClicked: () -> Unit) {
+fun SimilarShowsRow(items: List<TvShow>, onSeeAllClicked: () -> Unit) {
 
     Row(
         modifier = Modifier
@@ -293,7 +290,7 @@ fun SimilarShowsRow(items: List<TvShowInfo>, onSeeAllClicked: () -> Unit) {
 }
 
 @Composable
-fun SimilarShowCard(tvShowInfo: TvShowInfo) {
+fun SimilarShowCard(tvShow: TvShow) {
     Box(
         modifier = Modifier
             .padding(horizontal = 8.dp)
@@ -303,10 +300,7 @@ fun SimilarShowCard(tvShowInfo: TvShowInfo) {
         contentAlignment = Alignment.BottomCenter
     ) {
         AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(tvShowInfo.tvShow?.posterPath ?: tvShowInfo.tvShow?.backdropPath)
-                .crossfade(true)
-                .build(),
+            model = tvShow.backdropPath,
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.FillBounds,
             contentDescription = "similar show image"
@@ -324,13 +318,13 @@ fun SimilarShowCard(tvShowInfo: TvShowInfo) {
                     tint = GoldenYellow,
                     contentDescription = null
                 )
-                Text(text = "${tvShowInfo.tvShow?.voteAverage}")
+                Text(text = "${tvShow.voteAverage}")
             }
-            Text(text = "${tvShowInfo.tvShow?.name}", fontSize = 10.sp)
-            Text(
-                text = "${tvShowInfo.tvShow?.releaseDate?.take(4)}  S${tvShowInfo.tvShowDetails?.lastSeason?.toString()}  ${tvShowInfo.tvShowDetails?.lastEpisode?.toString()} episodes",
-                fontSize = 8.sp, color = WhiteTransparent60
-            )
+            Text(text = tvShow.name, fontSize = 10.sp)
+//            Text(
+//                text = "${tvShow.releaseDate}  S${tvShowInfo.tvShowDetails?.lastSeason?.toString()}  ${tvShowInfo.tvShowDetails?.lastEpisode?.toString()} episodes",
+//                fontSize = 8.sp, color = WhiteTransparent60
+//            )
 
         }
     }
@@ -339,7 +333,7 @@ fun SimilarShowCard(tvShowInfo: TvShowInfo) {
 
 
 @Composable
-fun UserReviews(items: List<Cast>, onSeeAllClicked: () -> Unit) {
+fun UserReviews(items: List<Review>, onSeeAllClicked: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -369,7 +363,7 @@ fun UserReviews(items: List<Cast>, onSeeAllClicked: () -> Unit) {
     LazyRow {
 
         items(items) {
-            ActorCard(it)
+//            ActorCard(it)
         }
 
     }
@@ -386,8 +380,8 @@ fun UserReviews(items: List<Cast>, onSeeAllClicked: () -> Unit) {
 fun MotionLayoutAppBar(
     modifier: Modifier = Modifier.background(Color.Transparent),
     imageUrl: String,
-    voteCount: Int,
-    voteAvg: Double,
+    rating: Double,
+    totalVotes: Int,
     progress: Float
 ) {
     MotionLayout(
@@ -416,7 +410,10 @@ fun MotionLayoutAppBar(
             contentDescription = null
         )
 
-        AppToolBar(modifier = Modifier.layoutId(MotionLayoutAppBarItem.MainAppBar), navController = rememberNavController()) {
+        AppToolBar(
+            modifier = Modifier.layoutId(MotionLayoutAppBarItem.MainAppBar),
+            navController = rememberNavController()
+        ) {
             IconButton(
                 modifier = Modifier
                     .background(color = BlackTransparent37, shape = RoundedCornerShape(8.dp))
@@ -431,8 +428,8 @@ fun MotionLayoutAppBar(
         }
         ServicesBox(
             modifier = Modifier.layoutId(MotionLayoutAppBarItem.ServicesBox),
-            voteAvg,
-            voteCount
+            rating,
+            totalVotes = totalVotes
         )
 
 
@@ -440,7 +437,7 @@ fun MotionLayoutAppBar(
 }
 
 @Composable
-fun ServicesBox(modifier: Modifier, voteAvg: Double, voteCount: Int) {
+fun ServicesBox(modifier: Modifier, voteAvg: Double, totalVotes: Int) {
     val sharedModifier = Modifier
         .background(Color.Transparent)
     Row(
@@ -465,7 +462,7 @@ fun ServicesBox(modifier: Modifier, voteAvg: Double, voteCount: Int) {
             Spacer(modifier = Modifier.height(4.dp))
             Text(text = "$voteAvg/10")
             Spacer(modifier = Modifier.height(4.dp))
-            Text(text = "$voteCount")
+            Text(text = "$totalVotes")
         }
         Column(
             modifier = sharedModifier,
@@ -567,7 +564,7 @@ private fun endConstraintSet() = ConstraintSet {
     }
 }
 
- enum class MotionLayoutAppBarItem {
+enum class MotionLayoutAppBarItem {
     MainAppBar,
     Image,
     ServicesBox;

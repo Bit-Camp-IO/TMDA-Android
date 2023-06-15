@@ -58,7 +58,7 @@ class DetailsViewModel @Inject constructor(
 
     private fun invokeGetMovieUseCase(useCaseType: MovieUseCaseFactory.MovieTypeWithId):
             MovieUseCaseFactory.MovieUseCaseWithId =
-        movieUseCase.invoke(useCaseType, movieId)
+        movieUseCase.getUseCase(useCaseType, movieId)
 
     private suspend fun isMovieSavedProvider(movieId: Int):Result< Boolean> {
         return getMovieSavedStateUseCase.invoke(movieId, user.sessionId)

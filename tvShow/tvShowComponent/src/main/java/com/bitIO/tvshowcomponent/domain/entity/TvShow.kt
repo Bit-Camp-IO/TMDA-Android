@@ -2,7 +2,6 @@ package com.bitIO.tvshowcomponent.domain.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.bitIO.tvshowcomponent.data.remote.response.Genre
 
 @Entity(tableName = "tvShows")
 data class TvShow(
@@ -10,7 +9,7 @@ data class TvShow(
     val adult: Boolean,
     val backdropPath: String?,
     val releaseDate: String,
-    val genres: List<TvShowGenre?>?,
+    val genres: List<TvShowGenre>,
     val name: String,
     val originalLanguage: String,
     val overview: String,

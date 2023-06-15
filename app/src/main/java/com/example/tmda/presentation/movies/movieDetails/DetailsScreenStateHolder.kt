@@ -15,6 +15,8 @@ import com.example.tmda.presentation.shared.toSuccessState
 import com.example.tmda.presentation.shared.toUiState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 
 class DetailsScreenStateHolder(
@@ -23,7 +25,7 @@ class DetailsScreenStateHolder(
     private val movieDetailsProvider: suspend (Int) -> Result<MovieDetails>,
     private val isMovieSavedProvider: suspend (Int) -> Result<Boolean>,
     private val movieVideosProvider: suspend (Int) -> Result<List<Video>>,
-    private val movieCreditsProvider: suspend (Int) ->Result<Credits>,
+    private val movieCreditsProvider: suspend (Int) -> Result<Credits>,
     private val similarMoviesProvider: suspend (Int) -> Result<MoviesPage>,
     private val recommendedMoviesProvider: suspend (Int) -> Result<MoviesPage>,
     private val reviewsProvider: suspend (Int) -> Result<List<Review>>,
@@ -68,58 +70,75 @@ class DetailsScreenStateHolder(
         mutableStateOf(UiState.Loading())
     val reviews: State<UiState<List<Review>>>
         get() = _reviews
+
+    private val _isError = mutableStateOf(false)
+    val isError: State<Boolean>
+        get() = _isError
     //
 
+
     init {
-        updateDetails()
-        updateIsSaved()
-        updateVideos()
-        updateCredits()
-        updateSimilarMovies()
-        updateRecommendedMovies()
-        updateReviews()
+        updateAll()
+    }
+
+    fun updateAll() {
+        coroutineScope.launch {
+            listOf(
+                updateDetails(),
+                updateIsSaved(),
+                updateVideos(),
+                updateCredits(),
+                updateSimilarMovies(),
+                updateRecommendedMovies(),
+                updateReviews()
+            ).awaitAll()
+            _isError.value = getIsErrorState()
+        }
     }
 
     private fun updateDetails() =
-        coroutineScope.launch(Dispatchers.IO) {
+        coroutineScope.async(Dispatchers.IO) {
             _movieDetails.value = movieDetailsProvider(movieId).toUiState()
+
         }
 
     private fun updateVideos() =
-        coroutineScope.launch(Dispatchers.IO) {
-            _movieVideos.value = movieVideosProvider(movieId).toUiState()
+        coroutineScope.async(Dispatchers.IO) {
+            _movieVideos.value =
+                movieVideosProvider(movieId).toUiState()
+
         }
 
     fun updateIsSaved() =
-        coroutineScope.launch(Dispatchers.IO) {
+        coroutineScope.async(Dispatchers.IO) {
             _isSaved.value = isMovieSavedProvider(movieId).toUiState()
+
+
         }
 
-    private fun updateCredits() {
-        coroutineScope.launch(Dispatchers.IO) {
-            _movieCredits.value = movieCreditsProvider(movieId).toUiState()
-        }
+    private fun updateCredits() = coroutineScope.async(Dispatchers.IO) {
+        _movieCredits.value = movieCreditsProvider(movieId).toUiState()
     }
 
-    private fun updateSimilarMovies() {
-        coroutineScope.launch(Dispatchers.IO) {
+
+    private fun updateSimilarMovies() =
+        coroutineScope.async(Dispatchers.IO) {
             _similarMovies.value =
                 similarMoviesProvider(1).mapToOtherType { it.results }.toUiState()
         }
-    }
 
-    private fun updateRecommendedMovies() {
-        coroutineScope.launch(Dispatchers.IO) {
+    private fun updateRecommendedMovies() =
+        coroutineScope.async(Dispatchers.IO) {
             _recommendedMovies.value =
                 recommendedMoviesProvider(1).mapToOtherType { it.results }.toUiState()
-        }
-    }
 
-    private fun updateReviews() {
-        coroutineScope.launch(Dispatchers.IO) {
+        }
+
+
+    private fun updateReviews() =
+        coroutineScope.async(Dispatchers.IO) {
             _reviews.value = reviewsProvider(movieId).toUiState()
         }
-    }
 
     fun addOrRemoveMovieToSavedList() {
         coroutineScope.launch(Dispatchers.IO) {
@@ -132,6 +151,18 @@ class DetailsScreenStateHolder(
                 }
             }
         }
+    }
+
+    private fun getIsErrorState(): Boolean {
+        return listOf(
+            _reviews,
+            _recommendedMovies,
+            _isSaved,
+            _similarMovies,
+            _movieDetails,
+            _movieVideos,
+            _movieCredits
+        ).any { it.value is UiState.Failure }
     }
 
 }

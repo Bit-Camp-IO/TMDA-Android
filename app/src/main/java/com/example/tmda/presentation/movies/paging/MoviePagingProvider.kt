@@ -5,6 +5,7 @@ import androidx.paging.PagingConfig
 import com.example.movies.domain.enities.movie.Movie
 import com.example.movies.domain.enities.movie.MoviesPage
 import com.example.tmda.presentation.movies.moviesList.UiPage
+import com.example.tmda.presentation.shared.paging.UiPagingSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -39,12 +40,12 @@ class MoviePagingProvider(
     private suspend fun getSearchPage(page: Int) =
         coroutineScope.async(Dispatchers.IO) {
             val moviePage = moviePageProvider(currentKeyWord, page)
-            UiPage(
+          Result.success(  UiPage(
                 page = moviePage.page,
                 results = moviePage.results,
                 totalPages = moviePage.totalPages,
                 isError = false
-            )
+            ))
 
         }.await()
 

@@ -1,21 +1,25 @@
 package com.bitIO.tvshowcomponent.domain.repository
 
-import androidx.paging.PagingData
-import com.bitIO.tvshowcomponent.data.remote.response.CreditsResponse
-import com.bitIO.tvshowcomponent.data.remote.response.TvShowDetailsResponse
-import com.bitIO.tvshowcomponent.data.remote.response.TvShowDto
-import kotlinx.coroutines.flow.Flow
+import com.bitIO.tvshowcomponent.domain.entity.TvShowDetails
+import com.bitIO.tvshowcomponent.domain.entity.TvShowPage
+import com.example.shared.entities.Video
+import com.example.shared.entities.credits.Credits
+
 
 interface TvShowRepository {
 
-     fun getPagingTvShows(type: Int): Flow<PagingData<TvShowDto>>
-     suspend fun getNowPlayingHomeTvShows() : Flow<List<TvShowDto>>
-     suspend fun getTopRatedHomeTvShows() : Flow<List<TvShowDto>>
-     suspend fun getPopularHomeTvShows(): Flow<List<TvShowDto>>
 
-     suspend fun getOnTheAirHomeTvShows(): Flow<List<TvShowDto>>
-     suspend fun getSimilarTvShows(tvShowId: Int): Flow<List<TvShowDto>>
-     suspend fun getTvShowDetails(tvShowId: Int) : Flow<TvShowDetailsResponse>
 
-     suspend fun getCredits(tvShowId: Int) : Flow<CreditsResponse>
+    suspend fun getTvShowDetails(tvShowId: Int): TvShowDetails
+    suspend fun getCredits(tvShowId: Int): Credits
+
+
+    suspend fun getAiringTodayTvShows(pageIndex: Int): TvShowPage
+    suspend fun getTrendingTvShows(): TvShowPage
+    suspend fun getPopularTvShows(pageIndex: Int): TvShowPage
+    suspend fun getOnTheAirTvShows(pageIndex: Int): TvShowPage
+    suspend fun getTopRatedTvShows(pageIndex: Int): TvShowPage
+    suspend fun getSimilarTvShows(tvShowId: Int, pageIndex: Int): TvShowPage
+    suspend fun geSeriestVideos(tvShowId: Int):List<Video>
+
 }

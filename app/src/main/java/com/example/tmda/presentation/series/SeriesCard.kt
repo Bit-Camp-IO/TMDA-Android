@@ -29,6 +29,7 @@ import com.bitIO.tvshowcomponent.domain.entity.TvShow
 import com.bitIO.tvshowcomponent.domain.entity.TvShowGenre
 import com.example.tmda.R
 import com.example.tmda.presentation.movies.moviesCardShape
+import com.example.tmda.presentation.series.uiDto.TvShowUiModel
 import com.example.tmda.presentation.shared.mainShape
 import com.example.tmda.ui.theme.BlackTransparent28
 import com.example.tmda.ui.theme.PineGreenDark
@@ -36,17 +37,17 @@ import com.example.tmda.ui.theme.PineGreenDark
 val seriesCardShape = mainShape(cornerRadiusDegree = 100f, slopeLength = 30f)
 
 @Composable
-fun SeriesCard(show: TvShow, onBookmarkClick: (TvShow) -> Unit) {
-    val genres = StringBuilder()
-    show.genres?.forEach {
-        it?.let {
-            if (it != show.genres?.last()) {
-                genres.append(it.name).append("/")
-            } else {
-                genres.append(it.name).append(" . ")
-            }
-        }
-    }
+fun SeriesCard(show: TvShowUiModel, onBookmarkClick: (TvShow) -> Unit) {
+//    val genres = StringBuilder()
+//    show.genres?.forEach {
+//        it?.let {
+//            if (it != show.genres?.last()) {
+//                genres.append(it.name).append("/")
+//            } else {
+//                genres.append(it.name).append(" . ")
+//            }
+//        }
+//    }
     Surface(
         shape = seriesCardShape, color = BlackTransparent28,
         modifier = Modifier
@@ -64,7 +65,7 @@ fun SeriesCard(show: TvShow, onBookmarkClick: (TvShow) -> Unit) {
             AsyncImage(
                 //placeholder = painterResource(id = R.drawable.series_image),
                 model = show.posterPath ?: show.backdropPath,
-                contentDescription = show.name + " image",
+                contentDescription = show.title + " image",
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
                     .size(144.dp)
@@ -79,16 +80,14 @@ fun SeriesCard(show: TvShow, onBookmarkClick: (TvShow) -> Unit) {
                     .fillMaxHeight(),
             ) {
                 Text(
-                    text = show.name,
+                    text = show.title,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color.White
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = show.releaseDate.take(4) + " . "
-                            + genres.toString()
-                            + show.originalLanguage.replaceFirstChar { it.uppercase() },
+                    text = show.releaseDate + " . " + show.genres + show.originalLanguage.replaceFirstChar { it.uppercase() },
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Light,
                     color = Color.White
@@ -115,7 +114,7 @@ fun SeriesCard(show: TvShow, onBookmarkClick: (TvShow) -> Unit) {
                         )
                     }
                     Text(
-                        text = show.popularity.toInt().toString() + "%",
+                        text = show.voteCount.toString() ,
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Light,
                         color = Color.White
@@ -156,6 +155,6 @@ fun PreviewTvSeriesCard() {
         11752
     )
 
-    SeriesCard(show = tv, {})
+  //  SeriesCard(show = tv, {})
 }
 
