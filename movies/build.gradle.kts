@@ -11,8 +11,6 @@ java {
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.1")
-    //Retrofit & Moshi
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
     implementation("com.squareup.moshi:moshi:1.15.0")

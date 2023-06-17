@@ -6,11 +6,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.tmda.presentation.movies.moviesHome.components.MovieHomeCard
 import com.example.tmda.presentation.movies.moviesHome.components.NowPlayingHeader
+import com.example.tmda.presentation.movies.moviesList.MovieUiDto
 import com.example.tmda.presentation.movies.moviesList.MoviesScreenType
 import com.example.tmda.presentation.navigation.navigateToMovieDetails
 import com.example.tmda.presentation.navigation.navigateToMovieListScreen
-import com.example.tmda.presentation.shared.ErrorScreen
-import com.example.tmda.presentation.shared.ItemsLazyRowComponent
+import com.example.tmda.presentation.shared.UiStates.ErrorScreen
+import com.example.tmda.presentation.shared.UiStates.UiState
+import com.example.tmda.presentation.shared.base.BaseLazyRowComponent
 
 
 @Composable
@@ -20,7 +22,7 @@ fun MoviesHomeScreen(navController: NavController) {
         LazyColumn {
             item { NowPlayingHeader(viewModel.nowPlayingMoviesState.value) }
             item {
-                ItemsLazyRowComponent(
+                HomeLazyRow(
                     title = "Popular",
                     onSeeAllClicked = {
                         navController.navigateToMovieListScreen(
@@ -28,16 +30,12 @@ fun MoviesHomeScreen(navController: NavController) {
                             MoviesScreenType.Popular
                         )
                     },
-                    moviesUiState = viewModel.popularMoviesState.value
-                ) {
-                    MovieHomeCard(
-                        movie = it,
-                        navController::navigateToMovieDetails,
-                    )
-                }
+                    itemsState = viewModel.popularMoviesState.value,
+                    onCardItemClicked = navController::navigateToMovieDetails
+                )
             }
             item {
-                ItemsLazyRowComponent(
+                HomeLazyRow(
                     title = "Upcoming",
                     onSeeAllClicked = {
                         navController.navigateToMovieListScreen(
@@ -45,17 +43,12 @@ fun MoviesHomeScreen(navController: NavController) {
                             MoviesScreenType.Upcoming
                         )
                     },
-                    moviesUiState = viewModel.upComingMoviesState.value
-                ) {
-                    MovieHomeCard(
-                        movie = it,
-                        onClick = navController::navigateToMovieDetails,
-
-                    )
-                }
+                    itemsState = viewModel.upComingMoviesState.value,
+                    onCardItemClicked = navController::navigateToMovieDetails
+                )
             }
             item {
-                ItemsLazyRowComponent(
+                HomeLazyRow(
                     title = "Top Rated",
                     hasBottomDivider = false,
                     onSeeAllClicked = {
@@ -64,14 +57,29 @@ fun MoviesHomeScreen(navController: NavController) {
                             MoviesScreenType.TopRated
                         )
                     },
-                    moviesUiState = viewModel.topRatedMoviesState.value
-                ) {
-                    MovieHomeCard(
-                        movie = it,
-                        onClick = navController::navigateToMovieDetails,
+                    itemsState = viewModel.topRatedMoviesState.value,
+                    onCardItemClicked = navController::navigateToMovieDetails
+                )
 
-                    )
-                }
             }
         }
+}
+
+@Composable
+fun HomeLazyRow(
+    title: String,
+    hasBottomDivider: Boolean = true,
+    itemsState: UiState<List<MovieUiDto>>,
+    onSeeAllClicked: () -> Unit,
+    onCardItemClicked: (Int) -> Unit
+) {
+    BaseLazyRowComponent(
+        title = title,
+        hasBottomDivider = hasBottomDivider,
+        onSeeAllClicked = onSeeAllClicked,
+        onItemClicked = onCardItemClicked,
+        itemsState = itemsState
+    ) { data, onItemClicked ->
+        MovieHomeCard(movie = data, onClick = onItemClicked)
+    }
 }

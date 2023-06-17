@@ -43,10 +43,10 @@ import com.example.tmda.presentation.movies.CreditsComponent
 import com.example.tmda.presentation.movies.moviesList.MoviesScreenType
 import com.example.tmda.presentation.navigation.navigateToMovieDetails
 import com.example.tmda.presentation.navigation.navigateToMovieListScreen
-import com.example.tmda.presentation.shared.ErrorScreen
-import com.example.tmda.presentation.shared.LoadingScreen
+import com.example.tmda.presentation.shared.UiStates.ErrorScreen
+import com.example.tmda.presentation.shared.UiStates.LoadingScreen
 import com.example.tmda.presentation.shared.MotionLayoutAppBar
-import com.example.tmda.presentation.shared.UiState
+import com.example.tmda.presentation.shared.UiStates.UiState
 
 
 @Composable
@@ -73,7 +73,6 @@ fun MovieDetailsScreen(
 
     when (stateHolder.isError.value) {
         true -> ErrorScreen { stateHolder.updateAll() }
-
         false -> DetailsScreenLoaded(
             stateHolder = stateHolder,
             viewModel::addOrRemoveMovieToSavedList,

@@ -47,12 +47,12 @@ import com.example.tmda.presentation.navigation.navigateToShowsListScreen
 import com.example.tmda.presentation.navigation.navigateToTvShowDetailsScreen
 import com.example.tmda.presentation.series.seriesList.SeriesScreenType
 import com.example.tmda.presentation.series.uiDto.TvShowUiModel
-import com.example.tmda.presentation.shared.ErrorScreen
-import com.example.tmda.presentation.shared.ImageCard
-import com.example.tmda.presentation.shared.LoadingScreen
-import com.example.tmda.presentation.shared.UiState
-import com.example.tmda.presentation.shared.imageCardModifier
-import com.example.tmda.presentation.shared.mainShape
+import com.example.tmda.presentation.shared.UiStates.ErrorScreen
+import com.example.tmda.presentation.shared.base.BaseImageCard
+import com.example.tmda.presentation.shared.UiStates.LoadingScreen
+import com.example.tmda.presentation.shared.UiStates.UiState
+import com.example.tmda.presentation.shared.base.imageCardModifier
+import com.example.tmda.presentation.shared.base.mainShape
 import com.example.tmda.ui.theme.PineGreenDark
 import com.example.tmda.ui.theme.WhiteTransparent60
 import kotlin.math.ceil
@@ -72,6 +72,9 @@ fun SeriesHomeScreen(
                         is UiState.Success -> {
                             NowPlayingHeader(nowPlaying.data)
                         }
+
+
+                        else -> {}
                     }
 
                 }
@@ -253,7 +256,7 @@ fun SeriesHomeCard(tvShow: TvShowUiModel, onTvShowClick: (Int) -> Unit) {
             MutableInteractionSource(),
             null
         ) { onTvShowClick(tvShow.id) }) {
-        ImageCard(
+        BaseImageCard(
             tvShow.backdropPath ?: tvShow.posterPath,
             tvShow.title,
             HomeCardModifier
@@ -335,6 +338,9 @@ fun <T> ItemsLazyRowComponent(
                     .padding(vertical = 16.dp, horizontal = 32.dp)
             ) else Spacer(modifier = Modifier.height(16.dp))
         }
+
+
+        else -> {}
     }
 
 

@@ -34,7 +34,7 @@ import com.example.tmda.R
 import com.example.tmda.presentation.movies.moviesList.MovieUiDto
 import com.example.tmda.presentation.shared.SavedItemIcon
 import com.example.tmda.presentation.shared.mainShape
-import com.example.tmda.presentation.shared.toSuccessState
+import com.example.tmda.presentation.shared.UiStates.toSuccessState
 import com.example.tmda.ui.theme.BlackTransparent28
 import kotlinx.coroutines.launch
 

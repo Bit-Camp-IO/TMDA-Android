@@ -58,7 +58,7 @@ import com.example.tmda.R
 import com.example.tmda.presentation.series.seriesDetails.uiDto.OverView
 import com.example.tmda.presentation.shared.AppToolBar
 import com.example.tmda.presentation.shared.BackGround
-import com.example.tmda.presentation.shared.UiState
+import com.example.tmda.presentation.shared.UiStates.UiState
 import com.example.tmda.ui.theme.BlackTransparent37
 import com.example.tmda.ui.theme.BlackTransparent60
 import com.example.tmda.ui.theme.GoldenYellow

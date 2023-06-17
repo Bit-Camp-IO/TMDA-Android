@@ -2,7 +2,7 @@ package com.example.tmda.di
 
 import android.app.Application
 import androidx.room.Room
-import com.bitIO.tvshowcomponent.data.local.abstractions.TvShowDao
+import com.bitIO.tvshowcomponent.data.local.TvShowDao
 import com.bitIO.tvshowcomponent.data.remote.TvShowApiService
 import com.example.authentication.data.local.UserDao
 import com.example.authentication.data.remote.UserApiServices

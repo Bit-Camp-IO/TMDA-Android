@@ -1,85 +1,82 @@
-@file:OptIn(FlowPreview::class, FlowPreview::class)
-
 package com.example.tmda.presentation.search
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
-import com.example.movies.domain.enities.movie.Movie
-import com.example.movies.domain.enities.movie.MoviesPage
+import com.bitIO.tvshowcomponent.domain.useCases.SearchSeriesUseCase
 import com.example.movies.domain.useCases.SearchMoviesUseCase
-import com.example.tmda.presentation.movies.paging.MoviePagingProvider
+import com.example.tmda.presentation.movies.moviesList.UiPage
+import com.example.tmda.presentation.search.data.SearchItemModel
+import com.example.tmda.presentation.search.data.toSearchItem
+import com.example.tmda.presentation.shared.UiStates.mapToOtherType
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SearchViewModel @Inject constructor(private val searchMoviesUseCase: SearchMoviesUseCase) :
+class SearchViewModel @Inject constructor(
+    private val searchMoviesUseCase: SearchMoviesUseCase,
+    private val searchSeriesUseCase: SearchSeriesUseCase
+) :
     ViewModel() {
     private val _searchType = mutableStateOf(SearchType.Movie)
     val searchType: State<SearchType>
         get() = _searchType
 
+    //
+    val moviesStateHolder = SearchStateHolder(viewModelScope, ::moviePageProvider)
+    val seriesStateHolder = SearchStateHolder(viewModelScope, ::seriesPageProvider)
+    var currentStateHolder = moviesStateHolder
 
-    private val moviePagingProvider = MoviePagingProvider(viewModelScope, ::moviePageProvider)
-    var pageStream: Flow<PagingData<Movie>> =
-        moviePagingProvider.currentPager.flow.cachedIn(viewModelScope)
-        private set
-
-
-    private val movieActionsStream = MutableSharedFlow<String>()
-    private val actionStreamDebounced = movieActionsStream.debounce(700)
-    val currentKeyword = mutableStateOf("")
-
-    init {
-        observeKeyword()
-    }
-
-    private suspend fun moviePageProvider(keyword: String, page: Int): MoviesPage {
-        val result = searchMoviesUseCase.invoke(keyword, page)
-        return if (result.isSuccess) {
-            result.getOrNull()!!
-        } else {
-            MoviesPage(
-                page,
-                results = listOf(),
-                totalPages = Int.MAX_VALUE,
-                totalResults = Int.MAX_VALUE
+    //
+    private suspend fun seriesPageProvider(
+        keyword: String,
+        page: Int
+    ): Result<UiPage<SearchItemModel>> {
+        return searchSeriesUseCase.invoke(keyword, page).mapToOtherType { tvShowPage ->
+            UiPage(
+                page = tvShowPage.page,
+                results = tvShowPage.results.map { it.toSearchItem() },
+                totalPages = tvShowPage.totalPages,
+                isError = false
             )
         }
     }
 
-    fun updateKeyword(keyword: String) {
-        currentKeyword.value = keyword
-        viewModelScope.launch {
-            movieActionsStream.emit(keyword)
+    private suspend fun moviePageProvider(
+        keyword: String,
+        page: Int
+    ): Result<UiPage<SearchItemModel>> {
+        return searchMoviesUseCase.invoke(keyword, page).mapToOtherType { it ->
+            UiPage(
+                page = it.page,
+                results = it.results.map { it.toSearchItem() },
+                totalPages = it.totalPages,
+                isError = false
+            )
         }
     }
 
-    private fun observeKeyword() {
-        viewModelScope.launch(Dispatchers.Unconfined) {
-            actionStreamDebounced.collect {
-                moviePagingProvider.changeKeyword(it)
-            }
-        }
-
-    }
 
     fun changeSearchType(type: SearchType) {
         if (_searchType.value == type) return
         _searchType.value = type
+        currentStateHolder = when (type) {
+            SearchType.Movie -> moviesStateHolder
+            SearchType.Series -> seriesStateHolder
+            SearchType.Actors -> TODO()
+        }
     }
 
+    fun updateKeyword(keyword: String) {
+        currentStateHolder.updateKeyword(keyword)
+    }
+    fun onTryAgain(){
+        moviesStateHolder
+    }
 
 }
+
 
 enum class SearchType(val title: String) {
     Movie("Movies"),

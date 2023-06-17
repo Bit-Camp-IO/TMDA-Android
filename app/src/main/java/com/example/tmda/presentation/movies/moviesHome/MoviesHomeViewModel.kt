@@ -7,9 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.movies.domain.enities.movie.Movie
 import com.example.movies.domain.useCases.MovieUseCaseFactory
 import com.example.tmda.presentation.movies.moviesList.MovieUiDto
-import com.example.tmda.presentation.shared.UiState
-import com.example.tmda.presentation.shared.mapToOtherType
-import com.example.tmda.presentation.shared.toUiState
+import com.example.tmda.presentation.shared.UiStates.UiState
+import com.example.tmda.presentation.shared.UiStates.mapToOtherType
+import com.example.tmda.presentation.shared.UiStates.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -48,6 +48,7 @@ class MoviesHomeViewModel @Inject constructor(private val interactor: MovieUseCa
 
     private fun updateNowPlayingMovies() {
         viewModelScope.launch(Dispatchers.IO) {
+
             val movies = interactor.getUseCase(MovieUseCaseFactory.MovieType.NowPlaying)
                 .invoke(1).mapToOtherType { it.results.take(5) }.toUiState()
             _nowPlayingMoviesState.value = movies

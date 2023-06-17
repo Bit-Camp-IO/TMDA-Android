@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.example.tmda.presentation.search
 
 import androidx.compose.foundation.background
@@ -46,81 +48,112 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
-import com.example.movies.domain.enities.movie.Movie
 import com.example.tmda.R
 import com.example.tmda.presentation.movies.getTmdbImageLink
+import com.example.tmda.presentation.movies.moviesList.ErrorComponent
 import com.example.tmda.presentation.movies.moviesList.MovieUiDto
 import com.example.tmda.presentation.navigation.navigateToMovieDetails
-import com.example.tmda.presentation.shared.LoadingScreen
+import com.example.tmda.presentation.navigation.navigateToTvShowDetailsScreen
+import com.example.tmda.presentation.search.data.SearchItemModel
+import com.example.tmda.presentation.shared.UiStates.ErrorScreen
+import com.example.tmda.presentation.shared.UiStates.LoadingScreen
 import com.example.tmda.presentation.shared.mainShape
 import com.example.tmda.ui.theme.BlackTransparent28
 import com.example.tmda.ui.theme.BlackTransparent37
 import com.example.tmda.ui.theme.PineGreenMedium
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
     navController: NavController
 ) {
     val viewModel = hiltViewModel<SearchViewModel>()
-    val movies = viewModel.pageStream.collectAsLazyPagingItems()
-    val listState = rememberLazyListState()
+    val movies = viewModel.moviesStateHolder.searchPagingProvider.collectAsLazyPagingItems()
+    val series = viewModel.seriesStateHolder.searchPagingProvider.collectAsLazyPagingItems()
+    val movieListState = rememberLazyListState()
+    val seriesListState = rememberLazyListState()
 
-    LaunchedEffect(key1 = viewModel.currentKeyword.value) {
-        listState.scrollToItem(0, 0)
+    LaunchedEffect(key1 = viewModel.moviesStateHolder.displayedKeyWord.value) {
+        movieListState.scrollToItem(0, 0)
+    }
+    LaunchedEffect(key1 = viewModel.seriesStateHolder.displayedKeyWord.value) {
+        seriesListState.scrollToItem(0, 0)
     }
 
     Box(contentAlignment = Alignment.TopCenter) {
-        MovieList(
-            navController = navController,
-            listState = listState,
-            movies = movies,
-        )
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Spacer(modifier = Modifier
-                .height(60.dp)
-                .fillMaxWidth()
-                .clickable(enabled = false) {})
-            SearchBar(
-                modifier = Modifier.height(60.dp),
-                query = viewModel.currentKeyword.value,
-                onQueryChange = viewModel::updateKeyword,
-                onSearch = {},
-                active = false,
-                trailingIcon = {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_mic),
-                        contentDescription = null
-                    )
-                },
-                placeholder = {
-                    Row(
-                        modifier = Modifier,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            modifier = Modifier.size(16.dp),
-                            painter = painterResource(id = R.drawable.ic_search),
-                            contentDescription = null,
-                            tint = Color.Unspecified
-                        )
-                        Text(text = "  Search..")
-                    }
-                },
-                shape = RoundedCornerShape(10.dp),
-                onActiveChange = {},
-                windowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
-                colors = SearchBarDefaults.colors(containerColor = BlackTransparent37)
-            ) {}
-            Spacer(modifier = Modifier.height(24.dp))
-            ChipRow(typeState = viewModel.searchType, onClick = viewModel::changeSearchType)
+        when (viewModel.searchType.value) {
+            SearchType.Movie -> {
+                CardList(onItemClicked = navController::navigateToMovieDetails, listState = movieListState, searchItems = movies) {
+                    movies.retry()
+                }
+            }
+
+            SearchType.Series -> {
+                CardList(
+                    onItemClicked = navController::navigateToTvShowDetailsScreen,
+                    listState = seriesListState,
+                    searchItems = series
+                ) { series.retry() }
+            }
+
+            SearchType.Actors -> TODO()
         }
-
-
+        SearchBox(
+            currentQuery = viewModel.currentStateHolder.displayedKeyWord.value,
+            onQueryChange = viewModel::updateKeyword,
+            currentSearchType=viewModel.searchType,
+            onChipChanged=viewModel::changeSearchType
+            )
     }
 }
 
+@Composable
+fun SearchBox(
+    currentQuery: String,
+    onQueryChange: (String) -> Unit,
+    currentSearchType:State< SearchType>,
+    onChipChanged: (SearchType)->Unit,
+    ) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Spacer(modifier = Modifier
+            .height(60.dp)
+            .fillMaxWidth()
+            .clickable(enabled = false) {})
+        SearchBar(
+            modifier = Modifier.height(60.dp),
+            query = currentQuery,
+            onQueryChange = onQueryChange,
+            onSearch = {},
+            active = false,
+            trailingIcon = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_mic),
+                    contentDescription = null
+                )
+            },
+            placeholder = {
+                Row(
+                    modifier = Modifier,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        modifier = Modifier.size(16.dp),
+                        painter = painterResource(id = R.drawable.ic_search),
+                        contentDescription = null,
+                        tint = Color.Unspecified
+                    )
+                    Text(text = "  Search..")
+                }
+            },
+            shape = RoundedCornerShape(10.dp),
+            onActiveChange = {},
+            windowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
+            colors = SearchBarDefaults.colors(containerColor = BlackTransparent37)
+        ) {}
+        Spacer(modifier = Modifier.height(24.dp))
+        ChipRow(typeState = currentSearchType, onClick = onChipChanged)
+    }
+}
 
 @Composable
 fun ChipRow(typeState: State<SearchType>, onClick: (SearchType) -> Unit) {
@@ -150,9 +183,12 @@ fun ChipRow(typeState: State<SearchType>, onClick: (SearchType) -> Unit) {
 @Composable
 fun ChipItem(type: SearchType, isSelected: Boolean, onClick: (SearchType) -> Unit) {
     val color = if (isSelected) PineGreenMedium else Color.Transparent
-    Box(modifier = Modifier.clip(RoundedCornerShape(20.dp))
-        .background(color)
-        .clickable { onClick(type) }, contentAlignment = Alignment.Center) {
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(20.dp))
+            .background(color)
+            .clickable { onClick(type) }, contentAlignment = Alignment.Center
+    ) {
 
         Text(
             text = type.title,
@@ -162,72 +198,72 @@ fun ChipItem(type: SearchType, isSelected: Boolean, onClick: (SearchType) -> Uni
     }
 }
 
+
 @Composable
-fun MovieList(
-    navController: NavController,
+fun CardList(
+    onItemClicked: (Int) -> Unit,
     listState: LazyListState,
-    movies: LazyPagingItems<Movie>,
+    searchItems: LazyPagingItems<SearchItemModel>,
+    onTryAgain: () -> Unit
 ) {
-
-
-    LazyColumn(
-        Modifier
-            .background(Color.Transparent)
-            .fillMaxSize(),
-        state = listState
-    ) {
-
-        item { Spacer(modifier = Modifier.height(128.dp)) }
-        items(
-            count = movies.itemSnapshotList.size,
-            contentType = { MovieUiDto::class },
-            key = { movies.peek(it)!!.id },
-
+    when (searchItems.loadState.refresh) {
+        is LoadState.Error -> ErrorScreen(onTryAgain)
+        is LoadState.Loading -> LoadingScreen()
+        is LoadState.NotLoading -> {
+            LazyColumn(
+                Modifier.fillMaxSize(),
+                state = listState,
             ) {
+                item { Spacer(modifier = Modifier.height(200.dp)) }
+                items(
+                    count = searchItems.itemSnapshotList.size,
+                    contentType = { MovieUiDto::class },
+                    key = { searchItems.peek(it)!!.id },
 
-            MovieCard(
-                movie = movies[it]!!,
-                onCardClicked = navController::navigateToMovieDetails,
-            )
-        }
-
-        when (val state = movies.loadState.append) {
-            is LoadState.Error -> {
-
-            }
-
-            is LoadState.Loading -> {
-                item {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(128.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
                     ) {
-                        LoadingScreen()
+                    ItemCard(
+                        searchItemModel = searchItems[it]!!,
+                        onCardClicked = onItemClicked,
+                    )
+                }
+
+                when (val state = searchItems.loadState.append) {
+                    is LoadState.Error -> item { ErrorComponent(onTryAgain) }
+
+                    is LoadState.Loading -> {
+                        item {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(128.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center,
+                            ) {
+                                LoadingScreen()
+                            }
+                        }
                     }
+
+                    else -> {}
                 }
             }
-
-            else -> {}
         }
     }
+
 }
 
 @Composable
-fun MovieCard(
-    movie: Movie,
+fun ItemCard(
+    searchItemModel: SearchItemModel,
     onCardClicked: (Int) -> Unit,
 ) {
-
     Surface(
-        shape = moviesCardShape, color = BlackTransparent28,
+        shape = itemCardShape, color = BlackTransparent28,
         modifier = Modifier
             .fillMaxWidth()
             .height(160.dp)
             .padding(vertical = 8.dp)
-            .clickable { onCardClicked(movie.id) }
+            .clickable { onCardClicked(searchItemModel.id) }
 
     ) {
         Row(
@@ -238,12 +274,14 @@ fun MovieCard(
         ) {
             val coroutineScope = rememberCoroutineScope()
             AsyncImage(
-                model = getTmdbImageLink(movie.backdropPath ?: movie.posterPath),
-                contentDescription = movie.title + "image",
+                model = getTmdbImageLink(
+                    searchItemModel.backdropPath ?: searchItemModel.posterPath
+                ),
+                contentDescription = searchItemModel.title + "image",
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
                     .size(144.dp)
-                    .clip(moviesCardShape)
+                    .clip(itemCardShape)
             )
             Spacer(modifier = Modifier.width(8.dp))
             Column(
@@ -258,14 +296,14 @@ fun MovieCard(
 
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = movie.title,
+                    text = searchItemModel.title,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color.White,
                     textAlign = TextAlign.Center
                 )
                 Text(
-                    text = movie.releaseDate.take(4) + ". genre/genre ." + movie.originalLanguage,
+                    text = "${searchItemModel.releaseDate}. ${searchItemModel.genres} .${searchItemModel.originalLanguage}",
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Normal,
                     color = Color.White
@@ -285,14 +323,14 @@ fun MovieCard(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = movie.voteAverage.toString(),
+                            text = searchItemModel.voteAverage.toString(),
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Normal,
                             color = Color.White
                         )
                     }
                     Text(
-                        text = movie.popularity.toString(),
+                        text = searchItemModel.voteCount.toString(),
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Normal,
                         color = Color.White
@@ -307,4 +345,4 @@ fun MovieCard(
 }
 
 
-val moviesCardShape = mainShape(cornerRadiusDegree = 100f, slopeLength = 30f)
+val itemCardShape = mainShape(cornerRadiusDegree = 100f, slopeLength = 30f)

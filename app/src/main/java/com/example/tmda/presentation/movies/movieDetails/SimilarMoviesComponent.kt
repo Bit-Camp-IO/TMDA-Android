@@ -28,12 +28,12 @@ import androidx.compose.ui.unit.sp
 import com.example.movies.domain.enities.movie.Movie
 import com.example.tmda.R
 import com.example.tmda.presentation.movies.getTmdbImageLink
-import com.example.tmda.presentation.shared.ImageCard
-import com.example.tmda.presentation.shared.LoadingScreen
+import com.example.tmda.presentation.shared.UiStates.LoadingScreen
 import com.example.tmda.presentation.shared.NoDataComponent
-import com.example.tmda.presentation.shared.UiState
-import com.example.tmda.presentation.shared.imageCardModifier
-import com.example.tmda.presentation.shared.mainShape
+import com.example.tmda.presentation.shared.UiStates.UiState
+import com.example.tmda.presentation.shared.base.BaseImageCard
+import com.example.tmda.presentation.shared.base.imageCardModifier
+import com.example.tmda.presentation.shared.base.mainShape
 import com.example.tmda.ui.theme.GoldenYellow
 import com.example.tmda.ui.theme.PineGreenDark
 import com.example.tmda.ui.theme.WhiteTransparent60
@@ -95,7 +95,7 @@ fun SimilarMoviesRow(
             .padding(vertical = 16.dp, horizontal = 32.dp)
     )
 }
-val shape= mainShape()
+val shape= mainShape
 @Composable
 fun SimilarMovieCard(movie: Movie, onCardItemClicked: (Int) -> Unit) {
     Box(
@@ -106,7 +106,7 @@ fun SimilarMovieCard(movie: Movie, onCardItemClicked: (Int) -> Unit) {
             .clickable { onCardItemClicked(movie.id) },
         contentAlignment = Alignment.BottomCenter
     ) {
-        ImageCard(
+        BaseImageCard(
             imagePath = getTmdbImageLink(movie.backdropPath ?: movie.posterPath),
             title = movie.title,
           modifier = similarMovieCardModifier

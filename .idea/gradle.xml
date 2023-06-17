@@ -14,8 +14,7 @@
             <option value="$PROJECT_DIR$/authentication" />
             <option value="$PROJECT_DIR$/movies" />
             <option value="$PROJECT_DIR$/shared" />
-            <option value="$PROJECT_DIR$/tvShow" />
-            <option value="$PROJECT_DIR$/tvShow/tvShowComponent" />
+            <option value="$PROJECT_DIR$/tvShowComponent" />
           </set>
         </option>
       </GradleProjectSettings>

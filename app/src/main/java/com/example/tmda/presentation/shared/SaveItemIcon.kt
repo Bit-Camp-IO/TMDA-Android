@@ -5,6 +5,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import com.example.tmda.R
+import com.example.tmda.presentation.shared.UiStates.LoadingScreen
+import com.example.tmda.presentation.shared.UiStates.UiState
 import com.example.tmda.ui.theme.PineGreenDark
 
 @Composable
@@ -15,7 +17,8 @@ fun SavedItemIcon(
     when(isSavedState){
         is UiState.Failure -> TODO()
         is UiState.Loading -> {
-            LoadingScreen()}
+            LoadingScreen()
+        }
         is UiState.Success -> {
             val isSaved=isSavedState.data
             if (isSaved)

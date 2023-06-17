@@ -40,7 +40,7 @@ class SeriesListViewModel @Inject constructor(
         if (pagesStream == null) {
             viewModelScope.launch { }
             pagesStream =
-                PagingProvider(::getSeriesPagingData).createPager().flow.cachedIn(viewModelScope)
+                PagingProvider(::getSeriesPagingData).createNewPager().flow.cachedIn(viewModelScope)
         }
         return pagesStream!!
 

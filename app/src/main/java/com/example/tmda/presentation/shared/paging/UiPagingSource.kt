@@ -1,5 +1,6 @@
 package com.example.tmda.presentation.shared.paging
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.tmda.presentation.movies.moviesList.UiPage
@@ -19,6 +20,7 @@ class UiPagingSource<T : Any>(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, T> {
         return try {
+            Log.d("xxxxx","xxxxx")
 
             val pageIndex = params.key ?: 1
             val response = responseGetter(pageIndex).getOrElse { return LoadResult.Error(Throwable())  }

@@ -45,10 +45,13 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("debug")
+            multiDexEnabled = true
         }
         getByName("debug") {
             isJniDebuggable = true
@@ -83,7 +86,7 @@ dependencies {
 
 
 
-    api(project(":tvShow:tvShowComponent"))
+    api(project(":tvShowComponent"))
 
 
     api(project(":movies"))
@@ -94,9 +97,9 @@ dependencies {
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.activity:activity-compose:1.7.2")
-    implementation("androidx.navigation:navigation-compose:2.5.3")
+    implementation("androidx.navigation:navigation-compose:2.6.0")
     //Compose
-    implementation("androidx.compose.ui:ui:1.4.0-beta02")
+    implementation("androidx.compose.ui:ui:1.5.0-beta02")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
@@ -130,7 +133,7 @@ dependencies {
     //Coil
     implementation("io.coil-kt:coil-compose:2.4.0")
     //Lottie
-    implementation ("com.airbnb.android:lottie-compose:6.0.0")
+    implementation ("com.airbnb.android:lottie-compose:6.0.1")
 
     //Testing
     testImplementation("junit:junit:4.13.2")

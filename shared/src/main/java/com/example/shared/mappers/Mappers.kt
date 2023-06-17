@@ -3,7 +3,9 @@ package com.example.shared.mappers
 import com.example.shared.dto.credits.CastMemberDto
 import com.example.shared.dto.credits.CreditsDto
 import com.example.shared.dto.credits.CrewMemberDto
+import com.example.shared.dto.people.PersonDto
 import com.example.shared.dto.videos.VideoDto
+import com.example.shared.entities.Person
 import com.example.shared.entities.Video
 import com.example.shared.entities.credits.CastMember
 import com.example.shared.entities.credits.Credits
@@ -14,6 +16,7 @@ fun CreditsDto.toCredits() = Credits(
     cast = cast.map { it.toCastMember() },
     crew = crew.map { it.toCrewMember() }
 )
+
 fun CastMemberDto.toCastMember() = CastMember(
     id = id,
     role = role,
@@ -29,4 +32,15 @@ fun CrewMemberDto.toCrewMember() = CrewMember(
     profilePath = profilePath,
     job = job
 )
-fun VideoDto.toVideo() = Video(key = key, site = site,type=type)
+
+fun VideoDto.toVideo() = Video(key = key, site = site, type = type)
+fun PersonDto.toPerson() = Person(
+    biography,
+    birthday,
+    deathDay,
+    id,
+    name,
+    placeOfBirth,
+    popularity,
+    profilePath
+)

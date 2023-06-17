@@ -18,6 +18,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.tmda.presentation.movies.moviesList.MovieUiDto
+import com.example.tmda.presentation.shared.UiStates.ErrorScreen
+import com.example.tmda.presentation.shared.UiStates.LoadingScreen
+import com.example.tmda.presentation.shared.UiStates.UiState
 import com.example.tmda.ui.theme.PineGreenDark
 
 @Composable
@@ -25,7 +28,7 @@ fun ItemsLazyRowComponent(
     title: String = "More like this",
     hasBottomDivider: Boolean = true,
     onSeeAllClicked: () -> Unit,
-    moviesUiState:UiState< List<MovieUiDto>>,
+    moviesUiState: UiState<List<MovieUiDto>>,
     contentCard: @Composable (MovieUiDto) -> Unit
 ) {
 
@@ -60,7 +63,8 @@ fun ItemsLazyRowComponent(
             ErrorScreen {}
         }
         is UiState.Loading -> {
-            LoadingScreen(modifier = Modifier.height(300.dp))}
+            LoadingScreen(modifier = Modifier.height(300.dp))
+        }
         is UiState.Success -> {
             val movies=moviesUiState.data
             LazyRow {

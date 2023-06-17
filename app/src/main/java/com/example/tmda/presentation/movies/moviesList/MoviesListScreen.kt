@@ -34,8 +34,8 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.tmda.presentation.movies.MovieCard
 import com.example.tmda.presentation.navigation.navigateToMovieDetails
 import com.example.tmda.presentation.shared.AppToolBar
-import com.example.tmda.presentation.shared.ErrorScreen
-import com.example.tmda.presentation.shared.LoadingScreen
+import com.example.tmda.presentation.shared.UiStates.ErrorScreen
+import com.example.tmda.presentation.shared.UiStates.LoadingScreen
 import com.example.tmda.ui.theme.PineGreenMedium
 
 

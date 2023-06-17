@@ -7,10 +7,14 @@ import com.example.tmda.presentation.movies.moviesList.UiPage
 class PagingProvider<T : Any>(
     private val dataPageProvider: suspend (Int) -> Result<UiPage<T>>
 ) {
+    private lateinit var currentPager: Pager<Int, T>
+    private lateinit var pagingSource: UiPagingSource<T>
 
-
-    fun createPager(): Pager<Int, T> {
-        return Pager(
+  init {
+      createNewPager()
+  }
+    fun createNewPager(): Pager<Int, T> {
+        currentPager= Pager(
             initialKey = 1,
             config = PagingConfig(
                 20,
@@ -18,7 +22,14 @@ class PagingProvider<T : Any>(
                 initialLoadSize = 20,
                 enablePlaceholders = false,
             ), pagingSourceFactory = {
-                UiPagingSource { dataPageProvider(it) }
+                pagingSource=   UiPagingSource { dataPageProvider(it) }
+                pagingSource
             })
+
+        return currentPager
+    }
+
+    fun invalidate(){
+        pagingSource.invalidate()
     }
 }
