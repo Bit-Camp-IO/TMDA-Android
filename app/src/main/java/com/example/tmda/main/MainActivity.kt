@@ -20,7 +20,7 @@ import com.example.tmda.presentation.login.LoginScreen
 import com.example.tmda.presentation.navigation.BottomNavBar
 import com.example.tmda.presentation.navigation.NavigationHost
 import com.example.tmda.presentation.shared.BackGround
-import com.example.tmda.presentation.shared.UiStates.LoadingScreen
+import com.example.tmda.presentation.shared.uiStates.LoadingScreen
 import com.example.tmda.ui.theme.TMDATheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview

@@ -1,4 +1,4 @@
-package com.example.tmda.presentation.movies
+package com.example.tmda.presentation.shared.base.list
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,10 +15,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,30 +29,35 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.tmda.R
-import com.example.tmda.presentation.movies.moviesList.MovieUiDto
+import com.example.tmda.presentation.movies.getTmdbImageLink
 import com.example.tmda.presentation.shared.SavedItemIcon
 import com.example.tmda.presentation.shared.mainShape
-import com.example.tmda.presentation.shared.UiStates.toSuccessState
 import com.example.tmda.ui.theme.BlackTransparent28
 import kotlinx.coroutines.launch
 
 
 @Composable
-fun MovieCard(
-    movie: MovieUiDto,
-    hasBookMarkIcon: Boolean,
+fun BaseListItemWithBookmark(
+    id: Int,
+    title: String,
+    backdropPath: String?,
+    date:String,
+    genres:String,
+    language:String,
+    voteAverage:Double,
+    voteCount:Int,
+    savedState: MutableState<Boolean>,
     onCardClicked: (Int) -> Unit,
-    onSaveItemClicked: suspend (Int, Boolean) -> Boolean
+    onSaveItemClicked: suspend (Int, MutableState<Boolean>) -> Boolean
 ) {
 
-    var isSavedState by remember { movie.isSaved }
     Surface(
         shape = moviesCardShape, color = BlackTransparent28,
         modifier = Modifier
             .fillMaxWidth()
             .height(160.dp)
             .padding(vertical = 8.dp)
-            .clickable { onCardClicked(movie.id) }
+            .clickable { onCardClicked(id) }
 
     ) {
         Row(
@@ -65,8 +68,8 @@ fun MovieCard(
         ) {
             val coroutineScope = rememberCoroutineScope()
             AsyncImage(
-                model = getTmdbImageLink(movie.backdropPath ),
-                contentDescription = movie.title + "image",
+                model = getTmdbImageLink(backdropPath),
+                contentDescription = title + "image",
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
                     .size(144.dp)
@@ -81,7 +84,7 @@ fun MovieCard(
                     .fillMaxHeight()
                     .padding(end = 16.dp),
             ) {
-                if (hasBookMarkIcon) Row(
+                Row(
                     Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
@@ -89,27 +92,23 @@ fun MovieCard(
                         modifier = Modifier
                             .size(24.dp)
                             .clickable {
-                                coroutineScope.launch {
-                                  if ( onSaveItemClicked(movie.id, movie.isSaved.value)){
-                                    movie.isSaved.value = !movie.isSaved.value
-                                    isSavedState = movie.isSaved.value
-                                }}
+                                coroutineScope.launch { onSaveItemClicked(id, savedState) }
                             },
-                        isSavedState = isSavedState.toSuccessState()
+                        isSavedState = savedState
                     )
 
-                } else Spacer(modifier = Modifier.height(24.dp))
+                }
 
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = movie.title,
+                    text = title,
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
                     color = Color.White,
                     textAlign = TextAlign.Center
                 )
                 Text(
-                    text = movie.releaseDate.take(4) + ". ${movie.genres} ." + movie.originalLanguage,
+                    text = "$date. $genres .$language",
                     fontSize = 10.sp,
                     fontWeight = FontWeight.Normal,
                     color = Color.White
@@ -129,14 +128,14 @@ fun MovieCard(
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
-                            text = movie.voteAverage.toString(),
+                            text = voteAverage.toString(),
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Normal,
                             color = Color.White
                         )
                     }
                     Text(
-                        text = movie.voteCount.toString(),
+                        text = voteCount.toString(),
                         fontSize = 10.sp,
                         fontWeight = FontWeight.Normal,
                         color = Color.White
@@ -149,5 +148,4 @@ fun MovieCard(
 
     }
 }
-
 val moviesCardShape = mainShape(cornerRadiusDegree = 100f, slopeLength = 30f)

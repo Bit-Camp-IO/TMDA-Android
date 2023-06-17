@@ -3,7 +3,6 @@ package com.example.tmda.presentation.shared.paging
 import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.tmda.presentation.movies.moviesList.UiPage
 
 class UiPagingSource<T : Any>(
     var responseGetter: suspend (Int) -> Result<UiPage<T>>,

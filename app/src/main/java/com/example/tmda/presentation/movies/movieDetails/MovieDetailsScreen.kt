@@ -40,13 +40,13 @@ import androidx.navigation.NavController
 import com.example.movies.domain.enities.Genre
 import com.example.movies.domain.enities.movie.MovieDetails
 import com.example.tmda.presentation.movies.CreditsComponent
-import com.example.tmda.presentation.movies.moviesList.MoviesScreenType
+import com.example.tmda.presentation.movies.uiModels.MoviesScreenType
 import com.example.tmda.presentation.navigation.navigateToMovieDetails
 import com.example.tmda.presentation.navigation.navigateToMovieListScreen
-import com.example.tmda.presentation.shared.UiStates.ErrorScreen
-import com.example.tmda.presentation.shared.UiStates.LoadingScreen
+import com.example.tmda.presentation.shared.uiStates.ErrorScreen
+import com.example.tmda.presentation.shared.uiStates.LoadingScreen
 import com.example.tmda.presentation.shared.MotionLayoutAppBar
-import com.example.tmda.presentation.shared.UiStates.UiState
+import com.example.tmda.presentation.shared.uiStates.UiState
 
 
 @Composable

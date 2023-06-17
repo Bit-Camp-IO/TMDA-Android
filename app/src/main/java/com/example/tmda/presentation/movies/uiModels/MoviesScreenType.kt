@@ -1,4 +1,4 @@
-package com.example.tmda.presentation.movies.moviesList
+package com.example.tmda.presentation.movies.uiModels
 
 enum class MoviesScreenType {
     Upcoming,
@@ -6,7 +6,5 @@ enum class MoviesScreenType {
     TopRated,
     Popular,
     Recommended,
-    Similar;
-
-
+    Similar
 }

@@ -1,4 +1,4 @@
-package com.example.tmda.presentation.movies.moviesList
+package com.example.tmda.presentation.movies.uiModels
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf

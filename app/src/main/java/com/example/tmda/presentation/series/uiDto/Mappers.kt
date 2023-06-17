@@ -2,7 +2,7 @@ package com.example.tmda.presentation.series.uiDto
 
 import com.bitIO.tvshowcomponent.domain.entity.TvShow
 import com.bitIO.tvshowcomponent.domain.entity.TvShowPage
-import com.example.tmda.presentation.movies.moviesList.UiPage
+import com.example.tmda.presentation.shared.paging.UiPage
 
 fun TvShow.toTvShowUIModel(): TvShowUiModel {
     return TvShowUiModel(

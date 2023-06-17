@@ -10,9 +10,9 @@ import com.bitIO.tvshowcomponent.domain.useCases.tvShow.GetTrendingTvShowUseCase
 import com.bitIO.tvshowcomponent.domain.useCases.tvShow.TvShowUseCaseFactory
 import com.example.tmda.presentation.series.uiDto.TvShowUiModel
 import com.example.tmda.presentation.series.uiDto.toTvShowUIModel
-import com.example.tmda.presentation.shared.UiStates.UiState
-import com.example.tmda.presentation.shared.UiStates.mapToOtherType
-import com.example.tmda.presentation.shared.UiStates.toUiState
+import com.example.tmda.presentation.shared.uiStates.UiState
+import com.example.tmda.presentation.shared.uiStates.mapToOtherType
+import com.example.tmda.presentation.shared.uiStates.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -1,5 +1,6 @@
 package com.example.tmda.presentation.movies.moviesList
 
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,6 +12,8 @@ import com.example.movies.domain.useCases.AddMovieToWatchListUseCase
 import com.example.movies.domain.useCases.GetMovieSavedStateUseCase
 import com.example.movies.domain.useCases.MovieUseCaseFactory
 import com.example.tmda.presentation.movies.paging.MovieWithBookMarkPagingProvider
+import com.example.tmda.presentation.movies.uiModels.MovieUiDto
+import com.example.tmda.presentation.movies.uiModels.MoviesScreenType
 import com.example.tmda.presentation.navigation.MOVIES_LIST_SCREEN_TYPE
 import com.example.tmda.presentation.navigation.MOVIE_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -52,9 +55,10 @@ class MoviesListViewModel @Inject constructor(
         return pagesStream!!
     }
 
-    suspend fun addOrRemoveMovieToSavedList(movieId: Int, isSaved: Boolean): Boolean {
+    suspend fun addOrRemoveMovieToSavedList(movieId: Int, isSaved:MutableState<Boolean>): Boolean {
 
-        addMovieToWatchListUseCase.invoke(16874876, user.sessionId, movieId, !isSaved).onSuccess {
+        addMovieToWatchListUseCase.invoke(16874876, user.sessionId, movieId, !isSaved.value).onSuccess {
+            isSaved.value=!isSaved.value
             return true
         }
         return false

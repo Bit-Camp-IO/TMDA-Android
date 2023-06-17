@@ -9,10 +9,10 @@ import com.example.movies.domain.enities.movie.Movie
 import com.example.movies.domain.enities.movie.MovieDetails
 import com.example.movies.domain.enities.movie.MoviesPage
 import com.example.movies.domain.enities.review.Review
-import com.example.tmda.presentation.shared.UiStates.UiState
-import com.example.tmda.presentation.shared.UiStates.mapToOtherType
-import com.example.tmda.presentation.shared.UiStates.toSuccessState
-import com.example.tmda.presentation.shared.UiStates.toUiState
+import com.example.tmda.presentation.shared.uiStates.UiState
+import com.example.tmda.presentation.shared.uiStates.mapToOtherType
+import com.example.tmda.presentation.shared.uiStates.toSuccessState
+import com.example.tmda.presentation.shared.uiStates.toUiState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

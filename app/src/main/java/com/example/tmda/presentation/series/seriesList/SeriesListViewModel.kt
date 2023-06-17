@@ -1,5 +1,6 @@
 package com.example.tmda.presentation.series.seriesList
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -9,7 +10,7 @@ import androidx.paging.cachedIn
 import com.bitIO.tvshowcomponent.domain.useCases.tvShow.TvShowUseCaseFactory
 import com.example.authentication.domain.interactors.AddOrRemoveTvFromWatchListUseCase
 import com.example.authentication.domain.interactors.GetTvSavedStateUseCase
-import com.example.tmda.presentation.movies.moviesList.UiPage
+import com.example.tmda.presentation.shared.paging.UiPage
 import com.example.tmda.presentation.navigation.SERIES_ID
 import com.example.tmda.presentation.navigation.SERIES_LIST_SCREEN_TYPE
 import com.example.tmda.presentation.series.uiDto.TvShowBookMarkUiModel
@@ -76,9 +77,12 @@ class SeriesListViewModel @Inject constructor(
     private suspend fun getIsSavedState(seriesId: Int) =
         viewModelScope.async { getTvSavedStateUseCase.invoke(seriesId) }
 
-   suspend fun addOrRemoveToBookMark(id:Int,isSaved:Boolean): Boolean {
-        return viewModelScope.async{
-        val result=    addOrRemoveTvFromWatchListUseCase.invoke(id,!isSaved)
+    suspend fun addOrRemoveToBookMark(id: Int, isSaved: MutableState<Boolean>): Boolean {
+        return viewModelScope.async {
+            val result = addOrRemoveTvFromWatchListUseCase.invoke(id, !isSaved.value)
+            if (result.isSuccess) {
+                isSaved.value = !isSaved.value
+            }
             result.isSuccess
         }.await()
     }
@@ -114,12 +118,13 @@ class SeriesListViewModel @Inject constructor(
                 launch lowPriority@{
                     if (index in priorityRange) return@lowPriority
                     val result = getIsSavedState(tvShow.tvShowUiModel.id).await()
-                    tvShow.bookMarkState .value = handleUpdateSavedError(result)
+                    tvShow.bookMarkState.value = handleUpdateSavedError(result)
 
                 }
             }
         }
     }
+
     private fun handleUpdateSavedError(result: Result<Boolean>): Boolean {
         return if (result.isSuccess) result.getOrNull()!! else false
 

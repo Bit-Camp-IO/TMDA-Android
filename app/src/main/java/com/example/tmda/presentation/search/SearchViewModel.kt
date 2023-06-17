@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bitIO.tvshowcomponent.domain.useCases.SearchSeriesUseCase
 import com.example.movies.domain.useCases.SearchMoviesUseCase
-import com.example.tmda.presentation.movies.moviesList.UiPage
+import com.example.tmda.presentation.shared.paging.UiPage
 import com.example.tmda.presentation.search.data.SearchItemModel
 import com.example.tmda.presentation.search.data.toSearchItem
-import com.example.tmda.presentation.shared.UiStates.mapToOtherType
+import com.example.tmda.presentation.shared.uiStates.mapToOtherType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

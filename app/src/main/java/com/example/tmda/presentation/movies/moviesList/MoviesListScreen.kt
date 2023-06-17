@@ -1,26 +1,15 @@
 package com.example.tmda.presentation.movies.moviesList
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -31,12 +20,13 @@ import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.example.tmda.presentation.movies.MovieCard
+import com.example.tmda.presentation.movies.MovieListTile
+import com.example.tmda.presentation.movies.uiModels.MovieUiDto
 import com.example.tmda.presentation.navigation.navigateToMovieDetails
 import com.example.tmda.presentation.shared.AppToolBar
-import com.example.tmda.presentation.shared.UiStates.ErrorScreen
-import com.example.tmda.presentation.shared.UiStates.LoadingScreen
-import com.example.tmda.ui.theme.PineGreenMedium
+import com.example.tmda.presentation.shared.base.list.BaseLazyColumn
+import com.example.tmda.presentation.shared.uiStates.ErrorScreen
+import com.example.tmda.presentation.shared.uiStates.LoadingScreen
 
 
 @Composable
@@ -69,14 +59,12 @@ fun MoviesListScreen(
     ) {
         when (movies.loadState.refresh) {
             is LoadState.Error -> ErrorScreen { movies.retry() }
-
             is LoadState.Loading -> LoadingScreen()
             else -> {
                 MovieList(
                     navController = navController,
                     listState = lazyListState,
                     movies = movies,
-                    hasBookMark = true,
                     addOrRemoveMovieToSavedList = viewModel::addOrRemoveMovieToSavedList
                 )
             }
@@ -93,65 +81,19 @@ fun MovieList(
     navController: NavController,
     listState: LazyListState = rememberLazyListState(),
     movies: LazyPagingItems<MovieUiDto>,
-    hasBookMark: Boolean,
-    addOrRemoveMovieToSavedList:suspend (Int, Boolean) -> Boolean = { _, _ -> false}
+    addOrRemoveMovieToSavedList: suspend (Int, MutableState<Boolean>) -> Boolean
 
 ) {
-    LazyColumn(
-        Modifier
-            .background(Color.Transparent)
-            .fillMaxSize(),
-        state = listState
+    BaseLazyColumn(
+        lazyItems = movies,
+        listState = listState,
+        keyGetter = { it.id },
+        contentType = { MovieUiDto::class }
     ) {
-
-        item { Spacer(modifier = Modifier.height(80.dp)) }
-        items(
-            count = movies.itemSnapshotList.size,
-            contentType = { MovieUiDto::class },
-            key = { movies.peek(it)!!.id },
-
-            ) {
-
-            MovieCard(
-                movie = movies[it]!!,
-                hasBookMark,
-                onCardClicked = navController::navigateToMovieDetails,
-                onSaveItemClicked = addOrRemoveMovieToSavedList
-            )
-        }
-
-        when (movies.loadState.append) {
-            is LoadState.Error -> {
-                item { ErrorComponent {movies.retry()} }
-            }
-
-            is LoadState.Loading -> {
-                item {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(128.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                    ) {
-                        LoadingScreen()
-                    }
-                }
-            }
-
-          //  else -> {}
-            is LoadState.NotLoading -> {}
-        }
-    }
-}
-@Composable
-fun ErrorComponent(onTryAgain:()->Unit){
-    Button(
-        onClick = onTryAgain,
-        modifier = Modifier.height(160.dp).fillMaxWidth(),
-        shape = RoundedCornerShape(10.dp),
-        colors = ButtonDefaults.buttonColors(containerColor = PineGreenMedium)
-    ) {
-        Text(text = "Try Again")
+        MovieListTile(
+            movie = movies[it]!!,
+            onCardClicked = navController::navigateToMovieDetails,
+            onSaveItemClicked = addOrRemoveMovieToSavedList
+        )
     }
 }

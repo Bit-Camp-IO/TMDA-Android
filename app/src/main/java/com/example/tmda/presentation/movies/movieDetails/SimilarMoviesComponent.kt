@@ -28,9 +28,9 @@ import androidx.compose.ui.unit.sp
 import com.example.movies.domain.enities.movie.Movie
 import com.example.tmda.R
 import com.example.tmda.presentation.movies.getTmdbImageLink
-import com.example.tmda.presentation.shared.UiStates.LoadingScreen
+import com.example.tmda.presentation.shared.uiStates.LoadingScreen
 import com.example.tmda.presentation.shared.NoDataComponent
-import com.example.tmda.presentation.shared.UiStates.UiState
+import com.example.tmda.presentation.shared.uiStates.UiState
 import com.example.tmda.presentation.shared.base.BaseImageCard
 import com.example.tmda.presentation.shared.base.imageCardModifier
 import com.example.tmda.presentation.shared.base.mainShape

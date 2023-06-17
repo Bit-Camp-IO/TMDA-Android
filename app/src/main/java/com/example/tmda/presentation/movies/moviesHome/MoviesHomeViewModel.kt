@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movies.domain.enities.movie.Movie
 import com.example.movies.domain.useCases.MovieUseCaseFactory
-import com.example.tmda.presentation.movies.moviesList.MovieUiDto
-import com.example.tmda.presentation.shared.UiStates.UiState
-import com.example.tmda.presentation.shared.UiStates.mapToOtherType
-import com.example.tmda.presentation.shared.UiStates.toUiState
+import com.example.tmda.presentation.movies.uiModels.MovieUiDto
+import com.example.tmda.presentation.shared.uiStates.UiState
+import com.example.tmda.presentation.shared.uiStates.mapToOtherType
+import com.example.tmda.presentation.shared.uiStates.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

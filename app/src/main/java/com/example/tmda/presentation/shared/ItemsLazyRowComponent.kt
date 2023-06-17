@@ -17,10 +17,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.tmda.presentation.movies.moviesList.MovieUiDto
-import com.example.tmda.presentation.shared.UiStates.ErrorScreen
-import com.example.tmda.presentation.shared.UiStates.LoadingScreen
-import com.example.tmda.presentation.shared.UiStates.UiState
+import com.example.tmda.presentation.movies.uiModels.MovieUiDto
+import com.example.tmda.presentation.shared.uiStates.ErrorScreen
+import com.example.tmda.presentation.shared.uiStates.LoadingScreen
+import com.example.tmda.presentation.shared.uiStates.UiState
 import com.example.tmda.ui.theme.PineGreenDark
 
 @Composable

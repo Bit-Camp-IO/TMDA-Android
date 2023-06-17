@@ -2,7 +2,6 @@ package com.example.tmda.presentation.shared.paging
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import com.example.tmda.presentation.movies.moviesList.UiPage
 
 class PagingProvider<T : Any>(
     private val dataPageProvider: suspend (Int) -> Result<UiPage<T>>

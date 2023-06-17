@@ -1,4 +1,4 @@
-package com.example.tmda.presentation.shared.UiStates
+package com.example.tmda.presentation.shared.uiStates
 
 sealed interface UiState<T : Any> {
     operator fun <O : Any> plus(uiState: UiState<O>) = listOf(this, uiState)

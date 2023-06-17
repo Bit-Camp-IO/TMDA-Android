@@ -17,7 +17,7 @@ import com.example.shared.entities.credits.Credits
 import com.example.tmda.presentation.navigation.SERIES_ID
 import com.example.tmda.presentation.series.seriesDetails.uiDto.OverView
 import com.example.tmda.presentation.series.seriesDetails.uiDto.makeOverView
-import com.example.tmda.presentation.shared.UiStates.UiState
+import com.example.tmda.presentation.shared.uiStates.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers

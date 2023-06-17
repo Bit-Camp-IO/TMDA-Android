@@ -6,7 +6,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.example.tmda.presentation.movies.moviesList.UiPage
+import com.example.tmda.presentation.shared.paging.UiPage
 import com.example.tmda.presentation.shared.paging.PagingProvider
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

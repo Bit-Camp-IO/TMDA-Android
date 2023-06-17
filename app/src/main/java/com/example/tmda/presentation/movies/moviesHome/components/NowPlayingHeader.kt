@@ -5,9 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.movies.domain.enities.movie.Movie
-import com.example.tmda.presentation.shared.UiStates.ErrorScreen
-import com.example.tmda.presentation.shared.UiStates.LoadingScreen
-import com.example.tmda.presentation.shared.UiStates.UiState
+import com.example.tmda.presentation.shared.uiStates.ErrorScreen
+import com.example.tmda.presentation.shared.uiStates.LoadingScreen
+import com.example.tmda.presentation.shared.uiStates.UiState
 import com.example.tmda.presentation.shared.base.home.BaseNowPlayingCard
 import com.example.tmda.presentation.shared.base.home.BaseNowPlayingHeader
 

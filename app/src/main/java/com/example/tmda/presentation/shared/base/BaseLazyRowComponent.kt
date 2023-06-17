@@ -17,9 +17,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.tmda.presentation.movies.moviesList.ErrorComponent
-import com.example.tmda.presentation.shared.UiStates.LoadingScreen
-import com.example.tmda.presentation.shared.UiStates.UiState
+import com.example.tmda.presentation.shared.uiStates.ErrorComponent
+import com.example.tmda.presentation.shared.uiStates.LoadingScreen
+import com.example.tmda.presentation.shared.uiStates.UiState
 import com.example.tmda.ui.theme.PineGreenDark
 
 @Composable
@@ -31,7 +31,6 @@ fun <T> BaseLazyRowComponent(
     onItemClicked: (Int) -> Unit,
     contentCard: @Composable (T, (Int) -> Unit) -> Unit
 ) {
-
 
     Row(
         modifier = Modifier
@@ -59,11 +58,11 @@ fun <T> BaseLazyRowComponent(
         }
     }
 
-    when (val items = itemsState) {
+    when (itemsState) {
         is UiState.Failure -> ErrorComponent {}
         is UiState.Loading -> LoadingScreen(modifier = Modifier.height(360.dp))
         is UiState.Success -> {
-            val data = items.data
+            val data = itemsState.data
             LazyRow {
                 item { Spacer(modifier = Modifier.width(16.dp)) }
                 items(data.size) { contentCard(data[it], onItemClicked) }

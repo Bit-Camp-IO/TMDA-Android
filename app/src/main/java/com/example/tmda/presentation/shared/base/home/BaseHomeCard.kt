@@ -15,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.example.tmda.presentation.movies.moviesHome.components.HomeCardModifier
+import com.example.tmda.presentation.shared.HomeCardModifier
 import com.example.tmda.presentation.shared.base.TotalRatingIcons
 
 @Composable

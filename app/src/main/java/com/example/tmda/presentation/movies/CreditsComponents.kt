@@ -30,9 +30,9 @@ import com.example.movies.domain.enities.credits.CastMember
 import com.example.movies.domain.enities.credits.CreditItem
 import com.example.movies.domain.enities.credits.Credits
 import com.example.movies.domain.enities.credits.CrewMember
-import com.example.tmda.presentation.shared.UiStates.LoadingScreen
+import com.example.tmda.presentation.shared.uiStates.LoadingScreen
 import com.example.tmda.presentation.shared.NoDataComponent
-import com.example.tmda.presentation.shared.UiStates.UiState
+import com.example.tmda.presentation.shared.uiStates.UiState
 import com.example.tmda.presentation.shared.base.mainShape
 import com.example.tmda.ui.theme.BlackTransparent60
 import com.example.tmda.ui.theme.PineGreenDark

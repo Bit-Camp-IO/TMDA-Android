@@ -1,7 +1,7 @@
 package com.example.tmda.presentation.navigation
 
 import androidx.navigation.NavController
-import com.example.tmda.presentation.movies.moviesList.MoviesScreenType
+import com.example.tmda.presentation.movies.uiModels.MoviesScreenType
 import com.example.tmda.presentation.series.seriesList.SeriesScreenType
 
 

@@ -1,7 +1,7 @@
 package com.example.tmda.presentation.movies.moviesHome.components
 
 import androidx.compose.runtime.Composable
-import com.example.tmda.presentation.movies.moviesList.MovieUiDto
+import com.example.tmda.presentation.movies.uiModels.MovieUiDto
 import com.example.tmda.presentation.shared.base.BaseImageCard
 import com.example.tmda.presentation.shared.base.home.BaseHomeCard
 import com.example.tmda.presentation.shared.imageCardModifier

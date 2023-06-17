@@ -6,13 +6,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.tmda.presentation.movies.moviesHome.components.MovieHomeCard
 import com.example.tmda.presentation.movies.moviesHome.components.NowPlayingHeader
-import com.example.tmda.presentation.movies.moviesList.MovieUiDto
-import com.example.tmda.presentation.movies.moviesList.MoviesScreenType
+import com.example.tmda.presentation.movies.uiModels.MoviesScreenType
+import com.example.tmda.presentation.movies.uiModels.MovieUiDto
 import com.example.tmda.presentation.navigation.navigateToMovieDetails
 import com.example.tmda.presentation.navigation.navigateToMovieListScreen
-import com.example.tmda.presentation.shared.UiStates.ErrorScreen
-import com.example.tmda.presentation.shared.UiStates.UiState
 import com.example.tmda.presentation.shared.base.BaseLazyRowComponent
+import com.example.tmda.presentation.shared.uiStates.ErrorScreen
+import com.example.tmda.presentation.shared.uiStates.UiState
 
 
 @Composable

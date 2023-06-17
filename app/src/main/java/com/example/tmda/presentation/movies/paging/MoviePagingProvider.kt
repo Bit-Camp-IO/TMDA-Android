@@ -4,7 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.example.movies.domain.enities.movie.Movie
 import com.example.movies.domain.enities.movie.MoviesPage
-import com.example.tmda.presentation.movies.moviesList.UiPage
+import com.example.tmda.presentation.shared.paging.UiPage
 import com.example.tmda.presentation.shared.paging.UiPagingSource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,7 +45,8 @@ class MoviePagingProvider(
                 results = moviePage.results,
                 totalPages = moviePage.totalPages,
                 isError = false
-            ))
+            )
+          )
 
         }.await()
 

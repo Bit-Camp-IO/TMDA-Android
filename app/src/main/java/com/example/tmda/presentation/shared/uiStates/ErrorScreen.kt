@@ -1,4 +1,4 @@
-package com.example.tmda.presentation.shared.UiStates
+package com.example.tmda.presentation.shared.uiStates
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
