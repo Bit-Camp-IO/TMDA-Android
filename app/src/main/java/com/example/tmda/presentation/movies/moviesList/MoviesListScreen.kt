@@ -3,11 +3,9 @@ package com.example.tmda.presentation.movies.moviesList
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -20,11 +18,8 @@ import androidx.navigation.NavController
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.example.tmda.presentation.movies.MovieListTile
 import com.example.tmda.presentation.movies.uiModels.MovieUiDto
-import com.example.tmda.presentation.navigation.navigateToMovieDetails
 import com.example.tmda.presentation.shared.AppToolBar
-import com.example.tmda.presentation.shared.base.list.BaseLazyColumn
 import com.example.tmda.presentation.shared.uiStates.ErrorScreen
 import com.example.tmda.presentation.shared.uiStates.LoadingScreen
 
@@ -76,24 +71,3 @@ fun MoviesListScreen(
 }
 
 
-@Composable
-fun MovieList(
-    navController: NavController,
-    listState: LazyListState = rememberLazyListState(),
-    movies: LazyPagingItems<MovieUiDto>,
-    addOrRemoveMovieToSavedList: suspend (Int, MutableState<Boolean>) -> Boolean
-
-) {
-    BaseLazyColumn(
-        lazyItems = movies,
-        listState = listState,
-        keyGetter = { it.id },
-        contentType = { MovieUiDto::class }
-    ) {
-        MovieListTile(
-            movie = movies[it]!!,
-            onCardClicked = navController::navigateToMovieDetails,
-            onSaveItemClicked = addOrRemoveMovieToSavedList
-        )
-    }
-}

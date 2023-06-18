@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bitIO.tvshowcomponent.domain.useCases.SearchSeriesUseCase
 import com.example.movies.domain.useCases.SearchMoviesUseCase
-import com.example.tmda.presentation.shared.paging.UiPage
 import com.example.tmda.presentation.search.data.SearchItemModel
 import com.example.tmda.presentation.search.data.toSearchItem
+import com.example.tmda.presentation.shared.paging.UiPage
 import com.example.tmda.presentation.shared.uiStates.mapToOtherType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -38,7 +38,7 @@ class SearchViewModel @Inject constructor(
                 page = tvShowPage.page,
                 results = tvShowPage.results.map { it.toSearchItem() },
                 totalPages = tvShowPage.totalPages,
-                isError = false
+              //  isError = false
             )
         }
     }
@@ -52,7 +52,7 @@ class SearchViewModel @Inject constructor(
                 page = it.page,
                 results = it.results.map { it.toSearchItem() },
                 totalPages = it.totalPages,
-                isError = false
+            //    isError = false
             )
         }
     }

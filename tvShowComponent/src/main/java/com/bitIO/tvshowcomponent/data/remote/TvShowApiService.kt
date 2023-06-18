@@ -31,7 +31,7 @@ interface TvShowApiService {
         @Query("page") page: Int
     ): TvShowDtoPage
 
-    @GET("/tv/{series_id}/recommendations")
+    @GET("tv/{series_id}/recommendations")
     suspend fun getRecommendations(
         @Path("series_id") tvShowId: Int,
         @Query("page") page: Int

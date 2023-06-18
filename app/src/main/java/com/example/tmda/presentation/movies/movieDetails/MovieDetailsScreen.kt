@@ -37,15 +37,15 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
-import com.example.movies.domain.enities.Genre
 import com.example.movies.domain.enities.movie.MovieDetails
+import com.example.shared.entities.Genre
 import com.example.tmda.presentation.movies.CreditsComponent
 import com.example.tmda.presentation.movies.uiModels.MoviesScreenType
 import com.example.tmda.presentation.navigation.navigateToMovieDetails
 import com.example.tmda.presentation.navigation.navigateToMovieListScreen
+import com.example.tmda.presentation.shared.MotionLayoutAppBar
 import com.example.tmda.presentation.shared.uiStates.ErrorScreen
 import com.example.tmda.presentation.shared.uiStates.LoadingScreen
-import com.example.tmda.presentation.shared.MotionLayoutAppBar
 import com.example.tmda.presentation.shared.uiStates.UiState
 
 
@@ -61,7 +61,7 @@ fun MovieDetailsScreen(
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_START) {
+            if (event == Lifecycle.Event.ON_RESUME) {
                 viewModel.checkIfSavedStateUpdated()
             }
         }
@@ -114,15 +114,15 @@ fun DetailsScreenLoaded(
             item {
                 CreditsComponent(
                     title = "Cast",
-                    creditItemsState = stateHolder.movieCredits.value,
+                    creditItemsState = stateHolder.movieCredits.value ,
                     onSeeAllClicked = {},
                     onCardClicked = {})
             }
             item {
                 SimilarMoviesRow(
-                    "Similar Movies",
-                    stateHolder.similarMovies.value,
-                    navController::navigateToMovieDetails
+                    title = "Similar Movies",
+                    moviesState = stateHolder.similarMovies.value,
+                    onCardItemClicked = navController::navigateToMovieDetails,
                 ) {
                     navController.navigateToMovieListScreen(
                         "Similar Movies",
@@ -133,9 +133,9 @@ fun DetailsScreenLoaded(
             }
             item {
                 SimilarMoviesRow(
-                    "Related",
-                    stateHolder.recommendedMovies.value,
-                    navController::navigateToMovieDetails
+                    title = "Related",
+                    moviesState = stateHolder.recommendedMovies .value,
+                    onCardItemClicked = navController::navigateToMovieDetails,
                 ) {
                     navController.navigateToMovieListScreen(
                         "Related",

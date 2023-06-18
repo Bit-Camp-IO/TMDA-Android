@@ -68,8 +68,8 @@ fun NavigationHost(navController: NavHostController) {
                 TvShowDetails.routeWithArgs,
                 arguments = TvShowDetails.arguments
             ) {
-                val id = it.arguments!!.getInt(TvShowDetails.tvShowIdArg)
-                SeriesDetailsScreen(id)
+              //  val id = it.arguments!!.getInt(TvShowDetails.tvShowIdArg)
+                SeriesDetailsScreen(navController)
             }
 
         }

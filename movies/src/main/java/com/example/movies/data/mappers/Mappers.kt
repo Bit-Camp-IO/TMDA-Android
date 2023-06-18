@@ -1,26 +1,22 @@
 package com.example.movies.data.mappers
 
-import com.example.movies.data.dto.credits.CastMemberDto
-import com.example.movies.data.dto.credits.CreditsDto
-import com.example.movies.data.dto.credits.CrewMemberDto
+
 import com.example.movies.data.dto.movies.MovieBriefDto
 import com.example.movies.data.dto.movies.MovieDetailsDto
 import com.example.movies.data.dto.movies.MoviesBriefWrapperDto
-import com.example.movies.data.dto.review.ReviewDto
-import com.example.movies.data.dto.shared.GenreDto
 import com.example.movies.data.dto.shared.MovieCollectionDetailsDto
 import com.example.movies.data.dto.videos.VideoDto
 import com.example.movies.data.util.genreMap
-import com.example.movies.domain.enities.Genre
 import com.example.movies.domain.enities.MovieCollectionDetails
 import com.example.movies.domain.enities.Video
-import com.example.movies.domain.enities.credits.CastMember
-import com.example.movies.domain.enities.credits.Credits
-import com.example.movies.domain.enities.credits.CrewMember
+
 import com.example.movies.domain.enities.movie.Movie
 import com.example.movies.domain.enities.movie.MovieDetails
 import com.example.movies.domain.enities.movie.MoviesPage
-import com.example.movies.domain.enities.review.Review
+import com.example.shared.dto.review.ReviewDto
+import com.example.shared.entities.Genre
+import com.example.shared.entities.review.Review
+import com.example.shared.mappers.toGenre
 import okhttp3.MediaType
 import okhttp3.RequestBody
 
@@ -58,7 +54,7 @@ fun MovieCollectionDetailsDto.toMovieCollectionDetails(): MovieCollectionDetails
     )
 }
 
-fun GenreDto.toGenre() = Genre(id = id, name = name)
+
 
 
 fun MovieBriefDto.toMovie( ): Movie {
@@ -92,27 +88,7 @@ internal fun Int.toGenre(): Genre {
     return Genre(this, genreMap[this]!!)
 }
 
-fun CreditsDto.toCredits() = Credits(
-    id = id,
-    cast = cast.map { it.toCastMember() },
-    crew = crew.map { it.toCrewMember() }
-)
 
-fun CastMemberDto.toCastMember() = CastMember(
-    id = id,
-    role = role,
-    name = name,
-    profilePath = profilePath,
-    character = character
-)
-
-fun CrewMemberDto.toCrewMember() = CrewMember(
-    id = id,
-    role = role,
-    name = name,
-    profilePath = profilePath,
-    job = job
-)
 
 fun ReviewDto.toReview() = Review(
     author = author,

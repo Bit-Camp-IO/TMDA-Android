@@ -1,7 +1,7 @@
 package com.example.movies.domain.enities.movie
 
-import com.example.movies.domain.enities.Genre
 import com.example.movies.domain.enities.MovieCollectionDetails
+import com.example.shared.entities.Genre
 
 
 data class MovieDetails(

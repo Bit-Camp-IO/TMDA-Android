@@ -37,14 +37,22 @@ class TvShowRepositoryImpl @Inject constructor(private val api: TvShowApiService
     override suspend fun getSimilarTvShows(tvShowId: Int, pageIndex: Int): TvShowPage {
         return api.getSimilarTvShows(tvShowId, pageIndex).toTvShowPage()
     }
-
+    override suspend fun getRecommendedTvShows(tvShowId: Int, pageIndex: Int): TvShowPage {
+        return api.getRecommendations(tvShowId, pageIndex).toTvShowPage()
+    }
     override suspend fun getSeriesVideos(tvShowId: Int): List<Video> {
         return api.getTvVideos(tvShowId).results.map { it.toVideo() }
     }
 
-    override suspend fun searchSeries(keyword: String, includeAdults: Boolean, page: Int): TvShowPage {
-        return api.searchSeries(keyword,includeAdults,page).toTvShowPage()
+    override suspend fun searchSeries(
+        keyword: String,
+        includeAdults: Boolean,
+        page: Int
+    ): TvShowPage {
+        return api.searchSeries(keyword, includeAdults, page).toTvShowPage()
     }
+
+
 
 
     override suspend fun getTvShowDetails(tvShowId: Int): TvShowDetails {

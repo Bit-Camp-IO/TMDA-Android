@@ -4,11 +4,13 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import com.example.movies.domain.enities.Video
-import com.example.movies.domain.enities.credits.Credits
+
 import com.example.movies.domain.enities.movie.Movie
 import com.example.movies.domain.enities.movie.MovieDetails
 import com.example.movies.domain.enities.movie.MoviesPage
-import com.example.movies.domain.enities.review.Review
+import com.example.shared.entities.credits.CastMember
+import com.example.shared.entities.credits.Credits
+import com.example.shared.entities.review.Review
 import com.example.tmda.presentation.shared.uiStates.UiState
 import com.example.tmda.presentation.shared.uiStates.mapToOtherType
 import com.example.tmda.presentation.shared.uiStates.toSuccessState
@@ -49,8 +51,8 @@ class DetailsScreenStateHolder(
         get() = _movieVideos
 
     //
-    private val _movieCredits: MutableState<UiState<Credits>> = mutableStateOf(UiState.Loading())
-    val movieCredits: State<UiState<Credits>>
+    private val _movieCredits: MutableState<UiState<List<CastMember>>> = mutableStateOf(UiState.Loading())
+    val movieCredits: State<UiState<List<CastMember>>>
         get() = _movieCredits
 
     //
@@ -117,7 +119,7 @@ class DetailsScreenStateHolder(
         }
 
     private fun updateCredits() = coroutineScope.async(Dispatchers.IO) {
-        _movieCredits.value = movieCreditsProvider(movieId).toUiState()
+        _movieCredits.value = movieCreditsProvider(movieId).mapToOtherType { it.cast } .toUiState()
     }
 
 
@@ -149,6 +151,7 @@ class DetailsScreenStateHolder(
                     changeSavedStateProvider(movieId, isSaved.data)
                     _isSaved.value = (!isSaved.data).toSuccessState()
                 }
+
             }
         }
     }

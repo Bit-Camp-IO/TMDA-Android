@@ -7,4 +7,5 @@ enum class MoviesScreenType {
     Popular,
     Recommended,
     Similar
+
 }

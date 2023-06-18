@@ -26,14 +26,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.movies.domain.enities.credits.CastMember
-import com.example.movies.domain.enities.credits.CreditItem
-import com.example.movies.domain.enities.credits.Credits
-import com.example.movies.domain.enities.credits.CrewMember
-import com.example.tmda.presentation.shared.uiStates.LoadingScreen
+import com.example.shared.entities.credits.CastMember
+import com.example.shared.entities.credits.CreditItem
+import com.example.shared.entities.credits.CrewMember
 import com.example.tmda.presentation.shared.NoDataComponent
-import com.example.tmda.presentation.shared.uiStates.UiState
 import com.example.tmda.presentation.shared.base.mainShape
+import com.example.tmda.presentation.shared.uiStates.LoadingScreen
+import com.example.tmda.presentation.shared.uiStates.UiState
 import com.example.tmda.ui.theme.BlackTransparent60
 import com.example.tmda.ui.theme.PineGreenDark
 import com.example.tmda.ui.theme.WhiteTransparent60
@@ -41,7 +40,7 @@ import com.example.tmda.ui.theme.WhiteTransparent60
 @Composable
 fun CreditsComponent(
     title: String = "Casts",
-    creditItemsState: UiState<Credits>,
+    creditItemsState: UiState<List<CastMember>>,
     onSeeAllClicked: () -> Unit,
     onCardClicked: (Int) -> Unit
 ) {
@@ -79,15 +78,15 @@ fun CreditsComponent(
 
 
         is UiState.Success -> {
-            val creditItems = creditItemsState.data
+            val castMembers = creditItemsState.data
             LazyRow {
                 item { Spacer(modifier = Modifier.width(16.dp)) }
-                if (creditItems.cast.isEmpty())
+                if (castMembers.isEmpty())
                     item { NoDataComponent(modifier = Modifier
                         .height(160.dp)
                         ) } else
-                    items(creditItems.cast.size, key = { creditItems.cast[it].id }) {
-                        CreditItemsCard(creditItems.cast[it])
+                    items(castMembers.size, key = { castMembers[it].id }) {
+                        CreditItemsCard(castMembers[it])
                     }
                 item { Spacer(modifier = Modifier.width(16.dp)) }
 

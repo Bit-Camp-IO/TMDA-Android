@@ -23,6 +23,5 @@ fun TvShowPage.toUiPage(): UiPage<TvShowUiModel> {
         page = page,
         results = results.map { it.toTvShowUIModel() },
         totalPages = totalPages,
-        isError = false
     )
 }

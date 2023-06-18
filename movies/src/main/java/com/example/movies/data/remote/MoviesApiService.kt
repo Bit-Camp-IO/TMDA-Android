@@ -1,14 +1,15 @@
 package com.example.movies.data.remote
 
 import com.example.movies.data.dto.account.MovieAccountStatesDto
-import com.example.movies.data.dto.credits.CreditsDto
+
 import com.example.movies.data.dto.image.ImageCollectionDto
 import com.example.movies.data.dto.movies.LatestMovieDto
 import com.example.movies.data.dto.movies.MovieDetailsDto
 import com.example.movies.data.dto.movies.MoviesBriefWrapperDto
-import com.example.movies.data.dto.review.ReviewsWrapperDto
-import com.example.movies.data.dto.shared.GenreDto
 import com.example.movies.data.dto.videos.VideoContainerDto
+import com.example.shared.dto.credits.CreditsDto
+import com.example.shared.dto.details.GenreDto
+import com.example.shared.dto.review.ReviewsWrapperDto
 import okhttp3.RequestBody
 import retrofit2.http.Body
 import retrofit2.http.GET

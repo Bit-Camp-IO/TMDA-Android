@@ -8,14 +8,16 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.authentication.domain.entities.User
 import com.example.authentication.domain.interactors.GetCurrentUserUseCase
+import com.example.movies.domain.enities.movie.MoviesPage
 import com.example.movies.domain.useCases.AddMovieToWatchListUseCase
 import com.example.movies.domain.useCases.GetMovieSavedStateUseCase
 import com.example.movies.domain.useCases.MovieUseCaseFactory
-import com.example.tmda.presentation.movies.paging.MovieWithBookMarkPagingProvider
 import com.example.tmda.presentation.movies.uiModels.MovieUiDto
 import com.example.tmda.presentation.movies.uiModels.MoviesScreenType
 import com.example.tmda.presentation.navigation.MOVIES_LIST_SCREEN_TYPE
 import com.example.tmda.presentation.navigation.MOVIE_ID
+import com.example.tmda.presentation.shared.paging.PagingProvider
+import com.example.tmda.presentation.shared.paging.UiPage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -43,24 +45,56 @@ class MoviesListViewModel @Inject constructor(
         moviesUseCase = moviesScreenType.toUseCase()
     }
 
+
     fun getPagesStream(): Flow<PagingData<MovieUiDto>> {
         if (pagesStream == null) {
-            val movieWithBookMarkPagingProvider = MovieWithBookMarkPagingProvider(
-                viewModelScope,
-                moviesUseCase::invoke
-            ) { handleUpdateSavedError(getMovieSavedStateUseCase.invoke(it, user.sessionId)) }
+            viewModelScope.launch { }
             pagesStream =
-                movieWithBookMarkPagingProvider.createPager().flow.cachedIn(viewModelScope)
+                PagingProvider(::getMovieDtoPage).createNewPager().flow.cachedIn(viewModelScope)
         }
         return pagesStream!!
     }
 
-    suspend fun addOrRemoveMovieToSavedList(movieId: Int, isSaved:MutableState<Boolean>): Boolean {
+    private suspend fun getMovieDtoPage(pageIndex: Int): Result<UiPage<MovieUiDto>> {
+        val moviesPage =
+            viewModelScope.async { moviesUseCase.invoke(pageIndex) }.await()
+                .getOrElse { return Result.failure(it) }
+        val isSavedList =
+            getIsSavedCorrespondingList(moviesPage).map { it.getOrElse { return Result.failure(it) } }
 
-        addMovieToWatchListUseCase.invoke(16874876, user.sessionId, movieId, !isSaved.value).onSuccess {
-            isSaved.value=!isSaved.value
-            return true
+        val moviesUiDtoList = moviesPage.results.mapIndexed { index, movie ->
+            MovieUiDto(movie, isSavedList[index])
         }
+
+        return Result.success(
+            UiPage(
+                page = pageIndex, results = moviesUiDtoList,
+                totalPages = moviesPage.totalPages,
+             //   isError = moviesPage.totalPages == -1
+            )
+        )
+    }
+
+    private suspend fun getIsSavedCorrespondingList(moviesPage: MoviesPage): List<Result<Boolean>> {
+        return viewModelScope.async(Dispatchers.IO) {
+            moviesPage.results.map { movie ->
+                viewModelScope.async(Dispatchers.IO) {
+                    getMovieSavedStateUseCase.invoke(movie.id, user.sessionId)
+                }
+            }.awaitAll()
+        }.await()
+
+
+    }
+
+
+    suspend fun addOrRemoveMovieToSavedList(movieId: Int, isSaved: MutableState<Boolean>): Boolean {
+
+        addMovieToWatchListUseCase.invoke(16874876, user.sessionId, movieId, !isSaved.value)
+            .onSuccess {
+                isSaved.value = !isSaved.value
+                return true
+            }
         return false
     }
 

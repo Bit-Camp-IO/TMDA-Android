@@ -2,7 +2,7 @@ package com.example.tmda.infrastructure.local
 
 import androidx.room.TypeConverter
 import com.bitIO.tvshowcomponent.domain.entity.TvShowGenre
-import com.example.movies.domain.enities.Genre
+import com.example.shared.entities.Genre
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.squareup.moshi.Moshi

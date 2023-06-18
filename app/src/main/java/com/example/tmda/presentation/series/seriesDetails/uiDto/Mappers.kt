@@ -1,5 +1,6 @@
 package com.example.tmda.presentation.series.seriesDetails.uiDto
 
+import androidx.compose.runtime.mutableStateOf
 import com.bitIO.tvshowcomponent.domain.entity.TvShow
 import com.bitIO.tvshowcomponent.domain.entity.TvShowDetails
 import com.example.shared.entities.Video
@@ -9,7 +10,9 @@ fun makeOverView(
     tvShowDetails: TvShowDetails,
     videos: List<Video>,
     credits: Credits,
-    similarSeries: List<TvShow>
+    similarSeries: List<TvShow>,
+    recommendedSeries: List<TvShow>,
+    isSaved: Boolean
 ): OverView {
     return OverView(
         id = tvShowDetails.id,
@@ -21,11 +24,13 @@ fun makeOverView(
         voteCount = tvShowDetails.voteCount,
         cast = credits.cast,
         similarSeries = similarSeries,
+        recommendedSeries=recommendedSeries,
         releaseYear = tvShowDetails.date.take(4),
         country = tvShowDetails.originCountry,
         company = tvShowDetails.network,
         seasonCount = tvShowDetails.seasonCount,
         episodesCount = tvShowDetails.episodesCount,
-        genres = tvShowDetails.genres.joinToString { it.name }
+        genres = tvShowDetails.genres.joinToString { it.name },
+        savedState = mutableStateOf(isSaved)
     )
 }

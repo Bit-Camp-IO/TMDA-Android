@@ -10,12 +10,12 @@ import androidx.paging.cachedIn
 import com.bitIO.tvshowcomponent.domain.useCases.tvShow.TvShowUseCaseFactory
 import com.example.authentication.domain.interactors.AddOrRemoveTvFromWatchListUseCase
 import com.example.authentication.domain.interactors.GetTvSavedStateUseCase
-import com.example.tmda.presentation.shared.paging.UiPage
 import com.example.tmda.presentation.navigation.SERIES_ID
 import com.example.tmda.presentation.navigation.SERIES_LIST_SCREEN_TYPE
 import com.example.tmda.presentation.series.uiDto.TvShowBookMarkUiModel
 import com.example.tmda.presentation.series.uiDto.toTvShowUIModel
 import com.example.tmda.presentation.shared.paging.PagingProvider
+import com.example.tmda.presentation.shared.paging.UiPage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -31,7 +31,7 @@ class SeriesListViewModel @Inject constructor(
     private val getTvSavedStateUseCase: GetTvSavedStateUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val seriesScreenType: SeriesScreenType = savedStateHandle[SERIES_LIST_SCREEN_TYPE]!!
+     val seriesScreenType: SeriesScreenType = savedStateHandle[SERIES_LIST_SCREEN_TYPE]!!
     private val seriesId: Int? = savedStateHandle[SERIES_ID]
     private var pagesStream: Flow<PagingData<TvShowBookMarkUiModel>>? = null
     private val seriesUseCase = seriesScreenType.toUseCase()
@@ -64,7 +64,7 @@ class SeriesListViewModel @Inject constructor(
                 Result.success(
                     UiPage(
                         page = seriesPage.page, results = tvShowBookMarkUiModels,
-                        totalPages = seriesPage.totalPages, isError = false
+                        totalPages = seriesPage.totalPages
                     )
                 )
             } catch (e: Throwable) {

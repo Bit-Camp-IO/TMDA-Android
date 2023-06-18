@@ -1,10 +1,11 @@
 package com.example.movies.data.dto.movies
 
-import com.example.movies.data.dto.shared.GenreDto
+
 import com.example.movies.data.dto.shared.MovieCollectionDetailsDto
-import com.example.movies.data.dto.shared.ProductionCompanyDto
-import com.example.movies.data.dto.shared.ProductionCountryDto
-import com.example.movies.data.dto.shared.SpokenLanguageDto
+import com.example.shared.dto.details.GenreDto
+import com.example.shared.dto.details.ProductionCompanyDto
+import com.example.shared.dto.details.ProductionCountryDto
+import com.example.shared.dto.details.SpokenLanguageDto
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 

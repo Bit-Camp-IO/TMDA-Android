@@ -60,7 +60,7 @@ fun MotionLayoutAppBar(
 ) {
     when (movieDetailsState) {
         is UiState.Failure -> {}
-        is UiState.Loading -> { LoadingScreen() }
+        is UiState.Loading -> { LoadingScreen(modifier= Modifier.height(400.dp)) }
         is UiState.Success -> {
             val movieDetails = movieDetailsState.data
             MotionLayout(

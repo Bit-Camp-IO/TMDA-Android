@@ -20,7 +20,8 @@ interface TvShowRepository {
     suspend fun getTopRatedTvShows(pageIndex: Int): TvShowPage
     suspend fun getSimilarTvShows(tvShowId: Int, pageIndex: Int): TvShowPage
     suspend fun getSeriesVideos(tvShowId: Int):List<Video>
-    abstract suspend fun searchSeries(keyword: String, includeAdults: Boolean, page: Int): TvShowPage
+    suspend fun searchSeries(keyword: String, includeAdults: Boolean, page: Int): TvShowPage
+    suspend fun getRecommendedTvShows(tvShowId: Int, pageIndex: Int): TvShowPage
 
 
 }

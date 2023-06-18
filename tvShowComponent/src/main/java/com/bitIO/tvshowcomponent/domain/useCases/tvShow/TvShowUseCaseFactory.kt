@@ -13,7 +13,7 @@ class TvShowUseCaseFactory @Inject constructor(private val repository: TvShowRep
             SeriesType.TopRated -> TvShowUseCase.GetTopRatedTvShowsUseCase(repository)
             SeriesType.Popular -> TvShowUseCase.GetPopularTvShowsUseCase(repository)
             SeriesType.Similar -> TvShowUseCase.GetSimilarTvShowsUseCase(repository, movieId)
-            SeriesType.Recommended -> TODO()
+            SeriesType.Recommended -> TvShowUseCase.GetRecommendedTvShowsUseCase(repository, movieId)
         }
     }
 
@@ -85,6 +85,19 @@ class TvShowUseCaseFactory @Inject constructor(private val repository: TvShowRep
                     Result.failure(e)
                 }
 
+            }
+
+        }
+
+
+        internal class GetRecommendedTvShowsUseCase(repo: TvShowRepository, tvShowId: Int) :
+            TvShowUseCase(repo, tvShowId) {
+            override suspend operator fun invoke(pageIndex: Int): Result<TvShowPage> {
+                return try {
+                    Result.success(repo.getRecommendedTvShows(tvShowId, pageIndex))
+                } catch (e: Throwable) {
+                    Result.failure(e)
+                }
             }
 
         }

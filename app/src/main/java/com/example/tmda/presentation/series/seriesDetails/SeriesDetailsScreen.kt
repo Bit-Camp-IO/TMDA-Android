@@ -7,13 +7,13 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -32,6 +32,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,42 +49,67 @@ import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.MotionLayout
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.bitIO.tvshowcomponent.domain.entity.TvShow
-import com.example.movies.domain.enities.review.Review
-import com.example.shared.entities.credits.CastMember
+import com.example.shared.entities.review.Review
 import com.example.tmda.R
+import com.example.tmda.presentation.movies.CreditsComponent
+import com.example.tmda.presentation.movies.getTmdbImageLink
+import com.example.tmda.presentation.movies.movieDetails.shape
+import com.example.tmda.presentation.navigation.navigateToShowsListScreen
+import com.example.tmda.presentation.navigation.navigateToTvShowDetailsScreen
 import com.example.tmda.presentation.series.seriesDetails.uiDto.OverView
+import com.example.tmda.presentation.series.seriesList.SeriesScreenType
 import com.example.tmda.presentation.shared.AppToolBar
 import com.example.tmda.presentation.shared.BackGround
+import com.example.tmda.presentation.shared.SavedItemIcon
+import com.example.tmda.presentation.shared.base.BaseImageCard
+import com.example.tmda.presentation.shared.base.BaseLazyRowComponent
+import com.example.tmda.presentation.shared.base.imageCardModifier
+import com.example.tmda.presentation.shared.uiStates.ErrorScreen
+import com.example.tmda.presentation.shared.uiStates.LoadingScreen
 import com.example.tmda.presentation.shared.uiStates.UiState
+import com.example.tmda.presentation.shared.uiStates.toSuccessState
 import com.example.tmda.ui.theme.BlackTransparent37
-import com.example.tmda.ui.theme.BlackTransparent60
 import com.example.tmda.ui.theme.GoldenYellow
 import com.example.tmda.ui.theme.PineGreenDark
 import com.example.tmda.ui.theme.WhiteTransparent60
+import kotlin.math.roundToInt
 
 
 @Composable
 fun SeriesDetailsScreen(
-    tvShowId: Int,
+    navController: NavController,
     modifier: Modifier = Modifier,
 
     ) {
     val viewModel = hiltViewModel<SeriesDetailsViewModel>()
-
-    //  val detailsUiState by viewModel.detailsUiState.collectAsState()
-    SeriesDetailsScreen(viewModel.overView.value, modifier)
+    SeriesDetailsScreen(
+        viewModel.overView.value,
+        modifier,
+        navController,
+        viewModel.seriesId,
+        viewModel::updateOverView,
+        viewModel::addOrRemoveSeriesFromSaveList
+    )
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SeriesDetailsScreen(overViewState: UiState<OverView>, modifier: Modifier) {
+fun SeriesDetailsScreen(
+    overViewState: UiState<OverView>,
+    modifier: Modifier,
+    navController: NavController,
+    seriesId: Int,
+    onTryAgain: () -> Unit,
+    onSaveClicked: () -> Unit
+) {
     when (overViewState) {
-        is UiState.Failure -> {}
-        is UiState.Loading -> {}
+        is UiState.Failure -> ErrorScreen(onTryAgain)
+        is UiState.Loading -> LoadingScreen()
         is UiState.Success -> {
             val overView = overViewState.data
             val scrollState = rememberLazyListState()
@@ -100,12 +126,43 @@ fun SeriesDetailsScreen(overViewState: UiState<OverView>, modifier: Modifier) {
                             progress = progress.value,
                             imageUrl = overView.image,
                             rating = overView.rating,
-                            totalVotes = overView.voteCount
+                            totalVotes = overView.voteCount,
+                            savedState = overView.savedState,
+                            onSaveClicked = onSaveClicked
                         )
                     }
                     item { PreviewSection(overView) }
-                    item { CastsRow(items = overView.cast) {} }
-                    item { SimilarShowsRow(items = overView.similarSeries) {} }
+                    item {
+                        CreditsComponent(
+                            creditItemsState = overView.cast.toSuccessState(),
+                            onSeeAllClicked = { /*TODO*/ },
+                            onCardClicked = {}
+                        )
+                    }
+                    item {
+                        SimilarSeriesRow(
+                            title = "Similar",
+                            seriesState = overView.similarSeries.toSuccessState(),
+                            navController::navigateToTvShowDetailsScreen
+                        ) {
+                            navController.navigateToShowsListScreen(
+                                SeriesScreenType.Similar,
+                                seriesId
+                            )
+                        }
+                    }
+                    item {
+                        SimilarSeriesRow(
+                            title = "Related",
+                            seriesState = overView.recommendedSeries.toSuccessState(),
+                            navController::navigateToTvShowDetailsScreen
+                        ) {
+                            navController.navigateToShowsListScreen(
+                                SeriesScreenType.Similar,
+                                seriesId
+                            )
+                        }
+                    }
                 }
 
             }
@@ -173,163 +230,68 @@ fun DetailsColumn(title: String, content: String) {
     }
 }
 
+
 @Composable
-fun CastsRow(items: List<CastMember>, onSeeAllClicked: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row {
-            Divider(
-                modifier = Modifier
-                    .height(20.dp)
-                    .width(5.dp), thickness = 1.dp, color = PineGreenDark
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "Casts", style = MaterialTheme.typography.titleMedium)
-        }
-        TextButton(onClick = { /*TODO*/ }, contentPadding = PaddingValues(0.dp)) {
-            Text(
-                text = "See All",
-                color = PineGreenDark,
-                style = MaterialTheme.typography.titleSmall
-            )
-
-        }
+fun SimilarSeriesRow(
+    title: String = "More like this",
+    seriesState: UiState<List<TvShow>>,
+    onCardItemClicked: (Int) -> Unit,
+    onSeeAllClicked: () -> Unit
+) {
+    BaseLazyRowComponent(
+        title = title,
+        onSeeAllClicked = onSeeAllClicked,
+        itemsState = seriesState,
+        onItemClicked = onCardItemClicked
+    ) { tvShow, _ ->
+        SimilarTvShowCard(tvShow = tvShow, onCardItemClicked = onCardItemClicked)
     }
-
-    LazyRow {
-        items(items) {
-            ActorCard(it)
-        }
-
-    }
-    Divider(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp, horizontal = 32.dp)
-    )
 }
 
 @Composable
-fun ActorCard(cast: CastMember) {
+fun SimilarTvShowCard(tvShow: TvShow, onCardItemClicked: (Int) -> Unit) {
     Box(
         modifier = Modifier
-            .padding(horizontal = 8.dp)
-            .width(100.dp)
-            .height(150.dp)
-            .clip(RoundedCornerShape(10.dp)),
+            .width(140.dp)
+            .height(180.dp)
+            .clip(shape)
+            .clickable { onCardItemClicked(tvShow.id) },
         contentAlignment = Alignment.BottomCenter
     ) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(cast.profilePath)
-                .crossfade(true)
-                .build(),
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.FillBounds,
-            contentDescription = "actor image"
+        BaseImageCard(
+            imagePath = getTmdbImageLink(tvShow.backdropPath ?: tvShow.posterPath),
+            title = tvShow.name,
+            modifier = similarTvShowCardModifier
         )
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(44.dp)
-                .background(color = BlackTransparent60)
-                .padding(8.dp)
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.Bottom
         ) {
-            Text(text = cast.name, fontSize = 10.sp)
-            Text(text = cast.character, fontSize = 10.sp, color = WhiteTransparent60)
-
-        }
-    }
-
-}
-
-@Composable
-fun SimilarShowsRow(items: List<TvShow>, onSeeAllClicked: () -> Unit) {
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row {
-            Divider(
-                modifier = Modifier
-                    .height(20.dp)
-                    .width(5.dp), thickness = 1.dp, color = PineGreenDark
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "More like this", style = MaterialTheme.typography.titleMedium)
-        }
-        TextButton(onClick = { /*TODO*/ }, contentPadding = PaddingValues(0.dp)) {
-            Text(
-                text = "See All",
-                color = PineGreenDark,
-                style = MaterialTheme.typography.titleSmall
-            )
-
-        }
-    }
-
-    LazyRow {
-        items(items) {
-            SimilarShowCard(it)
-        }
-    }
-    Divider(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp, horizontal = 32.dp)
-    )
-}
-
-@Composable
-fun SimilarShowCard(tvShow: TvShow) {
-    Box(
-        modifier = Modifier
-            .padding(horizontal = 8.dp)
-            .width(100.dp)
-            .height(160.dp)
-            .clip(RoundedCornerShape(10.dp)),
-        contentAlignment = Alignment.BottomCenter
-    ) {
-        AsyncImage(
-            model = tvShow.backdropPath,
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.FillBounds,
-            contentDescription = "similar show image"
-        )
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(54.dp)
-                .background(color = BlackTransparent60)
-                .padding(8.dp)
-        ) {
-            Row {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
+                    modifier = Modifier.size(12.dp),
                     painter = painterResource(id = R.drawable.ic_star),
                     tint = GoldenYellow,
                     contentDescription = null
                 )
-                Text(text = "${tvShow.voteAverage}")
+                Text(text = tvShow.voteAverage.roundToInt().toString())
             }
-            Text(text = tvShow.name, fontSize = 10.sp)
-//            Text(
-//                text = "${tvShow.releaseDate}  S${tvShowInfo.tvShowDetails?.lastSeason?.toString()}  ${tvShowInfo.tvShowDetails?.lastEpisode?.toString()} episodes",
-//                fontSize = 8.sp, color = WhiteTransparent60
-//            )
+            Text(text = tvShow.name, fontSize = 10.sp, maxLines = 1)
+            Text(
+                text = tvShow.voteCount.toString(),
+                fontSize = 8.sp,
+                color = WhiteTransparent60,
+                maxLines = 1
+            )
 
         }
     }
 
 }
+
+val similarTvShowCardModifier = Modifier.imageCardModifier(140.dp, 180.dp)
 
 
 @Composable
@@ -382,7 +344,9 @@ fun MotionLayoutAppBar(
     imageUrl: String,
     rating: Double,
     totalVotes: Int,
-    progress: Float
+    progress: Float,
+    savedState: MutableState<Boolean>,
+    onSaveClicked: () -> Unit
 ) {
     MotionLayout(
         modifier = modifier
@@ -402,8 +366,8 @@ fun MotionLayoutAppBar(
                 .background(Color.Transparent)
                 .clip(
                     RoundedCornerShape(
-                        bottomEnd = 120.dp,
-                        bottomStart = 120.dp
+                        bottomEnd = 16.dp,
+                        bottomStart = 16.dp
                     )
                 ),
             contentScale = ContentScale.FillBounds,
@@ -429,7 +393,9 @@ fun MotionLayoutAppBar(
         ServicesBox(
             modifier = Modifier.layoutId(MotionLayoutAppBarItem.ServicesBox),
             rating,
-            totalVotes = totalVotes
+            totalVotes = totalVotes,
+            savedState = savedState,
+            onSaveClicked = onSaveClicked
         )
 
 
@@ -437,7 +403,14 @@ fun MotionLayoutAppBar(
 }
 
 @Composable
-fun ServicesBox(modifier: Modifier, voteAvg: Double, totalVotes: Int) {
+fun ServicesBox(
+    modifier: Modifier,
+    voteAvg: Double,
+    totalVotes: Int,
+    savedState: MutableState<Boolean>,
+    onSaveClicked: () -> Unit
+
+) {
     val sharedModifier = Modifier
         .background(Color.Transparent)
     Row(
@@ -481,17 +454,12 @@ fun ServicesBox(modifier: Modifier, voteAvg: Double, totalVotes: Int) {
 
         }
         Column(
-            modifier = sharedModifier,
+            modifier = sharedModifier.clickable { onSaveClicked() },
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(20.dp))
-            Icon(
-                painterResource(id = R.drawable.ic_bookmark),
-                contentDescription = null,
-                tint = PineGreenDark,
-                modifier = Modifier.size(30.dp)
-            )
+            SavedItemIcon(modifier = Modifier.size(30.dp), isSavedState = savedState)
             Text(text = "Add")
 
         }

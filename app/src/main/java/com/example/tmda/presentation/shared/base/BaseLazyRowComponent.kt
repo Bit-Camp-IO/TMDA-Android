@@ -24,7 +24,7 @@ import com.example.tmda.ui.theme.PineGreenDark
 
 @Composable
 fun <T> BaseLazyRowComponent(
-    title: String = "More like this",
+    title: String ,
     hasBottomDivider: Boolean = true,
     onSeeAllClicked: () -> Unit,
     itemsState: UiState<List<T>>,

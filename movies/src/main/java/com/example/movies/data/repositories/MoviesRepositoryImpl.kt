@@ -5,16 +5,18 @@ import com.example.movies.data.dto.movies.LatestMovieDto
 import com.example.movies.data.dto.videos.VideoContainerDto
 import com.example.movies.data.local.MoviesDao
 import com.example.movies.data.mappers.makePostMovieToWatchListBody
-import com.example.movies.data.mappers.toCredits
+
 import com.example.movies.data.mappers.toMovieDetails
 import com.example.movies.data.mappers.toMoviePage
 import com.example.movies.data.mappers.toReview
 import com.example.movies.data.remote.MoviesApiService
-import com.example.movies.domain.enities.credits.Credits
+
 import com.example.movies.domain.enities.movie.MovieDetails
 import com.example.movies.domain.enities.movie.MoviesPage
-import com.example.movies.domain.enities.review.Review
 import com.example.movies.domain.repositories.MoviesRepository
+import com.example.shared.entities.credits.Credits
+import com.example.shared.entities.review.Review
+import com.example.shared.mappers.toCredits
 import javax.inject.Inject
 
 class MoviesRepositoryImpl @Inject constructor(
