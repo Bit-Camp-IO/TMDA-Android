@@ -60,7 +60,7 @@ interface TvShowApiService {
 
 
     @GET("tv/{series_id}/reviews")
-    suspend fun getReviews(
+    suspend fun getTvReviews(
         @Path("series_id") tvShowId: Int,
         @Query("page") page: Int
     ): ReviewsWrapperDto
@@ -77,10 +77,19 @@ interface TvShowApiService {
         @Query("include_adult") includeAdults: Boolean,
         @Query("page") page: Int
     ): TvShowDtoPage
+
     @GET("person/{person_id}")
     suspend fun getPersonDetails(@Path("person_id") personId: Int): PersonDetailsDto
 
     @GET("person/{person_id}/tv_credits")
-    suspend fun getPersonSeries(@Path("person_id")personId: Int): PersonSeriesWrapper
+    suspend fun getPersonSeries(@Path("person_id") personId: Int): PersonSeriesWrapper
+
+    @GET("account/{account_id}/watchlist/tv")
+    suspend fun getBookMarkedSeries(
+        @Path("account_id") accountId: Int,
+        @Query("session_id") sessionId: String,
+        @Query("page") page: Int
+    ): TvShowDtoPage
+
 
 }

@@ -4,6 +4,7 @@ import androidx.compose.runtime.MutableState
 import com.bitIO.tvshowcomponent.domain.entity.TvShow
 import com.example.shared.entities.Video
 import com.example.shared.entities.credits.CastMember
+import com.example.shared.entities.review.Review
 
 data class OverView(
     val id: Int,
@@ -22,5 +23,6 @@ data class OverView(
     val seasonCount: Int,
     val episodesCount: Int,
     val genres: String,
-    val savedState: MutableState<Boolean>
+    val savedState: MutableState<Boolean>,
+    val reviews: List<Review>
 )

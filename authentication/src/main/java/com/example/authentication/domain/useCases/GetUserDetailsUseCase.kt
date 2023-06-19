@@ -9,6 +9,7 @@ class GetUserDetailsUseCase @Inject constructor(private val repository: UserRepo
         return try {
             Result.success(repository.getUserDetails())
         } catch (e: Throwable) {
+            throw e
             Result.failure(e)
         }
     }

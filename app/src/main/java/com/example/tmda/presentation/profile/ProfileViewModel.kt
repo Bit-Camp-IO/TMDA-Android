@@ -5,8 +5,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.bitIO.tvshowcomponent.domain.entity.TvShow
+import com.bitIO.tvshowcomponent.domain.useCases.GetBookMarkedSeriesUseCase
 import com.example.authentication.domain.entities.UserDetails
 import com.example.authentication.domain.useCases.GetUserDetailsUseCase
+import com.example.authentication.domain.useCases.SignOutUseCase
 import com.example.movies.domain.enities.movie.Movie
 import com.example.movies.domain.useCases.GetBookMarkedMoviesUseCase
 import com.example.tmda.presentation.shared.uiStates.UiState
@@ -20,9 +23,11 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val getUserDetailsUseCase: GetUserDetailsUseCase,
-    private val getBookMarkedMoviesUseCase: GetBookMarkedMoviesUseCase
+    private val getBookMarkedMoviesUseCase: GetBookMarkedMoviesUseCase,
+    private val getBookMarkedSeriesUseCase: GetBookMarkedSeriesUseCase,
+    private val signOutUseCase: SignOutUseCase,
 
-) : ViewModel() {
+    ) : ViewModel() {
     private val _userDetails: MutableState<UiState<UserDetails>> = mutableStateOf(UiState.Loading())
     val userDetails: State<UiState<UserDetails>>
         get() = _userDetails
@@ -30,10 +35,14 @@ class ProfileViewModel @Inject constructor(
     private val _userMovies: MutableState<UiState<List<Movie>>> = mutableStateOf(UiState.Loading())
     val userMovies: State<UiState<List<Movie>>>
         get() = _userMovies
+    private val _userSeries: MutableState<UiState<List<TvShow>>> = mutableStateOf(UiState.Loading())
+    val userSeries: State<UiState<List<TvShow>>>
+        get() = _userSeries
 
     init {
         updateUserDetails()
         updateUserMovies()
+        updateUserSeries()
     }
 
 
@@ -47,6 +56,18 @@ class ProfileViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             _userMovies.value =
                 getBookMarkedMoviesUseCase.invoke(1).mapToOtherType { it.results }.toUiState()
+        }
+    }
+
+    private fun updateUserSeries() {
+        viewModelScope.launch(Dispatchers.IO) {
+            _userSeries.value =
+                getBookMarkedSeriesUseCase.invoke(1).mapToOtherType { it.results }.toUiState()
+        }
+    }
+    fun logOut(){
+        viewModelScope.launch(Dispatchers.IO) {
+            signOutUseCase.invoke()
         }
     }
 

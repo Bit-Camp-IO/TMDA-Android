@@ -16,10 +16,13 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MoviesHomeViewModel @Inject constructor(private val interactor: MovieUseCaseFactory) :
+class MoviesHomeViewModel @Inject constructor(
+    private val interactor: MovieUseCaseFactory,
+
+) :
     ViewModel() {
     init {
-      updateAll()
+        updateAll()
     }
 
     private val _nowPlayingMoviesState = mutableStateOf<UiState<List<Movie>>>(UiState.Loading())
@@ -39,7 +42,7 @@ class MoviesHomeViewModel @Inject constructor(private val interactor: MovieUseCa
         get() = _popularMoviesState
 
 
-    fun updateAll(){
+    fun updateAll() {
         updateNowPlayingMovies()
         updateUpComingMovies()
         updateTopRatedMovies()
@@ -86,6 +89,7 @@ class MoviesHomeViewModel @Inject constructor(private val interactor: MovieUseCa
             _popularMoviesState.value = moviesUiState
         }
     }
+
 
 
     fun isErrorState(): Boolean {

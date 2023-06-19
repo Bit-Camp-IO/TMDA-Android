@@ -25,6 +25,6 @@ fun UserDetailsDto.toUserDetails():UserDetails{
         id,
         name,
         username,
-        avatar.tmdb.avatarPath
+        avatar.tmdb.avatarPath?:""
     )
 }

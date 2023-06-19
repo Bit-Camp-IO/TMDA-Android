@@ -5,6 +5,7 @@ import com.bitIO.tvshowcomponent.domain.entity.TvShow
 import com.bitIO.tvshowcomponent.domain.entity.TvShowDetails
 import com.example.shared.entities.Video
 import com.example.shared.entities.credits.Credits
+import com.example.shared.entities.review.Review
 
 fun makeOverView(
     tvShowDetails: TvShowDetails,
@@ -12,7 +13,8 @@ fun makeOverView(
     credits: Credits,
     similarSeries: List<TvShow>,
     recommendedSeries: List<TvShow>,
-    isSaved: Boolean
+    isSaved: Boolean,
+    reviews:List<Review>
 ): OverView {
     return OverView(
         id = tvShowDetails.id,
@@ -31,6 +33,7 @@ fun makeOverView(
         seasonCount = tvShowDetails.seasonCount,
         episodesCount = tvShowDetails.episodesCount,
         genres = tvShowDetails.genres.joinToString { it.name },
-        savedState = mutableStateOf(isSaved)
+        savedState = mutableStateOf(isSaved),
+        reviews
     )
 }

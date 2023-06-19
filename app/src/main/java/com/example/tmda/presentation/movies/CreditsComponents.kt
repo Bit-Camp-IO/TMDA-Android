@@ -2,11 +2,8 @@ package com.example.tmda.presentation.movies
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,9 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Divider
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,48 +25,24 @@ import coil.compose.AsyncImage
 import com.example.shared.entities.credits.CastMember
 import com.example.shared.entities.credits.CreditItem
 import com.example.shared.entities.credits.CrewMember
+import com.example.tmda.presentation.shared.DividerTitle
 import com.example.tmda.presentation.shared.NoDataComponent
 import com.example.tmda.presentation.shared.base.mainShape
 import com.example.tmda.presentation.shared.uiStates.LoadingScreen
 import com.example.tmda.presentation.shared.uiStates.UiState
 import com.example.tmda.ui.theme.BlackTransparent60
-import com.example.tmda.ui.theme.PineGreenDark
 import com.example.tmda.ui.theme.WhiteTransparent60
 
 @Composable
 fun CreditsComponent(
     title: String = "Casts",
     creditItemsState: UiState<List<CastMember>>,
-    onSeeAllClicked: () -> Unit,
     onCardClicked: (Int) -> Unit
 ) {
 
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row {
-            Divider(
-                modifier = Modifier
-                    .height(20.dp)
-                    .width(5.dp), thickness = 1.dp, color = PineGreenDark
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = title, style = MaterialTheme.typography.titleMedium)
-        }
-        TextButton(onClick = { /*TODO*/ }, contentPadding = PaddingValues(0.dp)) {
-            Text(
-                text = "See All",
-                color = PineGreenDark,
-                style = MaterialTheme.typography.titleSmall
-            )
+    DividerTitle(title = title)
 
-        }
-    }
 
     when (creditItemsState) {
         is UiState.Failure -> {}
@@ -83,11 +54,14 @@ fun CreditsComponent(
             LazyRow {
                 item { Spacer(modifier = Modifier.width(16.dp)) }
                 if (castMembers.isEmpty())
-                    item { NoDataComponent(modifier = Modifier
-                        .height(160.dp)
-                        ) } else
+                    item {
+                        NoDataComponent(
+                            modifier = Modifier
+                                .height(160.dp)
+                        )
+                    } else
                     items(castMembers.size, key = { castMembers[it].id }) {
-                        CreditItemsCard(castMembers[it],onCardClicked)
+                        CreditItemsCard(castMembers[it], onCardClicked)
                     }
                 item { Spacer(modifier = Modifier.width(16.dp)) }
 
@@ -105,12 +79,13 @@ fun CreditsComponent(
 
 
 @Composable
-fun CreditItemsCard(creditItem: CreditItem,onCardClicked: (Int) -> Unit) {
+fun CreditItemsCard(creditItem: CreditItem, onCardClicked: (Int) -> Unit) {
     Box(
         modifier = Modifier
             .width(140.dp)
             .height(180.dp)
-            .clip(mainShape).clickable { onCardClicked(creditItem.id) },
+            .clip(mainShape)
+            .clickable { onCardClicked(creditItem.id) },
         contentAlignment = Alignment.BottomCenter
     ) {
         AsyncImage(

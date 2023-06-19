@@ -17,6 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.tmda.presentation.shared.DividerTitle
+import com.example.tmda.presentation.shared.NoDataComponent
 import com.example.tmda.presentation.shared.uiStates.ErrorComponent
 import com.example.tmda.presentation.shared.uiStates.LoadingScreen
 import com.example.tmda.presentation.shared.uiStates.UiState
@@ -24,10 +26,10 @@ import com.example.tmda.ui.theme.PineGreenDark
 
 @Composable
 fun <T> BaseLazyRowComponent(
-    title: String ,
+    title: String,
     hasBottomDivider: Boolean = true,
     onSeeAllClicked: () -> Unit,
-    hasSeeAll:Boolean=true,
+    hasSeeAll: Boolean = true,
     itemsState: UiState<List<T>>,
     onItemClicked: (Int) -> Unit,
     contentCard: @Composable (T, (Int) -> Unit) -> Unit
@@ -36,20 +38,14 @@ fun <T> BaseLazyRowComponent(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 24.dp),
+            .padding(end = 24.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Row {
-            Divider(
-                modifier = Modifier
-                    .height(20.dp)
-                    .width(5.dp), thickness = 1.dp, color = PineGreenDark
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = title, style = MaterialTheme.typography.titleMedium)
-        }
-       if (hasSeeAll) TextButton(onClick = onSeeAllClicked, contentPadding = PaddingValues(0.dp)) {
+
+        DividerTitle(title = title)
+
+        if (hasSeeAll) TextButton(onClick = onSeeAllClicked, contentPadding = PaddingValues(0.dp)) {
             Text(
                 text = "See All",
                 color = PineGreenDark,
@@ -64,6 +60,8 @@ fun <T> BaseLazyRowComponent(
         is UiState.Loading -> LoadingScreen(modifier = Modifier.height(360.dp))
         is UiState.Success -> {
             val data = itemsState.data
+            if (data.isEmpty())
+                NoDataComponent(modifier = Modifier.height(200.dp))
             LazyRow {
                 item { Spacer(modifier = Modifier.width(16.dp)) }
                 items(data.size) { contentCard(data[it], onItemClicked) }

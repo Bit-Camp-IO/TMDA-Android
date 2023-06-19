@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.tmda.R
 import com.example.tmda.ui.theme.BlackTransparent37
+import com.example.tmda.ui.theme.PineGreenLight
 import com.example.tmda.ui.theme.WhiteTransparent60
 
 fun mainShape(cornerRadiusDegree: Float = 60f, slopeLength: Float = 50f) =
@@ -124,4 +126,14 @@ fun BackGround() {
 }
 
 
+@Composable
+fun DividerTitle(title:String){
 
+    Row(Modifier.padding(bottom = 16.dp)) {
+        Spacer(modifier = Modifier.width(24.dp))
+        Divider(Modifier.size(5.dp, 20.dp), color = PineGreenLight)
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(text = title)
+    }
+
+}

@@ -3,9 +3,10 @@ package com.bitIO.tvshowcomponent.domain.repository
 import com.bitIO.tvshowcomponent.domain.entity.TvShow
 import com.bitIO.tvshowcomponent.domain.entity.TvShowDetails
 import com.bitIO.tvshowcomponent.domain.entity.TvShowPage
-import com.example.shared.entities.people.PersonDetails
 import com.example.shared.entities.Video
 import com.example.shared.entities.credits.Credits
+import com.example.shared.entities.people.PersonDetails
+import com.example.shared.entities.review.Review
 
 
 interface TvShowRepository {
@@ -26,4 +27,11 @@ interface TvShowRepository {
 
     suspend fun getPersonDetails(personId: Int): PersonDetails
     suspend fun getPersonSeries(personId: Int): List<TvShow>
+    suspend fun getBookMarkedSeries(
+        accountId: Int,
+        sessionId: String,
+        page: Int
+    ): TvShowPage
+
+    suspend fun getTvShowReviews(tvShowId: Int):List<Review>
 }

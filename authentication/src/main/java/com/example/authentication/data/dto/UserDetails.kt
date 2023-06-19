@@ -26,5 +26,5 @@ data class GravatarDto(
 @JsonClass(generateAdapter = true)
 data class TmdbDto(
     @Json(name="avatar_path")
-    val avatarPath: String
+    val avatarPath: String?
 )

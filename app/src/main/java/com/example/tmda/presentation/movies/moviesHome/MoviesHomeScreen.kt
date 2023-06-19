@@ -62,6 +62,7 @@ fun MoviesHomeScreen(navController: NavController) {
                 )
 
             }
+
         }
 }
 

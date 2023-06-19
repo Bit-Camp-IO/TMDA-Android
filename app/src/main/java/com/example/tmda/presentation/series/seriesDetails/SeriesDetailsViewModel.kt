@@ -10,12 +10,14 @@ import com.bitIO.tvshowcomponent.domain.entity.TvShowDetails
 import com.bitIO.tvshowcomponent.domain.entity.TvShowPage
 import com.bitIO.tvshowcomponent.domain.useCases.GetTvShowCreditsUseCase
 import com.bitIO.tvshowcomponent.domain.useCases.GetTvShowDetailsUseCase
+import com.bitIO.tvshowcomponent.domain.useCases.GetTvShowReviews
 import com.bitIO.tvshowcomponent.domain.useCases.GetTvVideosUseCase
 import com.bitIO.tvshowcomponent.domain.useCases.tvShow.TvShowUseCaseFactory
 import com.example.authentication.domain.useCases.AddOrRemoveTvFromWatchListUseCase
 import com.example.authentication.domain.useCases.GetTvSavedStateUseCase
 import com.example.shared.entities.Video
 import com.example.shared.entities.credits.Credits
+import com.example.shared.entities.review.Review
 import com.example.tmda.presentation.navigation.SERIES_ID
 import com.example.tmda.presentation.series.seriesDetails.uiDto.OverView
 import com.example.tmda.presentation.series.seriesDetails.uiDto.makeOverView
@@ -39,6 +41,7 @@ class SeriesDetailsViewModel @Inject constructor(
     private val videosUseCase: GetTvVideosUseCase,
     private val addOrRemoveTvFromWatchListUseCase: AddOrRemoveTvFromWatchListUseCase,
     private val getTvSavedStateUseCase: GetTvSavedStateUseCase,
+    private val getTvShowReviews: GetTvShowReviews,
     tvShowUseCaseFactory: TvShowUseCaseFactory,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -47,7 +50,10 @@ class SeriesDetailsViewModel @Inject constructor(
         tvShowUseCaseFactory.getUseCase(TvShowUseCaseFactory.SeriesType.Similar, movieId = seriesId)
 
     private val recommendedTvShowUseCase =
-        tvShowUseCaseFactory.getUseCase(TvShowUseCaseFactory.SeriesType.Recommended, movieId = seriesId)
+        tvShowUseCaseFactory.getUseCase(
+            TvShowUseCaseFactory.SeriesType.Recommended,
+            movieId = seriesId
+        )
     private val _overView: MutableState<UiState<OverView>> =
         mutableStateOf(UiState.Loading())
     val overView: State<UiState<OverView>>
@@ -63,18 +69,20 @@ class SeriesDetailsViewModel @Inject constructor(
         updateOverView()
     }
 
-     fun updateOverView() {
+    fun updateOverView() {
         viewModelScope.launch(Dispatchers.IO) {
             val detailsDeferred = getTvShowDetails()
             val creditsDeferred = getTvShowCredits(seriesId)
             val similarDeferred = getSimilarTvShows()
             val recommendedDeferred = getRecommendedShows()
             val videosDeferred = getTvShowVideos(seriesId)
-            val isBookmarked = getIsBookmarked()
+            val isBookmarkedDeferred = getIsBookmarked()
+            val reviewsDeferred = getReviews()
             joinAll(
                 detailsDeferred, creditsDeferred,
                 similarDeferred, videosDeferred,
-                isBookmarked
+                isBookmarkedDeferred, recommendedDeferred,
+                reviewsDeferred
             )
             mapDataToOverView(
                 detailsDeferred,
@@ -82,7 +90,8 @@ class SeriesDetailsViewModel @Inject constructor(
                 similarDeferred,
                 recommendedDeferred,
                 videosDeferred,
-                isBookmarked
+                isBookmarkedDeferred,
+                reviewsDeferred
             )
 
         }
@@ -95,7 +104,8 @@ class SeriesDetailsViewModel @Inject constructor(
         similarDef: DResult<TvShowPage>,
         recommendedDef: DResult<TvShowPage>,
         videosDef: DResult<List<Video>>,
-        isSavedDef: DResult<Boolean>
+        isSavedDef: DResult<Boolean>,
+        reviewsDef: DResult<List<Review>>
     ) {
         _overView.value =
             try {
@@ -105,6 +115,7 @@ class SeriesDetailsViewModel @Inject constructor(
                 val recommended = recommendedDef.getCompleted().getOrThrow().results
                 val videos = videosDef.getCompleted().getOrThrow()
                 val isSaved = isSavedDef.getCompleted().getOrThrow()
+                val reviews= reviewsDef.getCompleted().getOrThrow()
 
                 UiState.Success(
                     makeOverView(
@@ -114,6 +125,7 @@ class SeriesDetailsViewModel @Inject constructor(
                         similar,
                         recommended,
                         isSaved,
+                        reviews
                     )
                 )
             } catch (e: Throwable) {
@@ -142,6 +154,7 @@ class SeriesDetailsViewModel @Inject constructor(
         }
 
     }
+
     private fun getRecommendedShows(): DResult<TvShowPage> {
         return viewModelScope.async(Dispatchers.IO) {
             recommendedTvShowUseCase.invoke(1)
@@ -157,6 +170,10 @@ class SeriesDetailsViewModel @Inject constructor(
 
     private fun getIsBookmarked(): DResult<Boolean> {
         return viewModelScope.async { getTvSavedStateUseCase.invoke(seriesId) }
+    }
+
+    private fun getReviews(): DResult<List<Review>> {
+        return viewModelScope.async { getTvShowReviews.invoke(seriesId) }
 
     }
 

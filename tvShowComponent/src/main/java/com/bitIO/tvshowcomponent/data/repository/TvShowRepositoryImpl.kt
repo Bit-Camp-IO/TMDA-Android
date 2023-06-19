@@ -12,8 +12,10 @@ import com.bitIO.tvshowcomponent.domain.repository.TvShowRepository
 import com.example.shared.entities.Video
 import com.example.shared.entities.credits.Credits
 import com.example.shared.entities.people.PersonDetails
+import com.example.shared.entities.review.Review
 import com.example.shared.mappers.toCredits
 import com.example.shared.mappers.toPersonDetails
+import com.example.shared.mappers.toReview
 import com.example.shared.mappers.toVideo
 import javax.inject.Inject
 
@@ -76,7 +78,19 @@ class TvShowRepositoryImpl @Inject constructor(private val api: TvShowApiService
     }
 
     override suspend fun getPersonSeries(personId: Int): List<TvShow> {
-       return api.getPersonSeries(personId).cast.map { it.toTVShow() }
+        return api.getPersonSeries(personId).cast.map { it.toTVShow() }
+    }
+
+    override suspend fun getBookMarkedSeries(
+        accountId: Int,
+        sessionId: String,
+        page: Int
+    ): TvShowPage {
+      return  api.getBookMarkedSeries(accountId, sessionId, page).toTvShowPage()
+    }
+
+    override suspend fun getTvShowReviews(tvShowId: Int): List<Review> {
+       return api.getTvReviews(tvShowId,1).results.map { it.toReview()}
     }
 
 }

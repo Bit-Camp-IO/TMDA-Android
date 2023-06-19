@@ -13,6 +13,7 @@ import com.example.tmda.presentation.movies.moviesList.MoviesListScreen
 import com.example.tmda.presentation.movies.person.PersonMovieScreen
 import com.example.tmda.presentation.movies.uiModels.MoviesScreenType
 import com.example.tmda.presentation.people.PersonSearchScreen
+import com.example.tmda.presentation.profile.ProfileScreen
 import com.example.tmda.presentation.search.SearchScreen
 import com.example.tmda.presentation.series.person.PersonSeriesScreen
 import com.example.tmda.presentation.series.seriesDetails.SeriesDetailsScreen
@@ -112,7 +113,7 @@ fun NavigationHost(navController: NavHostController) {
             route = Destinations.ACCOUNT_ROUTE,
             startDestination = Destinations.ACCOUNT_SCREEN
         ) {
-            composable(Destinations.ACCOUNT_SCREEN) {}
+            composable(Destinations.ACCOUNT_SCREEN) { ProfileScreen(navController = navController)}
             composable(Destinations.MOVIES_DETAILS_SCREEN) { MovieDetailsScreen(navController) }
             composable(Destinations.MOVIES_LIST_SCREEN) {
                 MoviesListScreen(

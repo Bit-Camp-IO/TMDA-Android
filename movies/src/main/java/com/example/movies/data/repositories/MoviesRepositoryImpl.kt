@@ -8,7 +8,6 @@ import com.example.movies.data.mappers.makePostMovieToWatchListBody
 import com.example.movies.data.mappers.toMovie
 import com.example.movies.data.mappers.toMovieDetails
 import com.example.movies.data.mappers.toMoviePage
-import com.example.movies.data.mappers.toReview
 import com.example.movies.data.remote.MoviesApiService
 import com.example.movies.domain.enities.movie.Movie
 import com.example.movies.domain.enities.movie.MovieDetails
@@ -21,6 +20,7 @@ import com.example.shared.entities.review.Review
 import com.example.shared.mappers.toCredits
 import com.example.shared.mappers.toPeoplePage
 import com.example.shared.mappers.toPersonDetails
+import com.example.shared.mappers.toReview
 import javax.inject.Inject
 
 class MoviesRepositoryImpl @Inject constructor(

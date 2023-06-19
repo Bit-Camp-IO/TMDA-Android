@@ -12,13 +12,8 @@ import com.example.movies.domain.enities.Video
 import com.example.movies.domain.enities.movie.Movie
 import com.example.movies.domain.enities.movie.MovieDetails
 import com.example.movies.domain.enities.movie.MoviesPage
-import com.example.shared.dto.people.PeoplePageDto
-import com.example.shared.dto.review.ReviewDto
 import com.example.shared.entities.Genre
-import com.example.shared.entities.people.PeoplePage
-import com.example.shared.entities.review.Review
 import com.example.shared.mappers.toGenre
-import com.example.shared.mappers.toPersonDetails
 import okhttp3.MediaType
 import okhttp3.RequestBody
 
@@ -89,11 +84,7 @@ internal fun Int.toGenre(): Genre {
 }
 
 
-fun ReviewDto.toReview() = Review(
-    author = author,
-    content = content,
-    updatedAt = updatedAt
-)
+
 
 fun VideoDto.toVideo() = Video(key = key, site = site, type = type)
 

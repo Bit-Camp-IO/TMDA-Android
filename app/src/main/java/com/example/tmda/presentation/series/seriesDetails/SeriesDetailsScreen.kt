@@ -70,6 +70,7 @@ import com.example.tmda.presentation.shared.SavedItemIcon
 import com.example.tmda.presentation.shared.base.BaseImageCard
 import com.example.tmda.presentation.shared.base.BaseLazyRowComponent
 import com.example.tmda.presentation.shared.base.imageCardModifier
+import com.example.tmda.presentation.shared.reviews.ReviewsList
 import com.example.tmda.presentation.shared.uiStates.ErrorScreen
 import com.example.tmda.presentation.shared.uiStates.LoadingScreen
 import com.example.tmda.presentation.shared.uiStates.UiState
@@ -136,7 +137,6 @@ fun SeriesDetailsScreen(
                     item {
                         CreditsComponent(
                             creditItemsState = overView.cast.toSuccessState(),
-                            onSeeAllClicked = { /*TODO*/ },
                             onCardClicked = navController::navigateToSeriesPersonScreen
                         )
                     }
@@ -164,6 +164,7 @@ fun SeriesDetailsScreen(
                             )
                         }
                     }
+                    item { ReviewsList(reviews = overView.reviews.toSuccessState()) }
                 }
 
             }

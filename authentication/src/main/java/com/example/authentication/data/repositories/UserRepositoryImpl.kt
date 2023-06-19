@@ -55,12 +55,12 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun deleteSession(): Boolean {
         val isSessionDeleted = userApiServices.deleteSession(cachedUser!!.sessionId.toRequestBody())
-        if (isSessionDeleted) {
+        if (isSessionDeleted.success) {
             cachedUser = null
             userDao.deleteCurrentUser()
             userState.value = cachedUser
         }
-        return isSessionDeleted
+        return isSessionDeleted.success
     }
 
     override suspend fun addSeriesToWatchList(seriesId: Int, isAddRequest: Boolean) {

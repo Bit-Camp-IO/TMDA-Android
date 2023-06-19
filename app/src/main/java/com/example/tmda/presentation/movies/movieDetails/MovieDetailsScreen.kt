@@ -45,6 +45,7 @@ import com.example.tmda.presentation.navigation.navigateToMovieDetails
 import com.example.tmda.presentation.navigation.navigateToMovieListScreen
 import com.example.tmda.presentation.navigation.navigateToMoviePersonScreen
 import com.example.tmda.presentation.shared.MotionLayoutAppBar
+import com.example.tmda.presentation.shared.reviews.ReviewsList
 import com.example.tmda.presentation.shared.uiStates.ErrorScreen
 import com.example.tmda.presentation.shared.uiStates.LoadingScreen
 import com.example.tmda.presentation.shared.uiStates.UiState
@@ -114,9 +115,9 @@ fun DetailsScreenLoaded(
             item {
                 CreditsComponent(
                     title = "Cast",
-                    creditItemsState = stateHolder.movieCredits.value ,
-                    onSeeAllClicked = {},
-                    onCardClicked = navController::navigateToMoviePersonScreen)
+                    creditItemsState = stateHolder.movieCredits.value,
+                    onCardClicked = navController::navigateToMoviePersonScreen
+                )
             }
             item {
                 SimilarMoviesRow(
@@ -144,6 +145,8 @@ fun DetailsScreenLoaded(
                     )
                 }
             }
+            item { ReviewsList(reviews = stateHolder.reviews.value) 
+            Spacer(modifier = Modifier.height(16.dp))}
         }
 
     }

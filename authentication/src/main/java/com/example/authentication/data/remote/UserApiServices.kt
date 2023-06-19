@@ -1,14 +1,15 @@
 package com.example.authentication.data.remote
 
 import com.example.authentication.data.dto.AccountSavedStateDto
+import com.example.authentication.data.dto.DeleteDto
 import com.example.authentication.data.dto.GuestSessionDto
 import com.example.authentication.data.dto.RequestTokenDetailsDto
 import com.example.authentication.data.dto.SessionDto
 import com.example.authentication.data.dto.UserDetailsDto
 import okhttp3.RequestBody
 import retrofit2.http.Body
-import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -26,8 +27,9 @@ interface UserApiServices {
     @POST("authentication/token/validate_with_login")
     suspend fun createActiveTokenWithLogin(@Body body: RequestBody): RequestTokenDetailsDto
 
-    @DELETE("authentication/session")
-    suspend fun deleteSession(@Body body: RequestBody): Boolean
+    @HTTP(method = "DELETE", path = "authentication/session", hasBody = true)
+    //@DELETE("authentication/session")
+    suspend fun deleteSession(@Body body: RequestBody): DeleteDto
 
     @POST("account/{account_id}/watchlist")
     suspend fun postToWatchList(

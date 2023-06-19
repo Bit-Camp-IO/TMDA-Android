@@ -7,6 +7,7 @@ import com.example.shared.dto.details.GenreDto
 import com.example.shared.dto.people.PeoplePageDto
 import com.example.shared.dto.people.PersonDetailsDto
 import com.example.shared.dto.people.PersonDto
+import com.example.shared.dto.review.ReviewDto
 import com.example.shared.dto.videos.VideoDto
 import com.example.shared.entities.Genre
 import com.example.shared.entities.Video
@@ -16,6 +17,7 @@ import com.example.shared.entities.credits.CrewMember
 import com.example.shared.entities.people.PeoplePage
 import com.example.shared.entities.people.Person
 import com.example.shared.entities.people.PersonDetails
+import com.example.shared.entities.review.Review
 
 fun GenreDto.toGenre() = Genre(id = id, name = name)
 fun CreditsDto.toCredits() = Credits(
@@ -66,4 +68,9 @@ fun PeoplePageDto.toPeoplePage() = PeoplePage(
     totalPages,
     totalResults
 
+)
+fun ReviewDto.toReview() = Review(
+    author = author,
+    content = content,
+    updatedAt = updatedAt
 )
