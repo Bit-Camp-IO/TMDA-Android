@@ -1,6 +1,7 @@
 package com.example.authentication.domain.repositories
 
 import com.example.authentication.domain.entities.User
+import com.example.authentication.domain.entities.UserDetails
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
@@ -10,7 +11,9 @@ interface UserRepository {
     suspend fun getCurrentUser(): User
     fun getUserState(): Flow<User?>
 
-    suspend fun addSeriesToWatchList(seriesId:Int,isAddRequest:Boolean): Unit
-    suspend fun addMovieToWatchList(movieId:Int,isAddRequest:Boolean): Unit
+    suspend fun addSeriesToWatchList(seriesId:Int,isAddRequest:Boolean)
+    suspend fun addMovieToWatchList(movieId:Int,isAddRequest:Boolean)
     suspend fun getTvSavedState(seriesId: Int): Boolean
+    suspend fun getUserDetails():UserDetails
+
 }

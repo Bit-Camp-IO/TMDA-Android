@@ -1,10 +1,12 @@
 package com.bitIO.tvshowcomponent.data.remote
 
 
+import com.bitIO.tvshowcomponent.data.remote.dto.tvShow.PersonSeriesWrapper
 import com.bitIO.tvshowcomponent.data.remote.dto.tvShow.TvShowDtoPage
 import com.bitIO.tvshowcomponent.data.remote.dto.tvShow.details.TvShowDetailsDto
 import com.bitIO.tvshowcomponent.data.remote.response.ContentRatingResponse
 import com.example.shared.dto.credits.CreditsDto
+import com.example.shared.dto.people.PersonDetailsDto
 import com.example.shared.dto.review.ReviewsWrapperDto
 import com.example.shared.dto.videos.VideoContainerDto
 import retrofit2.http.GET
@@ -75,6 +77,10 @@ interface TvShowApiService {
         @Query("include_adult") includeAdults: Boolean,
         @Query("page") page: Int
     ): TvShowDtoPage
+    @GET("person/{person_id}")
+    suspend fun getPersonDetails(@Path("person_id") personId: Int): PersonDetailsDto
 
+    @GET("person/{person_id}/tv_credits")
+    suspend fun getPersonSeries(@Path("person_id")personId: Int): PersonSeriesWrapper
 
 }

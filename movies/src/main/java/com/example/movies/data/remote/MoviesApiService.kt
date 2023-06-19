@@ -1,14 +1,16 @@
 package com.example.movies.data.remote
 
 import com.example.movies.data.dto.account.MovieAccountStatesDto
-
 import com.example.movies.data.dto.image.ImageCollectionDto
 import com.example.movies.data.dto.movies.LatestMovieDto
 import com.example.movies.data.dto.movies.MovieDetailsDto
 import com.example.movies.data.dto.movies.MoviesBriefWrapperDto
+import com.example.movies.data.dto.movies.PersonMovieWrapper
 import com.example.movies.data.dto.videos.VideoContainerDto
 import com.example.shared.dto.credits.CreditsDto
 import com.example.shared.dto.details.GenreDto
+import com.example.shared.dto.people.PeoplePageDto
+import com.example.shared.dto.people.PersonDetailsDto
 import com.example.shared.dto.review.ReviewsWrapperDto
 import okhttp3.RequestBody
 import retrofit2.http.Body
@@ -90,6 +92,25 @@ interface MoviesApiService {
     suspend fun searchMovies(
         @Query("query") keyword: String,
         @Query("include_adult") includeAdults: Boolean,
+        @Query("page") page: Int
+    ): MoviesBriefWrapperDto
+
+    @GET("person/{person_id}")
+    suspend fun getPersonDetails(@Path("person_id") personId: Int): PersonDetailsDto
+
+    @GET("person/{person_id}/movie_credits")
+    suspend fun getPersonMovies(@Path("person_id") personId: Int): PersonMovieWrapper
+
+    @GET("search/person")
+    suspend fun searchPeople(
+        @Query("query") keyword: String,
+        @Query("page") page: Int
+    ): PeoplePageDto
+
+    @GET("account/{account_id}/watchlist/movies")
+    suspend fun getBookMarkedMovies(
+        @Path("account_id") accountId: Int,
+        @Query("session_id") sessionId: String,
         @Query("page") page: Int
     ): MoviesBriefWrapperDto
 }

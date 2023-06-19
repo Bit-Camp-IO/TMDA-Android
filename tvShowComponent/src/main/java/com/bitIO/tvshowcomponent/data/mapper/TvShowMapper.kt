@@ -22,7 +22,7 @@ import com.bitIO.tvshowcomponent.domain.entity.TvShowGenre
     )
 }
 
-internal fun Int.toGenre() = this.let { TvShowGenre(it, genres[it]!!) }
+internal fun Int.toGenre() = this.let { TvShowGenre(it, genres[it]?:"N/A") }
 
 internal val genres = mapOf(
     10759 to "Action & Adventure",

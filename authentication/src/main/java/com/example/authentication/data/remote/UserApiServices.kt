@@ -4,6 +4,7 @@ import com.example.authentication.data.dto.AccountSavedStateDto
 import com.example.authentication.data.dto.GuestSessionDto
 import com.example.authentication.data.dto.RequestTokenDetailsDto
 import com.example.authentication.data.dto.SessionDto
+import com.example.authentication.data.dto.UserDetailsDto
 import okhttp3.RequestBody
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -40,6 +41,12 @@ interface UserApiServices {
         @Path("series_id") seriesId: Int,
         @Query("session_id") sessionId: String
     ): AccountSavedStateDto
+
+    @GET("account/{account_id}")
+    suspend fun getUserDetails(
+        @Path("account_id") accountId: Int,
+        @Query("session_id") sessionId: String
+    ): UserDetailsDto
 
 
 }

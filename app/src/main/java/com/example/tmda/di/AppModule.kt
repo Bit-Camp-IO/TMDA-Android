@@ -6,8 +6,10 @@ import com.bitIO.tvshowcomponent.data.local.TvShowDao
 import com.bitIO.tvshowcomponent.data.remote.TvShowApiService
 import com.example.authentication.data.local.UserDao
 import com.example.authentication.data.remote.UserApiServices
+import com.example.authentication.domain.repositories.UserRepository
 import com.example.movies.data.local.MoviesDao
 import com.example.movies.data.remote.MoviesApiService
+import com.example.shared.auth.SessionProvider
 import com.example.tmda.infrastructure.local.TmdaDatabase
 import com.example.tmda.infrastructure.remote.TmdaRemoteDataSource
 import dagger.Module
@@ -66,6 +68,12 @@ object AppModule {
         return TmdaRemoteDataSource.tmdbService
     }
 
+    @Provides
+    @Singleton
+    suspend fun sessionId(userRepository: UserRepository): String {
+        return userRepository.getCurrentUser().sessionId
+    }
+
 
     @Provides
     @Singleton
@@ -73,14 +81,15 @@ object AppModule {
         return TmdaRemoteDataSource.tmdbService
     }
 
-//    @Provides
-//    @Singleton
-//    fun provideMoviesRepo(
-//        moviesApiService: MoviesApiService,
-//        moviesDao: MoviesDao
-//    ): MoviesRepository {
-//        return MoviesRepositoryImpl(moviesApiService, moviesDao)
-//    }
-//
+    @Provides
+    @Singleton
+    fun provideSession(userRepository: UserRepository): SessionProvider {
+        return object : SessionProvider {
+            override suspend fun getSessionId(): String {
+                return userRepository.getCurrentUser().sessionId
+            }
+
+        }
+    }
 
 }

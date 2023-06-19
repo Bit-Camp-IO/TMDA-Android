@@ -45,4 +45,10 @@ abstract class AbstractionModule {
         tvShowRepositoryImpl: TvShowRepositoryImpl
     ): TvShowRepository
 
+//  @Binds
+//  @Singleton
+//  abstract fun bindSessionProvider(
+//    tvShowRepositoryImpl: TvShowRepositoryImpl
+//  ): SessionProvider
+
 }

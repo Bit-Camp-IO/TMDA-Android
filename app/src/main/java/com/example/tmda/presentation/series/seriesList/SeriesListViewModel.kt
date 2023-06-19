@@ -8,8 +8,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.bitIO.tvshowcomponent.domain.useCases.tvShow.TvShowUseCaseFactory
-import com.example.authentication.domain.interactors.AddOrRemoveTvFromWatchListUseCase
-import com.example.authentication.domain.interactors.GetTvSavedStateUseCase
+import com.example.authentication.domain.useCases.AddOrRemoveTvFromWatchListUseCase
+import com.example.authentication.domain.useCases.GetTvSavedStateUseCase
 import com.example.tmda.presentation.navigation.SERIES_ID
 import com.example.tmda.presentation.navigation.SERIES_LIST_SCREEN_TYPE
 import com.example.tmda.presentation.series.uiDto.TvShowBookMarkUiModel

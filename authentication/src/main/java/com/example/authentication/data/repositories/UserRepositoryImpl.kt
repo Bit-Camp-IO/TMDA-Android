@@ -3,8 +3,10 @@ package com.example.authentication.data.repositories
 import com.example.authentication.data.dto.RequestTokenDetailsDto
 import com.example.authentication.data.local.UserDao
 import com.example.authentication.data.mappers.toRequestBody
+import com.example.authentication.data.mappers.toUserDetails
 import com.example.authentication.data.remote.UserApiServices
 import com.example.authentication.domain.entities.User
+import com.example.authentication.domain.entities.UserDetails
 import com.example.authentication.domain.repositories.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -79,6 +81,13 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun getTvSavedState(seriesId: Int): Boolean {
         return userApiServices.getTvSavedState(seriesId, cachedUser!!.sessionId).watchList
+    }
+
+    override suspend fun getUserDetails(): UserDetails {
+        return userApiServices.getUserDetails(
+            accountId = 16874876,
+            sessionId = cachedUser!!.sessionId
+        ).toUserDetails()
     }
 
 

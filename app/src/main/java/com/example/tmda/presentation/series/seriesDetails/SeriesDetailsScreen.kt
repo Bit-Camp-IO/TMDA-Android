@@ -59,6 +59,7 @@ import com.example.tmda.R
 import com.example.tmda.presentation.movies.CreditsComponent
 import com.example.tmda.presentation.movies.getTmdbImageLink
 import com.example.tmda.presentation.movies.movieDetails.shape
+import com.example.tmda.presentation.navigation.navigateToSeriesPersonScreen
 import com.example.tmda.presentation.navigation.navigateToShowsListScreen
 import com.example.tmda.presentation.navigation.navigateToTvShowDetailsScreen
 import com.example.tmda.presentation.series.seriesDetails.uiDto.OverView
@@ -136,14 +137,14 @@ fun SeriesDetailsScreen(
                         CreditsComponent(
                             creditItemsState = overView.cast.toSuccessState(),
                             onSeeAllClicked = { /*TODO*/ },
-                            onCardClicked = {}
+                            onCardClicked = navController::navigateToSeriesPersonScreen
                         )
                     }
                     item {
                         SimilarSeriesRow(
                             title = "Similar",
                             seriesState = overView.similarSeries.toSuccessState(),
-                            navController::navigateToTvShowDetailsScreen
+                            onCardItemClicked = navController::navigateToTvShowDetailsScreen
                         ) {
                             navController.navigateToShowsListScreen(
                                 SeriesScreenType.Similar,
@@ -155,7 +156,7 @@ fun SeriesDetailsScreen(
                         SimilarSeriesRow(
                             title = "Related",
                             seriesState = overView.recommendedSeries.toSuccessState(),
-                            navController::navigateToTvShowDetailsScreen
+                            onCardItemClicked = navController::navigateToTvShowDetailsScreen
                         ) {
                             navController.navigateToShowsListScreen(
                                 SeriesScreenType.Similar,
@@ -235,12 +236,14 @@ fun DetailsColumn(title: String, content: String) {
 fun SimilarSeriesRow(
     title: String = "More like this",
     seriesState: UiState<List<TvShow>>,
+    hasSeeAll: Boolean = true,
     onCardItemClicked: (Int) -> Unit,
     onSeeAllClicked: () -> Unit
 ) {
     BaseLazyRowComponent(
         title = title,
         onSeeAllClicked = onSeeAllClicked,
+        hasSeeAll=hasSeeAll,
         itemsState = seriesState,
         onItemClicked = onCardItemClicked
     ) { tvShow, _ ->

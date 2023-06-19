@@ -34,6 +34,7 @@ import kotlin.math.roundToInt
 fun SimilarMoviesRow(
     title: String = "More like this",
     moviesState: UiState<List<Movie>>,
+    hasSeeAll:Boolean = true,
     onCardItemClicked: (Int) -> Unit,
     onSeeAllClicked: () -> Unit
 ) {
@@ -41,6 +42,7 @@ fun SimilarMoviesRow(
         title = title,
         onSeeAllClicked = onSeeAllClicked,
         itemsState = moviesState,
+        hasSeeAll=hasSeeAll,
         onItemClicked = onCardItemClicked
     ) { movie,_->
         SimilarMovieCard(movie =movie , onCardItemClicked =onCardItemClicked)

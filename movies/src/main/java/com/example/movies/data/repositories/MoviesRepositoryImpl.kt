@@ -5,18 +5,22 @@ import com.example.movies.data.dto.movies.LatestMovieDto
 import com.example.movies.data.dto.videos.VideoContainerDto
 import com.example.movies.data.local.MoviesDao
 import com.example.movies.data.mappers.makePostMovieToWatchListBody
-
+import com.example.movies.data.mappers.toMovie
 import com.example.movies.data.mappers.toMovieDetails
 import com.example.movies.data.mappers.toMoviePage
 import com.example.movies.data.mappers.toReview
 import com.example.movies.data.remote.MoviesApiService
-
+import com.example.movies.domain.enities.movie.Movie
 import com.example.movies.domain.enities.movie.MovieDetails
 import com.example.movies.domain.enities.movie.MoviesPage
 import com.example.movies.domain.repositories.MoviesRepository
 import com.example.shared.entities.credits.Credits
+import com.example.shared.entities.people.PeoplePage
+import com.example.shared.entities.people.PersonDetails
 import com.example.shared.entities.review.Review
 import com.example.shared.mappers.toCredits
+import com.example.shared.mappers.toPeoplePage
+import com.example.shared.mappers.toPersonDetails
 import javax.inject.Inject
 
 class MoviesRepositoryImpl @Inject constructor(
@@ -84,7 +88,12 @@ class MoviesRepositoryImpl @Inject constructor(
         return moviesApiService.getMovieVideos(movieId)
     }
 
-    override suspend fun addMovieToWatchList(accountId: Int, sessionId: String, movieId: Int,isSaveRequest:Boolean) {
+    override suspend fun addMovieToWatchList(
+        accountId: Int,
+        sessionId: String,
+        movieId: Int,
+        isSaveRequest: Boolean
+    ) {
         val body = makePostMovieToWatchListBody(movieId, isSaveRequest)
         return moviesApiService.postMovieToWatchList(accountId, sessionId, body)
     }
@@ -94,7 +103,27 @@ class MoviesRepositoryImpl @Inject constructor(
         includeAdults: Boolean,
         page: Int
     ): MoviesPage {
-       return  moviesApiService.searchMovies(keyword,includeAdults,page).toMoviePage()
+        return moviesApiService.searchMovies(keyword, includeAdults, page).toMoviePage()
+    }
+
+    override suspend fun getPersonDetails(personId: Int): PersonDetails {
+        return moviesApiService.getPersonDetails(personId).toPersonDetails()
+    }
+
+    override suspend fun getPersonMovies(personId: Int): List<Movie> {
+        return moviesApiService.getPersonMovies(personId).cast.map { it.toMovie() }
+    }
+
+    override suspend fun searchPeople(keyword: String, page: Int): PeoplePage {
+        return moviesApiService.searchPeople(keyword, page).toPeoplePage()
+    }
+
+    override suspend fun getBookMarkedMovies(
+        accountId: Int,
+        sessionId: String,
+        page: Int
+    ): MoviesPage {
+        return moviesApiService.getBookMarkedMovies(accountId, sessionId, page).toMoviePage()
     }
 
 }

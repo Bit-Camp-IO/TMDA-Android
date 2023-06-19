@@ -27,6 +27,7 @@ fun <T> BaseLazyRowComponent(
     title: String ,
     hasBottomDivider: Boolean = true,
     onSeeAllClicked: () -> Unit,
+    hasSeeAll:Boolean=true,
     itemsState: UiState<List<T>>,
     onItemClicked: (Int) -> Unit,
     contentCard: @Composable (T, (Int) -> Unit) -> Unit
@@ -48,7 +49,7 @@ fun <T> BaseLazyRowComponent(
             Spacer(modifier = Modifier.width(8.dp))
             Text(text = title, style = MaterialTheme.typography.titleMedium)
         }
-        TextButton(onClick = onSeeAllClicked, contentPadding = PaddingValues(0.dp)) {
+       if (hasSeeAll) TextButton(onClick = onSeeAllClicked, contentPadding = PaddingValues(0.dp)) {
             Text(
                 text = "See All",
                 color = PineGreenDark,

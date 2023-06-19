@@ -10,8 +10,11 @@ import androidx.navigation.navigation
 import com.example.tmda.presentation.movies.movieDetails.MovieDetailsScreen
 import com.example.tmda.presentation.movies.moviesHome.MoviesHomeScreen
 import com.example.tmda.presentation.movies.moviesList.MoviesListScreen
+import com.example.tmda.presentation.movies.person.PersonMovieScreen
 import com.example.tmda.presentation.movies.uiModels.MoviesScreenType
+import com.example.tmda.presentation.people.PersonSearchScreen
 import com.example.tmda.presentation.search.SearchScreen
+import com.example.tmda.presentation.series.person.PersonSeriesScreen
 import com.example.tmda.presentation.series.seriesDetails.SeriesDetailsScreen
 import com.example.tmda.presentation.series.seriesHome.SeriesHomeScreen
 import com.example.tmda.presentation.series.seriesList.SeriesListScreen
@@ -52,6 +55,13 @@ fun NavigationHost(navController: NavHostController) {
                     navController,
                 )
             }
+            composable(
+                route = "${Destinations.MOVIES_PERSON_SCREEN}/{$PERSON_ID}",
+                arguments = listOf(navArgument(PERSON_ID) {
+                    type = NavType.IntType
+                })
+
+            ) { PersonMovieScreen(navController = navController) }
         }
         navigation(
             route = Destinations.SERIES_ROUTE,
@@ -68,9 +78,16 @@ fun NavigationHost(navController: NavHostController) {
                 TvShowDetails.routeWithArgs,
                 arguments = TvShowDetails.arguments
             ) {
-              //  val id = it.arguments!!.getInt(TvShowDetails.tvShowIdArg)
+                //  val id = it.arguments!!.getInt(TvShowDetails.tvShowIdArg)
                 SeriesDetailsScreen(navController)
             }
+            composable(
+                route = "${Destinations.SERIES_PERSON_SCREEN}/{$PERSON_ID}",
+                arguments = listOf(navArgument(PERSON_ID) {
+                    type = NavType.IntType
+                })
+
+            ) { PersonSeriesScreen(navController = navController) }
 
         }
         navigation(
@@ -85,6 +102,11 @@ fun NavigationHost(navController: NavHostController) {
                     navController
                 )
             }
+            composable(
+                route = "${Destinations.SEARCH_PERSON_SCREEN}/{$PERSON_ID}",
+                arguments = listOf(navArgument(PERSON_ID) { type = NavType.IntType })
+            )
+            { PersonSearchScreen(navController = navController) }
         }
         navigation(
             route = Destinations.ACCOUNT_ROUTE,

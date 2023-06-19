@@ -1,6 +1,7 @@
 package com.example.tmda.presentation.movies
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -86,7 +87,7 @@ fun CreditsComponent(
                         .height(160.dp)
                         ) } else
                     items(castMembers.size, key = { castMembers[it].id }) {
-                        CreditItemsCard(castMembers[it])
+                        CreditItemsCard(castMembers[it],onCardClicked)
                     }
                 item { Spacer(modifier = Modifier.width(16.dp)) }
 
@@ -104,12 +105,12 @@ fun CreditsComponent(
 
 
 @Composable
-fun CreditItemsCard(creditItem: CreditItem) {
+fun CreditItemsCard(creditItem: CreditItem,onCardClicked: (Int) -> Unit) {
     Box(
         modifier = Modifier
             .width(140.dp)
             .height(180.dp)
-            .clip(mainShape),
+            .clip(mainShape).clickable { onCardClicked(creditItem.id) },
         contentAlignment = Alignment.BottomCenter
     ) {
         AsyncImage(

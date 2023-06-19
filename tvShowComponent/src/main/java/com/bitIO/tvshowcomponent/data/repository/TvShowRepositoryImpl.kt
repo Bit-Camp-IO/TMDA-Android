@@ -1,15 +1,19 @@
 package com.bitIO.tvshowcomponent.data.repository
 
 
+import com.bitIO.tvshowcomponent.data.mapper.toTVShow
 import com.bitIO.tvshowcomponent.data.mapper.toTvShowDetails
 import com.bitIO.tvshowcomponent.data.mapper.toTvShowPage
 import com.bitIO.tvshowcomponent.data.remote.TvShowApiService
+import com.bitIO.tvshowcomponent.domain.entity.TvShow
 import com.bitIO.tvshowcomponent.domain.entity.TvShowDetails
 import com.bitIO.tvshowcomponent.domain.entity.TvShowPage
 import com.bitIO.tvshowcomponent.domain.repository.TvShowRepository
 import com.example.shared.entities.Video
 import com.example.shared.entities.credits.Credits
+import com.example.shared.entities.people.PersonDetails
 import com.example.shared.mappers.toCredits
+import com.example.shared.mappers.toPersonDetails
 import com.example.shared.mappers.toVideo
 import javax.inject.Inject
 
@@ -37,9 +41,12 @@ class TvShowRepositoryImpl @Inject constructor(private val api: TvShowApiService
     override suspend fun getSimilarTvShows(tvShowId: Int, pageIndex: Int): TvShowPage {
         return api.getSimilarTvShows(tvShowId, pageIndex).toTvShowPage()
     }
+
     override suspend fun getRecommendedTvShows(tvShowId: Int, pageIndex: Int): TvShowPage {
         return api.getRecommendations(tvShowId, pageIndex).toTvShowPage()
     }
+
+
     override suspend fun getSeriesVideos(tvShowId: Int): List<Video> {
         return api.getTvVideos(tvShowId).results.map { it.toVideo() }
     }
@@ -53,8 +60,6 @@ class TvShowRepositoryImpl @Inject constructor(private val api: TvShowApiService
     }
 
 
-
-
     override suspend fun getTvShowDetails(tvShowId: Int): TvShowDetails {
         return api.getTvShowDetails(tvShowId).toTvShowDetails()
     }
@@ -66,5 +71,12 @@ class TvShowRepositoryImpl @Inject constructor(private val api: TvShowApiService
         return api.getAiringTodayTvShows().toTvShowPage()
     }
 
+    override suspend fun getPersonDetails(personId: Int): PersonDetails {
+        return api.getPersonDetails(personId).toPersonDetails()
+    }
+
+    override suspend fun getPersonSeries(personId: Int): List<TvShow> {
+       return api.getPersonSeries(personId).cast.map { it.toTVShow() }
+    }
 
 }

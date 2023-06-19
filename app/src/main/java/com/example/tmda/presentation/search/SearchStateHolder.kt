@@ -2,12 +2,13 @@
 
 package com.example.tmda.presentation.search
 
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.example.tmda.presentation.shared.paging.UiPage
 import com.example.tmda.presentation.shared.paging.PagingProvider
+import com.example.tmda.presentation.shared.paging.UiPage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -36,6 +37,9 @@ class SearchStateHolder<T : Any>(
         _searchPagingProvider.createNewPager().flow.cachedIn(coroutineScope)
         private set
 
+
+    val listState = LazyListState()
+
     //
     init {
         observeKeyword()
@@ -50,6 +54,8 @@ class SearchStateHolder<T : Any>(
 
     fun updateKeyword(keyword: String) {
         _displayedKeyWord.value = keyword
+        coroutineScope.launch { listState.scrollToItem(0, 0) }
+
         coroutineScope.launch {
             actionStream.emit(keyword)
         }
@@ -64,7 +70,8 @@ class SearchStateHolder<T : Any>(
         }
 
     }
-    fun tryAgain(){
+
+    fun tryAgain() {
         _searchPagingProvider.invalidate()
     }
 

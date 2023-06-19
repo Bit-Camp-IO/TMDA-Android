@@ -13,6 +13,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.tmda.R
 import com.example.tmda.ui.theme.GreyMetallic
@@ -24,7 +25,9 @@ import com.example.tmda.ui.theme.WhiteTransparent60
 fun BottomNavBar(navController: NavController) {
 
     NavigationBar(
-        Modifier.height(60.dp).clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+        Modifier
+            .height(60.dp)
+            .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
         contentColor = GreyMetallic,
         containerColor = GreyMetallic
     ) {
@@ -33,14 +36,23 @@ fun BottomNavBar(navController: NavController) {
         bottomNavItems.forEach { item ->
             val selected = item.route == backStackEntry.value?.destination?.parent?.route
             NavigationBarItem(
-                modifier = Modifier.padding(top=8.dp),
+                modifier = Modifier.padding(top = 8.dp),
                 selected = selected,
                 colors = NavigationBarItemDefaults.colors(
                     selectedIconColor = PineGreenDark,
                     unselectedIconColor = WhiteTransparent60,
                     indicatorColor = GreyMetallic
                 ),
-                onClick = { navController.navigate(item.route) },
+                onClick = {
+                    if (!selected)
+                        navController.navigate(item.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                },
                 icon = {
                     Icon(
                         painter = painterResource(id = item.iconId),

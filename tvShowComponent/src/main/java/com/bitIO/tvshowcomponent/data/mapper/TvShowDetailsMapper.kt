@@ -13,10 +13,10 @@ import com.bitIO.tvshowcomponent.domain.entity.TvShowDetails
         overview = overview ?: "",
         lastEpisode = lastEpisodeToAir?.episodeNumber ?: 0,
         lastSeason = lastEpisodeToAir?.seasonNumber ?: 0,
-        network = networks?.get(0)?.name ?: "",
+        network = networks?.getOrNull (0)?.name ?: "",
         genres = genres.map { it.id.toGenre() },
         date = firstAirDate ?: "",
-        originCountry = originCountry?.get(0) ?: "",
+        originCountry = originCountry?.getOrNull(0) ?: "",
         seasonCount = this.numberOfSeasons?:0,
         episodesCount = this.numberOfEpisodes?:0
     )

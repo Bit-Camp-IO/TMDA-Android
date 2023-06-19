@@ -1,6 +1,6 @@
-package com.example.shared.entities
+package com.example.shared.entities.people
 
-data class Person(
+data class PersonDetails(
     val biography: String,
     val birthday: String,
     val deathDay: String?,

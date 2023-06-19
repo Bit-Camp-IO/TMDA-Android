@@ -10,12 +10,18 @@ object Destinations {
     const val MOVIES_HOME_SCREEN = "moviesHomeScreen"
     const val MOVIES_DETAILS_SCREEN = "movieDetailsScreen"
     const val MOVIES_LIST_SCREEN = "movieListScreen"
+    const val MOVIES_PERSON_SCREEN = "moviePersonScreen"
+
     const val SERIES_ROUTE = "seriesRoute"
     const val SERIES_HOME_SCREEN = "seriesHomeScreen"
     const val SERIES_DETAILS_SCREEN = "seriesDetailsScreen"
     const val SERIES_LIST_SCREEN = "seriesListScreen"
+    const val SERIES_PERSON_SCREEN = "seriesPersonScreen"
+
     const val SEARCH_ROUTE = "searchRoute"
     const val SEARCH_SCREEN = "searchHomeScreen"
+    const val SEARCH_PERSON_SCREEN="searchPersonScreen"
+
     const val ACCOUNT_ROUTE = "userRoute"
     const val ACCOUNT_SCREEN = "userInfoScreen"
 }
@@ -24,15 +30,15 @@ object Destinations {
 const val MOVIES_LIST_SCREEN_TYPE = "movieListScreenType"
 const val MOVIE_ID = "movieId"
 const val MOVIE_LIST_SCREEN_TITLE = "movieListScreenTitle"
+const val PERSON_ID="personID"
 //series list screen args
-const val SERIES_LIST_SCREEN_TYPE ="seriesListScreenType"
-const val SERIES_ID ="SeriesId"
-
+const val SERIES_LIST_SCREEN_TYPE = "seriesListScreenType"
+const val SERIES_ID = "SeriesId"
 
 
 object TvShowsList {
-   // const val route = "tvshows"
-  //  const val tvShowTypeArg = "tvshow_type"
+    // const val route = "tvshows"
+    //  const val tvShowTypeArg = "tvshow_type"
 //  const val routeWithArgs = "$route/{$tvShowTypeArg}"
     val arguments = listOf(
         navArgument(SERIES_LIST_SCREEN_TYPE) {
@@ -43,6 +49,7 @@ object TvShowsList {
             defaultValue = -1
         })
 }
+
 object TvShowDetails {
     const val route = "tvshow_details"
     const val tvShowIdArg = "tvshow_id"

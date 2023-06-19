@@ -9,7 +9,7 @@ class GetTvShowDetailsUseCase @Inject constructor(private val repository: TvShow
         return try {
             Result.success(repository.getTvShowDetails(tvShowId))
         } catch (e: Throwable) {
-
+            throw e
             Result.failure(e)
         }
 

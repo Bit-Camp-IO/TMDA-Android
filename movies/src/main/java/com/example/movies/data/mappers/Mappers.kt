@@ -9,14 +9,16 @@ import com.example.movies.data.dto.videos.VideoDto
 import com.example.movies.data.util.genreMap
 import com.example.movies.domain.enities.MovieCollectionDetails
 import com.example.movies.domain.enities.Video
-
 import com.example.movies.domain.enities.movie.Movie
 import com.example.movies.domain.enities.movie.MovieDetails
 import com.example.movies.domain.enities.movie.MoviesPage
+import com.example.shared.dto.people.PeoplePageDto
 import com.example.shared.dto.review.ReviewDto
 import com.example.shared.entities.Genre
+import com.example.shared.entities.people.PeoplePage
 import com.example.shared.entities.review.Review
 import com.example.shared.mappers.toGenre
+import com.example.shared.mappers.toPersonDetails
 import okhttp3.MediaType
 import okhttp3.RequestBody
 
@@ -55,9 +57,7 @@ fun MovieCollectionDetailsDto.toMovieCollectionDetails(): MovieCollectionDetails
 }
 
 
-
-
-fun MovieBriefDto.toMovie( ): Movie {
+fun MovieBriefDto.toMovie(): Movie {
     return Movie(
         isAdult = isAdult,
         backdropPath = backdropPath,
@@ -89,17 +89,20 @@ internal fun Int.toGenre(): Genre {
 }
 
 
-
 fun ReviewDto.toReview() = Review(
     author = author,
     content = content,
     updatedAt = updatedAt
 )
 
-fun VideoDto.toVideo() = Video(key = key, site = site,type=type)
+fun VideoDto.toVideo() = Video(key = key, site = site, type = type)
 
 
-fun makePostMovieToWatchListBody(movieId:Int, isSaveRequest:Boolean): RequestBody {
+fun makePostMovieToWatchListBody(movieId: Int, isSaveRequest: Boolean): RequestBody {
     val mediaType = MediaType.parse("application/json")
-    return RequestBody.create(mediaType, "{\"media_type\":\"movie\",\"media_id\":\"$movieId\",\"watchlist\":$isSaveRequest}")
+    return RequestBody.create(
+        mediaType,
+        "{\"media_type\":\"movie\",\"media_id\":\"$movieId\",\"watchlist\":$isSaveRequest}"
+    )
 }
+

@@ -12,6 +12,7 @@ class SearchSeriesUseCase
         return try {
             Result.success(repo.searchSeries(keyword = keyword, includeAdults = true, page = page))
         } catch (e: Throwable) {
+            throw e
             Result.failure(e)
         }
 

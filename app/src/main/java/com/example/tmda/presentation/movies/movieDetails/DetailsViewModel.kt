@@ -4,7 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.authentication.domain.entities.User
-import com.example.authentication.domain.interactors.GetCurrentUserUseCase
+import com.example.authentication.domain.useCases.GetCurrentUserUseCase
 import com.example.movies.domain.useCases.AddMovieToWatchListUseCase
 import com.example.movies.domain.useCases.GetMovieCreditsUseCase
 import com.example.movies.domain.useCases.GetMovieDetailsInteractor

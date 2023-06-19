@@ -12,8 +12,8 @@ import com.bitIO.tvshowcomponent.domain.useCases.GetTvShowCreditsUseCase
 import com.bitIO.tvshowcomponent.domain.useCases.GetTvShowDetailsUseCase
 import com.bitIO.tvshowcomponent.domain.useCases.GetTvVideosUseCase
 import com.bitIO.tvshowcomponent.domain.useCases.tvShow.TvShowUseCaseFactory
-import com.example.authentication.domain.interactors.AddOrRemoveTvFromWatchListUseCase
-import com.example.authentication.domain.interactors.GetTvSavedStateUseCase
+import com.example.authentication.domain.useCases.AddOrRemoveTvFromWatchListUseCase
+import com.example.authentication.domain.useCases.GetTvSavedStateUseCase
 import com.example.shared.entities.Video
 import com.example.shared.entities.credits.Credits
 import com.example.tmda.presentation.navigation.SERIES_ID
@@ -117,6 +117,7 @@ class SeriesDetailsViewModel @Inject constructor(
                     )
                 )
             } catch (e: Throwable) {
+                throw e
                 UiState.Failure(e.message ?: "Unknown Error")
             }
 

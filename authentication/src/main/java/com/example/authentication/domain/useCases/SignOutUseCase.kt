@@ -1,4 +1,4 @@
-package com.example.authentication.domain.interactors
+package com.example.authentication.domain.useCases
 
 import com.example.authentication.domain.repositories.UserRepository
 import javax.inject.Inject

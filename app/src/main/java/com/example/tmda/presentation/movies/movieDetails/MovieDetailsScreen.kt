@@ -43,6 +43,7 @@ import com.example.tmda.presentation.movies.CreditsComponent
 import com.example.tmda.presentation.movies.uiModels.MoviesScreenType
 import com.example.tmda.presentation.navigation.navigateToMovieDetails
 import com.example.tmda.presentation.navigation.navigateToMovieListScreen
+import com.example.tmda.presentation.navigation.navigateToMoviePersonScreen
 import com.example.tmda.presentation.shared.MotionLayoutAppBar
 import com.example.tmda.presentation.shared.uiStates.ErrorScreen
 import com.example.tmda.presentation.shared.uiStates.LoadingScreen
@@ -57,7 +58,6 @@ fun MovieDetailsScreen(
 ) {
     val viewModel = hiltViewModel<DetailsViewModel>()
     val stateHolder = viewModel.detailsScreenStateHolder
-
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
@@ -116,7 +116,7 @@ fun DetailsScreenLoaded(
                     title = "Cast",
                     creditItemsState = stateHolder.movieCredits.value ,
                     onSeeAllClicked = {},
-                    onCardClicked = {})
+                    onCardClicked = navController::navigateToMoviePersonScreen)
             }
             item {
                 SimilarMoviesRow(
