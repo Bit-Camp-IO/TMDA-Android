@@ -50,7 +50,7 @@ object TvShowsList {
 }
 
 object TvShowDetails {
-    const val route = "tvshow_details"
+    private const val route = "tvshow_details"
     const val routeWithArgs = "$route/{$SERIES_ID}"
     val arguments = listOf(navArgument(SERIES_ID) { type = NavType.IntType })
 }
