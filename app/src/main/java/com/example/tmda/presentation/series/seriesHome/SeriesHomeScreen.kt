@@ -22,7 +22,7 @@ fun SeriesHomeScreen(
     val viewModel = hiltViewModel<SeriesHomeViewModel>()
     if (viewModel.isErrorState()) ErrorScreen(viewModel::updateAll)
     else LazyColumn {
-        item { NowPlayingHeader(viewModel.trendingUiState.value) }
+        item { NowPlayingHeader(viewModel.trendingUiState.value,navController::navigateToTvShowDetailsScreen) }
 
         item {
             SeriesHomeLazyRow(

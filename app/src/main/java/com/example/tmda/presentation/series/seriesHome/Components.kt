@@ -19,25 +19,27 @@ import com.example.tmda.presentation.shared.uiStates.UiState
 
 //
 @Composable
-fun NowPlayingHeader(tvShows: UiState<List<TvShowUiModel>>) {
+fun NowPlayingHeader(tvShows: UiState<List<TvShowUiModel>>,onCardItemClicked: (Int) -> Unit) {
     when (tvShows) {
         is UiState.Failure -> ErrorComponent {}
         is UiState.Loading -> LoadingScreen(Modifier.height(400.dp))
         is UiState.Success -> {
             val series = tvShows.data
-            BaseNowPlayingHeader(items = series) { NowPlayingCard(tvShow = series[it]) }
+            BaseNowPlayingHeader(items = series) { NowPlayingCard(tvShow = series[it],onCardItemClicked) }
         }
     }
 
 }
 
 @Composable
-fun NowPlayingCard(tvShow: TvShowUiModel) {
+fun NowPlayingCard(tvShow: TvShowUiModel,onCardItemClicked: (Int) -> Unit) {
     BaseNowPlayingCard(
         title = tvShow.title,
+        id=tvShow.id,
         posterPath = tvShow.backdropPath,
         voteAverage = tvShow.voteAverage,
-        voteCount = tvShow.voteCount
+        voteCount = tvShow.voteCount,
+        onClick =onCardItemClicked
     )
 
 }

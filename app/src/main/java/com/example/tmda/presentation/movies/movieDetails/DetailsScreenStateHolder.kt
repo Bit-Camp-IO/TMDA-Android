@@ -3,11 +3,11 @@ package com.example.tmda.presentation.movies.movieDetails
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import com.example.movies.domain.enities.Video
 
 import com.example.movies.domain.enities.movie.Movie
 import com.example.movies.domain.enities.movie.MovieDetails
 import com.example.movies.domain.enities.movie.MoviesPage
+import com.example.shared.entities.Video
 import com.example.shared.entities.credits.CastMember
 import com.example.shared.entities.credits.Credits
 import com.example.shared.entities.review.Review

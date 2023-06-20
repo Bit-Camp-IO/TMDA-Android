@@ -36,9 +36,11 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.MotionLayout
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.movies.domain.enities.Video
+
 import com.example.movies.domain.enities.movie.MovieDetails
+import com.example.shared.entities.Video
 import com.example.tmda.R
+import com.example.tmda.presentation.movies.getParsedYoutubeList
 import com.example.tmda.presentation.movies.getTmdbImageLink
 import com.example.tmda.presentation.shared.uiStates.LoadingScreen
 import com.example.tmda.presentation.shared.uiStates.UiState
@@ -265,10 +267,6 @@ private enum class MotionLayoutAppBarItem {
     Image,
     ServicesBox;
 }
-
-fun List<Video>.getParsedYoutubeList() =
-    filter { it.site == "YouTube" && it.type == "Trailer" }
-        .joinToString(separator = ",") { it.key }
 
 
 fun Activity.openYouTubePlaylist(videoKeys: String) {

@@ -51,7 +51,7 @@ fun PersonMovieScreen(
     val itemsState = viewModel.personMovies
     Box {
         when (val personDetails = personDetailsState.value) {
-            is UiState.Failure -> ErrorScreen {}
+            is UiState.Failure -> ErrorScreen (viewModel::updateAll)
             is UiState.Loading -> LoadingScreen()
             is UiState.Success -> {
                 val person = personDetails.data

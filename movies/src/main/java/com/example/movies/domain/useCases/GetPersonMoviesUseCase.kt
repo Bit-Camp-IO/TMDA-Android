@@ -10,7 +10,6 @@ class GetPersonMoviesUseCase @Inject constructor(private val repository: MoviesR
         return try {
             Result.success(repository.getPersonMovies(personId))
         } catch (e: Throwable) {
-            throw e
             Result.failure(e)
         }
     }

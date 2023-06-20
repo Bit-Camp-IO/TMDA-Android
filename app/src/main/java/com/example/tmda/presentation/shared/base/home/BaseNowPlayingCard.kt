@@ -1,5 +1,6 @@
 package com.example.tmda.presentation.shared.base.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,11 +22,20 @@ import com.example.tmda.ui.theme.PineGreenDark
 import com.example.tmda.ui.theme.WhiteTransparent60
 
 @Composable
-fun BaseNowPlayingCard(title: String, posterPath: String?, voteAverage: Double, voteCount: Int) {
+fun BaseNowPlayingCard(
+    title: String,
+    id: Int,
+    posterPath: String?,
+    voteAverage: Double,
+
+    voteCount: Int,
+    onClick: (Int) -> Unit
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(400.dp),
+            .height(400.dp)
+            .clickable { onClick(id) },
         contentAlignment = Alignment.BottomStart
     ) {
         AsyncImage(

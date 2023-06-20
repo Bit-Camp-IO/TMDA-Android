@@ -5,14 +5,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.movies.domain.enities.movie.Movie
+import com.example.tmda.presentation.shared.base.home.BaseNowPlayingCard
+import com.example.tmda.presentation.shared.base.home.BaseNowPlayingHeader
 import com.example.tmda.presentation.shared.uiStates.ErrorScreen
 import com.example.tmda.presentation.shared.uiStates.LoadingScreen
 import com.example.tmda.presentation.shared.uiStates.UiState
-import com.example.tmda.presentation.shared.base.home.BaseNowPlayingCard
-import com.example.tmda.presentation.shared.base.home.BaseNowPlayingHeader
 
 @Composable
-fun NowPlayingHeader(moviesUiState: UiState<List<Movie>>) {
+fun NowPlayingHeader(moviesUiState: UiState<List<Movie>>, onMovieClicked: (Int) -> Unit) {
     when (moviesUiState) {
         is UiState.Failure -> {
             ErrorScreen {}
@@ -25,19 +25,22 @@ fun NowPlayingHeader(moviesUiState: UiState<List<Movie>>) {
         is UiState.Success -> {
             val moviesList = moviesUiState.data
             BaseNowPlayingHeader(items = moviesList) {
-                NowPlayingCard(movie = moviesList[it])
+                NowPlayingCard(movie = moviesList[it],onMovieClicked)
             }
         }
     }
 }
 
 @Composable
-fun NowPlayingCard(movie: Movie) {
+fun NowPlayingCard(movie: Movie,onMovieClicked: (Int) -> Unit) {
     BaseNowPlayingCard(
         title = movie.title,
+        id=movie.id,
         posterPath = movie.posterPath,
         voteAverage = movie.voteAverage,
-        voteCount = movie.voteCount
+        voteCount = movie.voteCount,
+        onClick = onMovieClicked
+
     )
 }
 

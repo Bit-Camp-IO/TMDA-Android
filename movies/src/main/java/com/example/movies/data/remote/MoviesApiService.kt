@@ -6,12 +6,12 @@ import com.example.movies.data.dto.movies.LatestMovieDto
 import com.example.movies.data.dto.movies.MovieDetailsDto
 import com.example.movies.data.dto.movies.MoviesBriefWrapperDto
 import com.example.movies.data.dto.movies.PersonMovieWrapper
-import com.example.movies.data.dto.videos.VideoContainerDto
 import com.example.shared.dto.credits.CreditsDto
 import com.example.shared.dto.details.GenreDto
 import com.example.shared.dto.people.PeoplePageDto
 import com.example.shared.dto.people.PersonDetailsDto
 import com.example.shared.dto.review.ReviewsWrapperDto
+import com.example.shared.dto.videos.VideoContainerDto
 import okhttp3.RequestBody
 import retrofit2.http.Body
 import retrofit2.http.GET

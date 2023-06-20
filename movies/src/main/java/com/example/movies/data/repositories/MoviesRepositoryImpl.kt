@@ -2,7 +2,6 @@ package com.example.movies.data.repositories
 
 import com.example.movies.data.dto.image.ImageCollectionDto
 import com.example.movies.data.dto.movies.LatestMovieDto
-import com.example.movies.data.dto.videos.VideoContainerDto
 import com.example.movies.data.local.MoviesDao
 import com.example.movies.data.mappers.makePostMovieToWatchListBody
 import com.example.movies.data.mappers.toMovie
@@ -13,6 +12,7 @@ import com.example.movies.domain.enities.movie.Movie
 import com.example.movies.domain.enities.movie.MovieDetails
 import com.example.movies.domain.enities.movie.MoviesPage
 import com.example.movies.domain.repositories.MoviesRepository
+import com.example.shared.dto.videos.VideoContainerDto
 import com.example.shared.entities.credits.Credits
 import com.example.shared.entities.people.PeoplePage
 import com.example.shared.entities.people.PersonDetails

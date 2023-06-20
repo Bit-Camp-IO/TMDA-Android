@@ -1,6 +1,7 @@
 package com.example.tmda.presentation.series.seriesDetails
 
 import android.annotation.SuppressLint
+import androidx.activity.ComponentActivity
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -11,7 +12,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,8 +21,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
@@ -54,9 +52,10 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.bitIO.tvshowcomponent.domain.entity.TvShow
-import com.example.shared.entities.review.Review
+import com.example.shared.entities.Video
 import com.example.tmda.R
 import com.example.tmda.presentation.movies.CreditsComponent
+import com.example.tmda.presentation.movies.getParsedYoutubeList
 import com.example.tmda.presentation.movies.getTmdbImageLink
 import com.example.tmda.presentation.movies.movieDetails.shape
 import com.example.tmda.presentation.navigation.navigateToSeriesPersonScreen
@@ -70,6 +69,7 @@ import com.example.tmda.presentation.shared.SavedItemIcon
 import com.example.tmda.presentation.shared.base.BaseImageCard
 import com.example.tmda.presentation.shared.base.BaseLazyRowComponent
 import com.example.tmda.presentation.shared.base.imageCardModifier
+import com.example.tmda.presentation.shared.openYouTubePlaylist
 import com.example.tmda.presentation.shared.reviews.ReviewsList
 import com.example.tmda.presentation.shared.uiStates.ErrorScreen
 import com.example.tmda.presentation.shared.uiStates.LoadingScreen
@@ -77,7 +77,6 @@ import com.example.tmda.presentation.shared.uiStates.UiState
 import com.example.tmda.presentation.shared.uiStates.toSuccessState
 import com.example.tmda.ui.theme.BlackTransparent37
 import com.example.tmda.ui.theme.GoldenYellow
-import com.example.tmda.ui.theme.PineGreenDark
 import com.example.tmda.ui.theme.WhiteTransparent60
 import kotlin.math.roundToInt
 
@@ -129,8 +128,10 @@ fun SeriesDetailsScreen(
                             imageUrl = overView.image,
                             rating = overView.rating,
                             totalVotes = overView.voteCount,
+                            videos = overView.videos,
                             savedState = overView.savedState,
-                            onSaveClicked = onSaveClicked
+                            onSaveClicked = onSaveClicked,
+
                         )
                     }
                     item { PreviewSection(overView) }
@@ -244,7 +245,7 @@ fun SimilarSeriesRow(
     BaseLazyRowComponent(
         title = title,
         onSeeAllClicked = onSeeAllClicked,
-        hasSeeAll=hasSeeAll,
+        hasSeeAll = hasSeeAll,
         itemsState = seriesState,
         onItemClicked = onCardItemClicked
     ) { tvShow, _ ->
@@ -298,49 +299,6 @@ fun SimilarTvShowCard(tvShow: TvShow, onCardItemClicked: (Int) -> Unit) {
 val similarTvShowCardModifier = Modifier.imageCardModifier(140.dp, 180.dp)
 
 
-@Composable
-fun UserReviews(items: List<Review>, onSeeAllClicked: () -> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row {
-            Divider(
-                modifier = Modifier
-                    .height(20.dp)
-                    .width(5.dp), thickness = 1.dp, color = PineGreenDark
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(text = "User reviews", style = MaterialTheme.typography.titleMedium)
-        }
-        TextButton(onClick = { /*TODO*/ }, contentPadding = PaddingValues(0.dp)) {
-            Text(
-                text = "See All",
-                color = PineGreenDark,
-                style = MaterialTheme.typography.titleSmall
-            )
-
-        }
-    }
-
-    LazyRow {
-
-        items(items) {
-//            ActorCard(it)
-        }
-
-    }
-    Divider(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp, horizontal = 32.dp)
-    )
-}
-
-
 @SuppressLint("ModifierParameter")
 @Composable
 fun MotionLayoutAppBar(
@@ -349,6 +307,7 @@ fun MotionLayoutAppBar(
     rating: Double,
     totalVotes: Int,
     progress: Float,
+    videos: List<Video>,
     savedState: MutableState<Boolean>,
     onSaveClicked: () -> Unit
 ) {
@@ -399,7 +358,8 @@ fun MotionLayoutAppBar(
             rating,
             totalVotes = totalVotes,
             savedState = savedState,
-            onSaveClicked = onSaveClicked
+            onSaveClicked = onSaveClicked,
+            videos
         )
 
 
@@ -412,7 +372,8 @@ fun ServicesBox(
     voteAvg: Double,
     totalVotes: Int,
     savedState: MutableState<Boolean>,
-    onSaveClicked: () -> Unit
+    onSaveClicked: () -> Unit,
+    videos:List<Video>
 
 ) {
     val sharedModifier = Modifier
@@ -446,7 +407,11 @@ fun ServicesBox(
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            TextButton(onClick = { /*TODO*/ }) {
+            val context = LocalContext.current as ComponentActivity
+            TextButton(onClick = {
+                val videoKeys = videos. getParsedYoutubeList()
+                context.openYouTubePlaylist(videoKeys)
+            }) {
 
                 Image(
                     modifier = Modifier.size(60.dp),

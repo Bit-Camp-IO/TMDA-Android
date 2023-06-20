@@ -20,7 +20,7 @@ fun MoviesHomeScreen(navController: NavController) {
     val viewModel = hiltViewModel<MoviesHomeViewModel>()
     if (viewModel.isErrorState()) ErrorScreen(viewModel::updateAll) else
         LazyColumn {
-            item { NowPlayingHeader(viewModel.nowPlayingMoviesState.value) }
+            item { NowPlayingHeader(viewModel.nowPlayingMoviesState.value,navController::navigateToMovieDetails) }
             item {
                 HomeLazyRow(
                     title = "Popular",

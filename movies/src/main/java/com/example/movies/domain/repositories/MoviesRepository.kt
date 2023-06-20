@@ -2,10 +2,10 @@ package com.example.movies.domain.repositories
 
 import com.example.movies.data.dto.image.ImageCollectionDto
 import com.example.movies.data.dto.movies.LatestMovieDto
-import com.example.movies.data.dto.videos.VideoContainerDto
 import com.example.movies.domain.enities.movie.Movie
 import com.example.movies.domain.enities.movie.MovieDetails
 import com.example.movies.domain.enities.movie.MoviesPage
+import com.example.shared.dto.videos.VideoContainerDto
 import com.example.shared.entities.credits.Credits
 import com.example.shared.entities.people.PeoplePage
 import com.example.shared.entities.people.PersonDetails

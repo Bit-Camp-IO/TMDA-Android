@@ -50,7 +50,7 @@ fun CardList(
     onTryAgain: () -> Unit
 ) {
     when (searchItems.loadState.refresh) {
-        is LoadState.Error -> ErrorScreen(onTryAgain)
+        is LoadState.Error -> ErrorScreen { searchItems.retry() }
         is LoadState.Loading -> LoadingScreen()
         is LoadState.NotLoading -> {
             LazyColumn(
@@ -70,7 +70,7 @@ fun CardList(
                     )
                 }
 
-                when (val state = searchItems.loadState.append) {
+                when (searchItems.loadState.append) {
                     is LoadState.Error -> item { ErrorComponent(onTryAgain) }
 
                     is LoadState.Loading -> {
@@ -115,7 +115,7 @@ fun ItemCard(
                 .fillMaxWidth()
                 .padding(all = 8.dp)
         ) {
-            val coroutineScope = rememberCoroutineScope()
+            rememberCoroutineScope()
             AsyncImage(
                 model = getTmdbImageLink(
                     searchItemModel.backdropPath ?: searchItemModel.posterPath

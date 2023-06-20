@@ -1,8 +1,9 @@
 package com.example.movies.domain.useCases
 
-import com.example.movies.data.mappers.toVideo
-import com.example.movies.domain.enities.Video
+
 import com.example.movies.domain.repositories.MoviesRepository
+import com.example.shared.entities.Video
+import com.example.shared.mappers.toVideo
 import javax.inject.Inject
 
 class GetMovieVideosUseCase @Inject constructor(private val repo: MoviesRepository) {

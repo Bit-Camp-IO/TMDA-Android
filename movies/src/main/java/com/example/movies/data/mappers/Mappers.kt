@@ -5,10 +5,10 @@ import com.example.movies.data.dto.movies.MovieBriefDto
 import com.example.movies.data.dto.movies.MovieDetailsDto
 import com.example.movies.data.dto.movies.MoviesBriefWrapperDto
 import com.example.movies.data.dto.shared.MovieCollectionDetailsDto
-import com.example.movies.data.dto.videos.VideoDto
+
 import com.example.movies.data.util.genreMap
 import com.example.movies.domain.enities.MovieCollectionDetails
-import com.example.movies.domain.enities.Video
+
 import com.example.movies.domain.enities.movie.Movie
 import com.example.movies.domain.enities.movie.MovieDetails
 import com.example.movies.domain.enities.movie.MoviesPage
@@ -86,7 +86,7 @@ internal fun Int.toGenre(): Genre {
 
 
 
-fun VideoDto.toVideo() = Video(key = key, site = site, type = type)
+
 
 
 fun makePostMovieToWatchListBody(movieId: Int, isSaveRequest: Boolean): RequestBody {

@@ -1,6 +1,5 @@
 package com.example.tmda.presentation.search
 
-import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -85,8 +84,6 @@ class SearchViewModel @Inject constructor(
     }
 
     fun updateKeyword(keyword: String) {
-      //  if (currentStateHolder.displayedKeyWord.value == keyword) return
-        Log.d("zzzzz","Zzzzz")
         currentStateHolder.updateKeyword(keyword)
     }
 
