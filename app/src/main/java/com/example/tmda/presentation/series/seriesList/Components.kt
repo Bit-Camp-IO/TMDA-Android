@@ -42,7 +42,7 @@ fun SeriesListTile(
     BaseListItemWithBookmark(
         id = series.tvShowUiModel.id,
         title = series.tvShowUiModel.title,
-        backdropPath = series.tvShowUiModel.backdropPath,
+        backdropPath = series.tvShowUiModel.backdropPath?:series.tvShowUiModel.posterPath,
         date = series.tvShowUiModel.releaseDate,
         genres = series.tvShowUiModel.genres,
         language = series.tvShowUiModel.originalLanguage,

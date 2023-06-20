@@ -6,6 +6,7 @@ import com.example.tmda.presentation.series.seriesList.SeriesScreenType
 
 
 fun NavController.navigateToMovieListScreen(
+
     screenTitle: String,
     moviesScreenType: MoviesScreenType,
     id: Int = -1

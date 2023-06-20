@@ -116,7 +116,7 @@ fun NavigationHost(navController: NavHostController) {
 
 
             composable(
-                "${Destinations.MOVIES_ROUTE+Destinations.MOVIES_LIST_SCREEN}/{$MOVIE_LIST_SCREEN_TITLE}/{$MOVIES_LIST_SCREEN_TYPE}/{$MOVIE_ID}",
+                "${Destinations.SEARCH_ROUTE+Destinations.MOVIES_LIST_SCREEN}/{$MOVIE_LIST_SCREEN_TITLE}/{$MOVIES_LIST_SCREEN_TYPE}/{$MOVIE_ID}",
                 arguments = listOf(
                     navArgument(MOVIE_LIST_SCREEN_TITLE) {
                         type = NavType.StringType
