@@ -43,7 +43,7 @@ import com.example.tmda.presentation.movies.CreditsComponent
 import com.example.tmda.presentation.movies.uiModels.MoviesScreenType
 import com.example.tmda.presentation.navigation.navigateToMovieDetails
 import com.example.tmda.presentation.navigation.navigateToMovieListScreen
-import com.example.tmda.presentation.navigation.navigateToMoviePersonScreen
+import com.example.tmda.presentation.navigation.navigateToPersonScreen
 import com.example.tmda.presentation.shared.MotionLayoutAppBar
 import com.example.tmda.presentation.shared.reviews.ReviewsList
 import com.example.tmda.presentation.shared.uiStates.ErrorScreen
@@ -116,7 +116,7 @@ fun DetailsScreenLoaded(
                 CreditsComponent(
                     title = "Cast",
                     creditItemsState = stateHolder.movieCredits.value,
-                    onCardClicked = navController::navigateToMoviePersonScreen
+                    onCardClicked = navController::navigateToPersonScreen
                 )
             }
             item {

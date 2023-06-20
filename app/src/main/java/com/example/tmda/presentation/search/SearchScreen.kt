@@ -40,7 +40,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.tmda.R
 import com.example.tmda.presentation.navigation.Destinations
 import com.example.tmda.presentation.navigation.navigateToMovieDetails
-import com.example.tmda.presentation.navigation.navigateToSearchPersonScreen
+import com.example.tmda.presentation.navigation.navigateToPersonScreen
 import com.example.tmda.presentation.navigation.navigateToTvShowDetailsScreen
 import com.example.tmda.presentation.search.components.ActorCardList
 import com.example.tmda.presentation.search.components.CardList
@@ -79,7 +79,7 @@ fun SearchScreen(
             }
 
             SearchType.Actors -> ActorCardList(
-                onItemClicked = navController::navigateToSearchPersonScreen,
+                onItemClicked = navController::navigateToPersonScreen,
                 listState = viewModel.actorStateHolder.listState,
                 searchItems = actors
             ) {

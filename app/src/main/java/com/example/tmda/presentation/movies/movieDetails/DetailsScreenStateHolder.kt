@@ -51,7 +51,8 @@ class DetailsScreenStateHolder(
         get() = _movieVideos
 
     //
-    private val _movieCredits: MutableState<UiState<List<CastMember>>> = mutableStateOf(UiState.Loading())
+    private val _movieCredits: MutableState<UiState<List<CastMember>>> =
+        mutableStateOf(UiState.Loading())
     val movieCredits: State<UiState<List<CastMember>>>
         get() = _movieCredits
 
@@ -119,7 +120,7 @@ class DetailsScreenStateHolder(
         }
 
     private fun updateCredits() = coroutineScope.async(Dispatchers.IO) {
-        _movieCredits.value = movieCreditsProvider(movieId).mapToOtherType { it.cast } .toUiState()
+        _movieCredits.value = movieCreditsProvider(movieId).mapToOtherType { it.cast }.toUiState()
     }
 
 
@@ -145,11 +146,13 @@ class DetailsScreenStateHolder(
     fun addOrRemoveMovieToSavedList() {
         coroutineScope.launch(Dispatchers.IO) {
             when (val isSaved = _isSaved.value) {
-                is UiState.Failure -> {}
+                is UiState.Failure -> updateIsSaved()
                 is UiState.Loading -> {}
                 is UiState.Success -> {
-                    changeSavedStateProvider(movieId, isSaved.data)
-                    _isSaved.value = (!isSaved.data).toSuccessState()
+                    val isChangedSuccessfully =
+                        changeSavedStateProvider(movieId, isSaved.data).isSuccess
+                    if (isChangedSuccessfully)
+                        _isSaved.value = (!isSaved.data).toSuccessState()
                 }
 
             }

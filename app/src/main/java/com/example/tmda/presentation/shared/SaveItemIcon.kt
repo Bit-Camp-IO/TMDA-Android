@@ -4,6 +4,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import com.example.tmda.R
 import com.example.tmda.presentation.shared.uiStates.LoadingScreen
@@ -16,7 +17,12 @@ fun SavedItemIcon(
     isSavedState: UiState<Boolean>
 ) {
     when(isSavedState){
-        is UiState.Failure -> TODO()
+        is UiState.Failure -> {  Icon(
+            painterResource(id = R.drawable.ic_bookmark_filled),
+            contentDescription = null,
+            tint = Color.Red,
+            modifier = modifier
+        )}
         is UiState.Loading -> {
             LoadingScreen()
         }

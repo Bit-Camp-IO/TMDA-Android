@@ -58,7 +58,7 @@ import com.example.tmda.presentation.movies.CreditsComponent
 import com.example.tmda.presentation.movies.getParsedYoutubeList
 import com.example.tmda.presentation.movies.getTmdbImageLink
 import com.example.tmda.presentation.movies.movieDetails.shape
-import com.example.tmda.presentation.navigation.navigateToSeriesPersonScreen
+import com.example.tmda.presentation.navigation.navigateToPersonScreen
 import com.example.tmda.presentation.navigation.navigateToShowsListScreen
 import com.example.tmda.presentation.navigation.navigateToTvShowDetailsScreen
 import com.example.tmda.presentation.series.seriesDetails.uiDto.OverView
@@ -138,7 +138,7 @@ fun SeriesDetailsScreen(
                     item {
                         CreditsComponent(
                             creditItemsState = overView.cast.toSuccessState(),
-                            onCardClicked = navController::navigateToSeriesPersonScreen
+                            onCardClicked = navController::navigateToPersonScreen
                         )
                     }
                     item {

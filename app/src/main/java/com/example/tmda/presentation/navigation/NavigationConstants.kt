@@ -10,17 +10,16 @@ object Destinations {
     const val MOVIES_HOME_SCREEN = "moviesHomeScreen"
     const val MOVIES_DETAILS_SCREEN = "movieDetailsScreen"
     const val MOVIES_LIST_SCREEN = "movieListScreen"
-    const val MOVIES_PERSON_SCREEN = "moviePersonScreen"
+    const val PERSON_SCREEN = "PersonScreen"
 
     const val SERIES_ROUTE = "seriesRoute"
     const val SERIES_HOME_SCREEN = "seriesHomeScreen"
     const val SERIES_DETAILS_SCREEN = "seriesDetailsScreen"
     const val SERIES_LIST_SCREEN = "seriesListScreen"
-    const val SERIES_PERSON_SCREEN = "seriesPersonScreen"
+
 
     const val SEARCH_ROUTE = "searchRoute"
     const val SEARCH_SCREEN = "searchHomeScreen"
-    const val SEARCH_PERSON_SCREEN="searchPersonScreen"
 
     const val ACCOUNT_ROUTE = "userRoute"
     const val ACCOUNT_SCREEN = "userInfoScreen"
@@ -52,7 +51,6 @@ object TvShowsList {
 
 object TvShowDetails {
     const val route = "tvshow_details"
-    const val tvShowIdArg = "tvshow_id"
     const val routeWithArgs = "$route/{$SERIES_ID}"
     val arguments = listOf(navArgument(SERIES_ID) { type = NavType.IntType })
 }

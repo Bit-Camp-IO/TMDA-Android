@@ -1,5 +1,6 @@
 package com.example.tmda.presentation.navigation
 
+import android.util.Log
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,6 +36,7 @@ fun BottomNavBar(navController: NavController) {
         val backStackEntry = navController.currentBackStackEntryAsState()
         bottomNavItems.forEach { item ->
             val selected = item.route == backStackEntry.value?.destination?.parent?.route
+            Log.d("xxxx",backStackEntry.value?.destination?.parent?.route.toString())
             NavigationBarItem(
                 modifier = Modifier.padding(top = 8.dp),
                 selected = selected,
@@ -44,7 +46,6 @@ fun BottomNavBar(navController: NavController) {
                     indicatorColor = GreyMetallic
                 ),
                 onClick = {
-                    if (!selected)
                         navController.navigate(item.route) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
