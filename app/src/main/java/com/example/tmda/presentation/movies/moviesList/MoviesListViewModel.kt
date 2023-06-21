@@ -141,5 +141,6 @@ class MoviesListViewModel @Inject constructor(
             MovieUseCaseFactory.MovieTypeWithId.Similar,
             movieId!!
         )
+        MoviesScreenType.Bookmarked -> interactor.getUseCase(MovieUseCaseFactory.MovieType.Bookmarked)
     }
 }

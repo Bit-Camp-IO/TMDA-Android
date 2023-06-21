@@ -30,6 +30,10 @@ import com.example.movies.domain.enities.movie.Movie
 import com.example.tmda.R
 import com.example.tmda.presentation.movies.getTmdbImageLink
 import com.example.tmda.presentation.movies.movieDetails.SimilarMoviesRow
+import com.example.tmda.presentation.movies.uiModels.MoviesScreenType
+import com.example.tmda.presentation.navigation.navigateToMovieDetails
+import com.example.tmda.presentation.navigation.navigateToMovieListScreen
+import com.example.tmda.presentation.navigation.navigateToTvShowDetailsScreen
 import com.example.tmda.presentation.series.seriesDetails.SimilarSeriesRow
 import com.example.tmda.presentation.shared.uiStates.ErrorComponent
 import com.example.tmda.presentation.shared.uiStates.LoadingScreen
@@ -40,20 +44,32 @@ fun ProfileScreen(navController: NavController) {
     val viewModel = hiltViewModel<ProfileViewModel>()
     val user = viewModel.userDetails.value
     val movies = viewModel.userMovies.value
-    val series=viewModel.userSeries.value
+    val series = viewModel.userSeries.value
 
     Column {
         Spacer(modifier = Modifier.height(72.dp))
-        UserInfoRow(userDetails = user,viewModel::logOut)
-        BookMarkedMovies(movieState = movies, onCardItemClicked = {})
+        UserInfoRow(userDetails = user, viewModel::logOut)
+        BookMarkedMovies(
+            movieState = movies,
+            onCardItemClicked = navController::navigateToMovieDetails,
+            onSeeAllClicked = {
+                navController.navigateToMovieListScreen(
+                    "Bookmarked",
+                    MoviesScreenType.Bookmarked
+                )
+            }
+        )
         Spacer(modifier = Modifier.height(16.dp))
-        BookMarkedSeries(seriesState = series, onCardItemClicked ={} )
+        BookMarkedSeries(
+            seriesState = series,
+            onCardItemClicked = navController::navigateToTvShowDetailsScreen
+        )
     }
 
 }
 
 @Composable
-fun UserInfoRow(userDetails: UiState<UserDetails>,onLogOut: ()->Unit) {
+fun UserInfoRow(userDetails: UiState<UserDetails>, onLogOut: () -> Unit) {
 
     when (val userDetails = userDetails) {
         is UiState.Failure -> ErrorComponent {}
@@ -104,13 +120,19 @@ fun UserInfoRow(userDetails: UiState<UserDetails>,onLogOut: ()->Unit) {
     }
 
 }
+
 @Composable
-fun BookMarkedMovies(movieState: UiState<List<Movie>>, onCardItemClicked: (Int) -> Unit) {
+fun BookMarkedMovies(
+    movieState: UiState<List<Movie>>,
+    onCardItemClicked: (Int) -> Unit,
+    onSeeAllClicked: () -> Unit
+) {
     SimilarMoviesRow(
         title = "your Bookmarked Movies",
         moviesState = movieState,
-        onCardItemClicked = onCardItemClicked
-    ) {}
+        onCardItemClicked = onCardItemClicked,
+        onSeeAllClicked = onSeeAllClicked
+    )
 }
 
 @Composable

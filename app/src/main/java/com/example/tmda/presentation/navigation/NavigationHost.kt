@@ -30,7 +30,7 @@ fun NavigationHost(navController: NavHostController) {
         ) {
             composable(Destinations.MOVIES_HOME_SCREEN) { MoviesHomeScreen(navController) }
             composable(
-                "${Destinations.MOVIES_ROUTE+Destinations.MOVIES_DETAILS_SCREEN}/{$MOVIE_ID}",
+                "${Destinations.MOVIES_ROUTE + Destinations.MOVIES_DETAILS_SCREEN}/{$MOVIE_ID}",
                 arguments = listOf(
                     navArgument(MOVIE_ID) {
                         type = NavType.IntType
@@ -38,7 +38,7 @@ fun NavigationHost(navController: NavHostController) {
                 )
             ) { MovieDetailsScreen(navController) }
             composable(
-                "${Destinations.MOVIES_ROUTE+Destinations.MOVIES_LIST_SCREEN}/{$MOVIE_LIST_SCREEN_TITLE}/{$MOVIES_LIST_SCREEN_TYPE}/{$MOVIE_ID}",
+                "${Destinations.MOVIES_ROUTE + Destinations.MOVIES_LIST_SCREEN}/{$MOVIE_LIST_SCREEN_TITLE}/{$MOVIES_LIST_SCREEN_TYPE}/{$MOVIE_ID}",
                 arguments = listOf(
                     navArgument(MOVIE_LIST_SCREEN_TITLE) {
                         type = NavType.StringType
@@ -57,7 +57,7 @@ fun NavigationHost(navController: NavHostController) {
                 )
             }
             composable(
-                route = "${Destinations.MOVIES_ROUTE+Destinations.PERSON_SCREEN}/{$PERSON_ID}",
+                route = "${Destinations.MOVIES_ROUTE + Destinations.PERSON_SCREEN}/{$PERSON_ID}",
                 arguments = listOf(navArgument(PERSON_ID) {
                     type = NavType.IntType
                 })
@@ -74,19 +74,19 @@ fun NavigationHost(navController: NavHostController) {
             composable(Destinations.SERIES_HOME_SCREEN) { SeriesHomeScreen(navController) }
 
             composable(
-                "${Destinations.SERIES_ROUTE+Destinations.SERIES_LIST_SCREEN}/{$SERIES_LIST_SCREEN_TYPE}/{$SERIES_ID}",
+                "${Destinations.SERIES_ROUTE + Destinations.SERIES_LIST_SCREEN}/{$SERIES_LIST_SCREEN_TYPE}/{$SERIES_ID}",
                 arguments = TvShowsList.arguments
             ) {
                 SeriesListScreen(navController)
             }
             composable(
-                "${Destinations.SERIES_ROUTE+Destinations.SERIES_DETAILS_SCREEN}/{$SERIES_ID}",
+                "${Destinations.SERIES_ROUTE + Destinations.SERIES_DETAILS_SCREEN}/{$SERIES_ID}",
                 arguments = listOf(navArgument(SERIES_ID) { type = NavType.IntType }
                 )) {
                 SeriesDetailsScreen(navController)
             }
             composable(
-                route = "${Destinations.SERIES_ROUTE+Destinations.PERSON_SCREEN}/{$PERSON_ID}",
+                route = "${Destinations.SERIES_ROUTE + Destinations.PERSON_SCREEN}/{$PERSON_ID}",
                 arguments = listOf(navArgument(PERSON_ID) {
                     type = NavType.IntType
                 })
@@ -102,13 +102,13 @@ fun NavigationHost(navController: NavHostController) {
 
 
             composable(
-               "${Destinations.SEARCH_ROUTE+Destinations.SERIES_DETAILS_SCREEN}/{$SERIES_ID}",
+                "${Destinations.SEARCH_ROUTE + Destinations.SERIES_DETAILS_SCREEN}/{$SERIES_ID}",
                 arguments = listOf(navArgument(SERIES_ID) { type = NavType.IntType }
-            )) {
+                )) {
                 SeriesDetailsScreen(navController)
             }
             composable(
-                "${Destinations.SEARCH_ROUTE+Destinations.SERIES_LIST_SCREEN}/{$SERIES_LIST_SCREEN_TYPE}/{$SERIES_ID}",
+                "${Destinations.SEARCH_ROUTE + Destinations.SERIES_LIST_SCREEN}/{$SERIES_LIST_SCREEN_TYPE}/{$SERIES_ID}",
                 arguments = TvShowsList.arguments
             ) {
                 SeriesListScreen(navController)
@@ -116,7 +116,7 @@ fun NavigationHost(navController: NavHostController) {
 
 
             composable(
-                "${Destinations.SEARCH_ROUTE+Destinations.MOVIES_LIST_SCREEN}/{$MOVIE_LIST_SCREEN_TITLE}/{$MOVIES_LIST_SCREEN_TYPE}/{$MOVIE_ID}",
+                "${Destinations.SEARCH_ROUTE + Destinations.MOVIES_LIST_SCREEN}/{$MOVIE_LIST_SCREEN_TITLE}/{$MOVIES_LIST_SCREEN_TYPE}/{$MOVIE_ID}",
                 arguments = listOf(
                     navArgument(MOVIE_LIST_SCREEN_TITLE) {
                         type = NavType.StringType
@@ -135,7 +135,7 @@ fun NavigationHost(navController: NavHostController) {
                 )
             }
             composable(
-                "${Destinations.SEARCH_ROUTE+Destinations.MOVIES_DETAILS_SCREEN}/{$MOVIE_ID}",
+                "${Destinations.SEARCH_ROUTE + Destinations.MOVIES_DETAILS_SCREEN}/{$MOVIE_ID}",
                 arguments = listOf(
                     navArgument(MOVIE_ID) {
                         type = NavType.IntType
@@ -146,7 +146,7 @@ fun NavigationHost(navController: NavHostController) {
 
 
             composable(
-                route = "${Destinations.SEARCH_ROUTE+Destinations.PERSON_SCREEN}/{$PERSON_ID}",
+                route = "${Destinations.SEARCH_ROUTE + Destinations.PERSON_SCREEN}/{$PERSON_ID}",
                 arguments = listOf(navArgument(PERSON_ID) { type = NavType.IntType })
             )
             { PersonSearchScreen(navController = navController) }
@@ -155,20 +155,54 @@ fun NavigationHost(navController: NavHostController) {
             route = Destinations.ACCOUNT_ROUTE,
             startDestination = Destinations.ACCOUNT_SCREEN
         ) {
-            composable(Destinations.ACCOUNT_SCREEN) { ProfileScreen(navController = navController)}
-            composable(Destinations.MOVIES_DETAILS_SCREEN) { MovieDetailsScreen(navController) }
-            composable(Destinations.MOVIES_LIST_SCREEN) {
+            composable(Destinations.ACCOUNT_SCREEN) { ProfileScreen(navController = navController) }
+
+            composable(
+                "${Destinations.ACCOUNT_ROUTE + Destinations.MOVIES_DETAILS_SCREEN}/{$MOVIE_ID}",
+                arguments = listOf(
+                    navArgument(MOVIE_ID) {
+                        type = NavType.IntType
+                    },
+                )
+            ) { MovieDetailsScreen(navController) }
+            composable(
+                "${Destinations.ACCOUNT_ROUTE + Destinations.MOVIES_LIST_SCREEN}/{$MOVIE_LIST_SCREEN_TITLE}/{$MOVIES_LIST_SCREEN_TYPE}/{$MOVIE_ID}",
+                arguments = listOf(
+                    navArgument(MOVIE_LIST_SCREEN_TITLE) {
+                        type = NavType.StringType
+                    },
+                    navArgument(MOVIES_LIST_SCREEN_TYPE) {
+                        type = NavType.EnumType(MoviesScreenType::class.java)
+                    },
+                    navArgument(MOVIE_ID) {
+                        type = NavType.IntType
+                        defaultValue = -1
+                    })
+            ) {
                 MoviesListScreen(
                     it.arguments!!.getString(MOVIE_LIST_SCREEN_TITLE)!!,
-                    navController
+                    navController,
                 )
             }
-            composable(Destinations.SERIES_DETAILS_SCREEN) {}
-            composable(Destinations.SERIES_LIST_SCREEN) {}
+            composable(
+                "${Destinations.ACCOUNT_ROUTE + Destinations.SERIES_LIST_SCREEN}/{$SERIES_LIST_SCREEN_TYPE}/{$SERIES_ID}",
+                arguments = TvShowsList.arguments
+            ) {
+                SeriesListScreen(navController)
+            }
+            composable(
+                "${Destinations.ACCOUNT_ROUTE + Destinations.SERIES_DETAILS_SCREEN}/{$SERIES_ID}",
+                arguments = listOf(navArgument(SERIES_ID) { type = NavType.IntType }
+                )) {
+                SeriesDetailsScreen(navController)
+            }
+            composable(
+                route = "${Destinations.ACCOUNT_ROUTE + Destinations.PERSON_SCREEN}/{$PERSON_ID}",
+                arguments = listOf(navArgument(PERSON_ID) { type = NavType.IntType })
+            )
+            { PersonSearchScreen(navController = navController) }
+
         }
 
     }
 }
-
-
-

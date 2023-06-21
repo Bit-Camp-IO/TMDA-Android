@@ -2,15 +2,17 @@ package com.example.movies.domain.useCases
 
 import com.example.movies.domain.enities.movie.MoviesPage
 import com.example.movies.domain.repositories.MoviesRepository
+import com.example.shared.auth.SessionProvider
 import javax.inject.Inject
 
 
 class MovieUseCaseFactory @Inject constructor(
-    private val repo: MoviesRepository
+    private val repo: MoviesRepository,
+    private val sessionProvider: SessionProvider
 ) {
 
     fun getUseCase(movieType: MovieType): MovieUseCase {
-        return getMovieUseCase(movieType)
+        return getMovieUseCase(movieType,sessionProvider)
     }
 
     fun getUseCase(movieType: MovieTypeWithId, movieId: Int): MovieUseCaseWithId {
@@ -65,7 +67,16 @@ class MovieUseCaseFactory @Inject constructor(
 
             }
         }
+       internal class Bookmarked(repo: MoviesRepository,sessionProvider: SessionProvider) : MovieUseCase(repo) {
+            override suspend fun invoke(pageNumber: Int):  Result<MoviesPage> {
+                return try {
+                    Result.success(repo.getPopularMovies(pageNumber))
+                }catch (e:Throwable){
+                    Result.failure(e)
+                }
 
+            }
+        }
 
     }
 
@@ -74,13 +85,15 @@ class MovieUseCaseFactory @Inject constructor(
         NowPlaying,
         TopRated,
         Popular,
+        Bookmarked
     }
 
-    private fun getMovieUseCase(movieType: MovieType) = when (movieType) {
+    private fun getMovieUseCase(movieType: MovieType,sessionProvider: SessionProvider) = when (movieType) {
         MovieType.Upcoming -> MovieUseCase.Upcoming(repo)
         MovieType.NowPlaying -> MovieUseCase.NowPlaying(repo)
         MovieType.TopRated -> MovieUseCase.TopRated(repo)
         MovieType.Popular -> MovieUseCase.Popular(repo)
+        MovieType.Bookmarked -> MovieUseCase.Bookmarked(repo,sessionProvider)
     }
 
     //

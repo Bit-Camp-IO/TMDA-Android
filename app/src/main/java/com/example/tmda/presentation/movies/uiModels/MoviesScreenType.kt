@@ -6,6 +6,7 @@ enum class MoviesScreenType {
     TopRated,
     Popular,
     Recommended,
-    Similar
+    Similar,
+    Bookmarked
 
 }
