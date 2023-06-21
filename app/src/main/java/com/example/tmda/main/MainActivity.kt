@@ -39,8 +39,8 @@ class MainActivity : ComponentActivity() {
             TMDATheme {
                 Box {
                     BackGround()
-                    AppLoginStateHandler(
-                        loginState = viewModel.userState.value,
+                    LoginStateHandler(
+                        currentState = viewModel.userState.value,
                         navController = navController
                     )
 
@@ -50,22 +50,22 @@ class MainActivity : ComponentActivity() {
         }
 
     }
+
+
 }
 
 @Composable
-fun AppLoginStateHandler(loginState: MainViewModel.LoginState, navController: NavHostController) {
-    when (loginState) {
-        MainViewModel.LoginState.Loading -> LoadingScreen()
+fun LoginStateHandler(currentState: MainViewModel.LoginState, navController: NavHostController) {
+    when (currentState) {
+        MainViewModel.LoginState.LoggedIn -> MainScreen(navController = navController)
         MainViewModel.LoginState.LoggedOut -> LoginScreen()
-        MainViewModel.LoginState.LoggedIn -> MainScreen(navController)
+        MainViewModel.LoginState.Loading -> LoadingScreen()
     }
 }
 
-
-
-
 @Composable
 fun MainScreen(navController: NavHostController) {
+
     Scaffold(
         contentWindowInsets = WindowInsets(top = 0.dp),
         bottomBar = { BottomNavBar(navController = navController) },

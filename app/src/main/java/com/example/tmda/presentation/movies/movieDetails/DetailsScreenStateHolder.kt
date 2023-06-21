@@ -3,7 +3,6 @@ package com.example.tmda.presentation.movies.movieDetails
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-
 import com.example.movies.domain.enities.movie.Movie
 import com.example.movies.domain.enities.movie.MovieDetails
 import com.example.movies.domain.enities.movie.MoviesPage
@@ -13,13 +12,13 @@ import com.example.shared.entities.credits.Credits
 import com.example.shared.entities.review.Review
 import com.example.tmda.presentation.shared.uiStates.UiState
 import com.example.tmda.presentation.shared.uiStates.mapToOtherType
-import com.example.tmda.presentation.shared.uiStates.toSuccessState
 import com.example.tmda.presentation.shared.uiStates.toUiState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class DetailsScreenStateHolder(
     val movieId: Int,
@@ -101,46 +100,56 @@ class DetailsScreenStateHolder(
 
     private fun updateDetails() =
         coroutineScope.async(Dispatchers.IO) {
-            _movieDetails.value = movieDetailsProvider(movieId).toUiState()
+            val state = movieDetailsProvider(movieId).toUiState()
+            withContext(Dispatchers.Main) { _movieDetails.value = state }
 
         }
 
     private fun updateVideos() =
         coroutineScope.async(Dispatchers.IO) {
-            _movieVideos.value =
-                movieVideosProvider(movieId).toUiState()
+            val uiState = movieVideosProvider(movieId).toUiState()
+            withContext(Dispatchers.Main) { _movieVideos.value = uiState }
+
 
         }
 
     fun updateIsSaved() =
         coroutineScope.async(Dispatchers.IO) {
-            _isSaved.value = isMovieSavedProvider(movieId).toUiState()
+            val state = isMovieSavedProvider(movieId).toUiState()
+            withContext(Dispatchers.Main) { _isSaved.value = state }
 
 
         }
 
     private fun updateCredits() = coroutineScope.async(Dispatchers.IO) {
-        _movieCredits.value = movieCreditsProvider(movieId).mapToOtherType { it.cast }.toUiState()
+        val state = movieCreditsProvider(movieId).mapToOtherType { it.cast }.toUiState()
+        withContext(Dispatchers.Main) { _movieCredits.value = state }
+
     }
 
 
     private fun updateSimilarMovies() =
         coroutineScope.async(Dispatchers.IO) {
-            _similarMovies.value =
-                similarMoviesProvider(1).mapToOtherType { it.results }.toUiState()
+            val state = similarMoviesProvider(1).mapToOtherType { it.results }.toUiState()
+            withContext(Dispatchers.Main) { _similarMovies.value = state }
+
+
         }
 
     private fun updateRecommendedMovies() =
         coroutineScope.async(Dispatchers.IO) {
-            _recommendedMovies.value =
-                recommendedMoviesProvider(1).mapToOtherType { it.results }.toUiState()
+            val state = recommendedMoviesProvider(1).mapToOtherType { it.results }.toUiState()
+            withContext(Dispatchers.Main) { _recommendedMovies.value = state }
+
 
         }
 
 
     private fun updateReviews() =
         coroutineScope.async(Dispatchers.IO) {
-            _reviews.value = reviewsProvider(movieId).toUiState()
+            val state = reviewsProvider(movieId).toUiState()
+            withContext(Dispatchers.Main) { _reviews.value = state }
+
         }
 
     fun addOrRemoveMovieToSavedList() {
@@ -149,10 +158,9 @@ class DetailsScreenStateHolder(
                 is UiState.Failure -> updateIsSaved()
                 is UiState.Loading -> {}
                 is UiState.Success -> {
-                    val isChangedSuccessfully =
-                        changeSavedStateProvider(movieId, isSaved.data).isSuccess
-                    if (isChangedSuccessfully)
-                        _isSaved.value = (!isSaved.data).toSuccessState()
+                    withContext(Dispatchers.Main) { _isSaved.value = UiState.Loading() }
+                    changeSavedStateProvider(movieId, isSaved.data)
+                    updateIsSaved()
                 }
 
             }

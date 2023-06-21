@@ -12,7 +12,6 @@ class GetPersonDetailsUseCase @Inject constructor(
         return try {
             Result.success(repository.getPersonDetails(personId))
         } catch (e: Exception) {
-            throw e
             Result.failure(e)
         }
     }

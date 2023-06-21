@@ -46,6 +46,7 @@ fun BottomNavBar(navController: NavController) {
                     indicatorColor = GreyMetallic
                 ),
                 onClick = {
+                    navController.getOrganizer().addToEventsStream {
                         navController.navigate(item.route) {
                             popUpTo(navController.graph.findStartDestination().id) {
                                 saveState = true
@@ -53,6 +54,8 @@ fun BottomNavBar(navController: NavController) {
                             launchSingleTop = true
                             restoreState = true
                         }
+                    }
+
                 },
                 icon = {
                     Icon(

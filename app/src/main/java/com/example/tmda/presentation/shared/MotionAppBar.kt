@@ -189,9 +189,7 @@ fun ServicesBox(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Spacer(modifier = Modifier.height(20.dp))
-            SavedItemIcon(modifier = Modifier.size(30.dp), isSavedState = isSavedState)
-            Text(text = "Add")
-
+            BookMarkComponent(modifier =Modifier.size(30.dp) , isSavedState =isSavedState ) { onSavedClicked() }
         }
 
     }

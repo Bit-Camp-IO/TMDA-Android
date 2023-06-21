@@ -129,7 +129,6 @@ class SeriesDetailsViewModel @Inject constructor(
                     )
                 )
             } catch (e: Throwable) {
-                throw e
                 UiState.Failure(e.message ?: "Unknown Error")
             }
 
@@ -180,6 +179,7 @@ class SeriesDetailsViewModel @Inject constructor(
     fun addOrRemoveSeriesFromSaveList() {
         viewModelScope.launch {
             val isSaved = (_overView.value as UiState.Success).data.savedState
+
             val result = addOrRemoveTvFromWatchListUseCase.invoke(seriesId, !isSaved.value)
             if (result.isSuccess)
                 isSaved.value = !isSaved.value

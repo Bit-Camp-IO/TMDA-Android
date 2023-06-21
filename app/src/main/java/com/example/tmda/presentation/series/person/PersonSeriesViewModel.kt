@@ -14,7 +14,9 @@ import com.example.tmda.presentation.navigation.PERSON_ID
 import com.example.tmda.presentation.shared.uiStates.UiState
 import com.example.tmda.presentation.shared.uiStates.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -24,7 +26,8 @@ class PersonSeriesViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val personId: Int = savedStateHandle[PERSON_ID]!!
-    private val _personDetailsDetails: MutableState<UiState<PersonDetails>> = mutableStateOf(UiState.Loading())
+    private val _personDetailsDetails: MutableState<UiState<PersonDetails>> =
+        mutableStateOf(UiState.Loading())
     val personDetails: State<UiState<PersonDetails>>
         get() = _personDetailsDetails
     private val _personSeries: MutableState<UiState<List<TvShow>>> =
@@ -41,15 +44,19 @@ class PersonSeriesViewModel @Inject constructor(
         updatePersonSeries()
     }
 
-    fun updatePersonDetails() {
-        viewModelScope.launch {
-            _personDetailsDetails.value = getPersonDetailsUseCase.invoke(personId).toUiState()
+    private fun updatePersonDetails() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val state = getPersonDetailsUseCase.invoke(personId).toUiState()
+            withContext(Dispatchers.Main) { _personDetailsDetails.value = state }
+
         }
     }
 
-    fun updatePersonSeries() {
-        viewModelScope.launch {
-            _personSeries.value = getPersonSeriesUseCase.invoke(personId).toUiState()
+    private fun updatePersonSeries() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val state = getPersonSeriesUseCase.invoke(personId).toUiState()
+            withContext(Dispatchers.Main) { _personSeries.value = state }
+
         }
     }
 }

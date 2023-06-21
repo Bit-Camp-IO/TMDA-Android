@@ -1,51 +1,78 @@
 package com.example.tmda.presentation.shared
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.unit.dp
 import com.example.tmda.R
-import com.example.tmda.presentation.shared.uiStates.LoadingScreen
 import com.example.tmda.presentation.shared.uiStates.UiState
 import com.example.tmda.ui.theme.PineGreenDark
 
+
 @Composable
-fun SavedItemIcon(
-    modifier: Modifier,
-    isSavedState: UiState<Boolean>
-) {
-    when(isSavedState){
-        is UiState.Failure -> {  Icon(
-            painterResource(id = R.drawable.ic_bookmark_filled),
-            contentDescription = null,
-            tint = Color.Red,
-            modifier = modifier
-        )}
-        is UiState.Loading -> {
-            LoadingScreen()
-        }
-        is UiState.Success -> {
-            val isSaved=isSavedState.data
-            if (isSaved)
-                Icon(
-                    painterResource(id = R.drawable.ic_bookmark_filled),
-                    contentDescription = null,
-                    tint = PineGreenDark,
-                    modifier = modifier
+fun BookMarkComponent(modifier: Modifier, isSavedState: UiState<Boolean>, onClick: () -> Unit) {
+    Box(modifier = Modifier.clickable { onClick() }) {
+        when (isSavedState) {
+            is UiState.Failure -> {
+                BookmarkIcon(
+                    iconRes = R.drawable.ic_bookmark_filled,
+                    text = "reload",
+                    color = Color.Red
                 )
-            else
-                Icon(
-                    painterResource(id = R.drawable.ic_bookmark),
-                    contentDescription = null,
-                    tint = PineGreenDark,
-                    modifier = modifier
+            }
+
+            is UiState.Loading -> {
+
+                BookmarkIcon(
+                    iconRes = R.drawable.ic_bookmark_filled,
+                    text = "loading",
+                    color = Color.Magenta
                 )
+            }
+
+            is UiState.Success -> {
+                val isSaved = isSavedState.data
+                if (isSaved)
+                    BookmarkIcon(iconRes = R.drawable.ic_bookmark_filled, text = "Remove")
+                else
+                    BookmarkIcon(iconRes = R.drawable.ic_bookmark, text = "Add")
+
+            }
         }
     }
 
 }
+
+@Composable
+fun BookmarkIcon(
+    iconRes: Int,
+    text: String,
+    color: Color = PineGreenDark, ) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Icon(
+            painterResource(id = iconRes),
+            contentDescription = null,
+            tint = color,
+            modifier = Modifier.size(30.dp)
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        //Text(text = text)
+    }
+
+}
+
 @Composable
 fun SavedItemIcon(
     modifier: Modifier,

@@ -18,13 +18,18 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,11 +45,24 @@ import com.example.tmda.R
 import com.example.tmda.ui.theme.PineGreenDark
 import com.example.tmda.ui.theme.WhiteTransparent15
 import com.example.tmda.ui.theme.WhiteTransparent60
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen() {
     val viewModel = hiltViewModel<LoginViewModel>()
+    val snackBarHostState = remember { SnackbarHostState() }
+    val localCoroutineScope = rememberCoroutineScope()
 
+    LaunchedEffect(viewModel.errorMsg.value) {
+        if (viewModel.errorMsg.value.isNotEmpty())
+            localCoroutineScope.launch {
+                snackBarHostState.showSnackbar(
+                    message = viewModel.errorMsg.value,
+                    duration = SnackbarDuration.Short
+                )
+            }
+
+    }
 
     var isPasswordVisible by remember {
         mutableStateOf(false)
@@ -127,6 +145,7 @@ fun LoginScreen() {
             contentDescription = "Login Button"
         )
         Spacer(modifier = Modifier.height(136.dp))
+        SnackbarHost(hostState = snackBarHostState, Modifier)
         Row(
             Modifier
                 .fillMaxWidth()
