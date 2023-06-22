@@ -31,7 +31,7 @@ class SeriesListViewModel @Inject constructor(
     private val getTvSavedStateUseCase: GetTvSavedStateUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-     val seriesScreenType: SeriesScreenType = savedStateHandle[SERIES_LIST_SCREEN_TYPE]!!
+    val seriesScreenType: SeriesScreenType = savedStateHandle[SERIES_LIST_SCREEN_TYPE]!!
     private val seriesId: Int? = savedStateHandle[SERIES_ID]
     private var pagesStream: Flow<PagingData<TvShowBookMarkUiModel>>? = null
     private val seriesUseCase = seriesScreenType.toUseCase()
@@ -100,6 +100,8 @@ class SeriesListViewModel @Inject constructor(
         SeriesScreenType.Similar -> useCaseFactory.getUseCase(
             TvShowUseCaseFactory.SeriesType.Similar, seriesId!!
         )
+
+        SeriesScreenType.Bookmarked -> useCaseFactory.getUseCase(TvShowUseCaseFactory.SeriesType.Bookmarked)
     }
 
     fun updateIsSavedState(series: List<TvShowBookMarkUiModel>, priorityRange: IntRange) {

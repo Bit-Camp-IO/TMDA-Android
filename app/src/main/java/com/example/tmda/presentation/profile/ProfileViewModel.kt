@@ -18,6 +18,7 @@ import com.example.tmda.presentation.shared.uiStates.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,32 +41,50 @@ class ProfileViewModel @Inject constructor(
         get() = _userSeries
 
     init {
+        updateAll()
+    }
+
+    fun updateAll() {
         updateUserDetails()
         updateUserMovies()
         updateUserSeries()
     }
 
-
     private fun updateUserDetails() {
         viewModelScope.launch(Dispatchers.IO) {
-            _userDetails.value = getUserDetailsUseCase.invoke().toUiState()
+            val state = getUserDetailsUseCase.invoke().toUiState()
+            withContext(Dispatchers.Main) {
+                _userDetails.value = state
+            }
+
         }
     }
 
     private fun updateUserMovies() {
         viewModelScope.launch(Dispatchers.IO) {
-            _userMovies.value =
+            val state =
                 getBookMarkedMoviesUseCase.invoke(1).mapToOtherType { it.results }.toUiState()
+            withContext(Dispatchers.Main) {
+                _userMovies.value = state
+            }
+
+
         }
     }
 
     private fun updateUserSeries() {
         viewModelScope.launch(Dispatchers.IO) {
-            _userSeries.value =
+            val state =
                 getBookMarkedSeriesUseCase.invoke(1).mapToOtherType { it.results }.toUiState()
+            withContext(Dispatchers.Main) {
+                _userSeries.value = state
+            }
+
+
         }
     }
-    fun logOut(){
+
+    fun logOut() {
         viewModelScope.launch(Dispatchers.IO) {
             signOutUseCase.invoke()
         }

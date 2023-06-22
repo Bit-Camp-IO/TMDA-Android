@@ -8,11 +8,9 @@ import java.util.concurrent.TimeUnit
 
 
 fun NavController.navigateToMovieListScreen(
-
     screenTitle: String,
     moviesScreenType: MoviesScreenType,
-    id: Int = -1
-) {
+    id: Int = -1) {
     getOrganizer().addToEventsStream {
         val parent = currentBackStackEntry?.destination?.parent?.route
         navigate("${parent + Destinations.MOVIES_LIST_SCREEN}/$screenTitle/$moviesScreenType/${id}")

@@ -5,7 +5,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bitIO.tvshowcomponent.domain.useCases.GetTvShowDetailsUseCase
 import com.bitIO.tvshowcomponent.domain.useCases.tvShow.GetTrendingTvShowUseCase
 import com.bitIO.tvshowcomponent.domain.useCases.tvShow.TvShowUseCaseFactory
 import com.example.tmda.presentation.series.uiDto.TvShowUiModel
@@ -21,7 +20,6 @@ import javax.inject.Inject
 @HiltViewModel
 class SeriesHomeViewModel @Inject constructor(
     factory: TvShowUseCaseFactory,
-    private val getTvShowDetailsUseCase: GetTvShowDetailsUseCase,
     private val  trendingTvShowUseCase: GetTrendingTvShowUseCase
 ) : ViewModel() {
    private val nowPlayingUseCase = factory.getUseCase(TvShowUseCaseFactory.SeriesType.NowPlaying)

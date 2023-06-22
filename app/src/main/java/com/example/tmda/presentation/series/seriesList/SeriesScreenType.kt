@@ -6,5 +6,6 @@ enum class SeriesScreenType(val screenTitle: String) {
     TopRated("Top Rated"),
     Popular("Popular"),
     Similar("Similar"),
-    Recommended("Recommended")
+    Recommended("Recommended"),
+    Bookmarked("Bookmarked")
 }

@@ -2,18 +2,33 @@ package com.bitIO.tvshowcomponent.domain.useCases.tvShow
 
 import com.bitIO.tvshowcomponent.domain.entity.TvShowPage
 import com.bitIO.tvshowcomponent.domain.repository.TvShowRepository
+import com.example.shared.auth.SessionProvider
 import javax.inject.Inject
 
-class TvShowUseCaseFactory @Inject constructor(private val repository: TvShowRepository) {
+class TvShowUseCaseFactory @Inject constructor(
+    private val repository: TvShowRepository,
+    private val sessionProvider: SessionProvider
+) {
 
-    fun getUseCase(seriesType: SeriesType, movieId: Int = -1): TvShowUseCase {
+    fun getUseCase(
+        seriesType: SeriesType,
+        movieId: Int = -1,
+    ): TvShowUseCase {
         return when (seriesType) {
             SeriesType.OnTheAir -> TvShowUseCase.GetOnTheAirTvShowsUseCase(repository)
             SeriesType.NowPlaying -> TvShowUseCase.GetNowPlayingTvShowsUseCase(repository)
             SeriesType.TopRated -> TvShowUseCase.GetTopRatedTvShowsUseCase(repository)
             SeriesType.Popular -> TvShowUseCase.GetPopularTvShowsUseCase(repository)
             SeriesType.Similar -> TvShowUseCase.GetSimilarTvShowsUseCase(repository, movieId)
-            SeriesType.Recommended -> TvShowUseCase.GetRecommendedTvShowsUseCase(repository, movieId)
+            SeriesType.Recommended -> TvShowUseCase.GetRecommendedTvShowsUseCase(
+                repository,
+                movieId
+            )
+
+            SeriesType.Bookmarked -> TvShowUseCase.GetBookmarkedTvShowsUseCase(
+                repository,
+                sessionProvider
+            )
         }
     }
 
@@ -23,7 +38,8 @@ class TvShowUseCaseFactory @Inject constructor(private val repository: TvShowRep
         TopRated,
         Popular,
         Similar,
-        Recommended
+        Recommended,
+        Bookmarked
     }
 
     sealed class TvShowUseCase(
@@ -69,6 +85,26 @@ class TvShowUseCaseFactory @Inject constructor(private val repository: TvShowRep
             override suspend operator fun invoke(pageIndex: Int): Result<TvShowPage> {
                 return try {
                     Result.success(repo.getPopularTvShows(pageIndex))
+                } catch (e: Throwable) {
+                    Result.failure(e)
+                }
+            }
+
+        }
+
+        internal class GetBookmarkedTvShowsUseCase(
+            repo: TvShowRepository,
+            private val sessionProvider: SessionProvider
+        ) : TvShowUseCase(repo) {
+            override suspend operator fun invoke(pageIndex: Int): Result<TvShowPage> {
+                return try {
+                    Result.success(
+                        repo.getBookMarkedSeries(
+                            16874876,
+                            sessionProvider.getSessionId(),
+                            pageIndex
+                        )
+                    )
                 } catch (e: Throwable) {
                     Result.failure(e)
                 }

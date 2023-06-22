@@ -70,7 +70,6 @@ class MoviesListViewModel @Inject constructor(
             UiPage(
                 page = pageIndex, results = moviesUiDtoList,
                 totalPages = moviesPage.totalPages,
-             //   isError = moviesPage.totalPages == -1
             )
         )
     }
