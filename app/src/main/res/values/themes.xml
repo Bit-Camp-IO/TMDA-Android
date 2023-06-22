@@ -11,5 +11,6 @@
         <item name="android:statusBarColor">
             @android:color/transparent
         </item>
+        <item name="android:windowBackground">@drawable/tmda_launcher_background</item>
     </style>
 </resources>

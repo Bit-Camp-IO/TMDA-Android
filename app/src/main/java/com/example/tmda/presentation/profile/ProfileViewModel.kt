@@ -40,7 +40,11 @@ class ProfileViewModel @Inject constructor(
     val userSeries: State<UiState<List<TvShow>>>
         get() = _userSeries
 
+
+
+
     init {
+
         updateAll()
     }
 
@@ -48,6 +52,7 @@ class ProfileViewModel @Inject constructor(
         updateUserDetails()
         updateUserMovies()
         updateUserSeries()
+
     }
 
     private fun updateUserDetails() {

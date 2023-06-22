@@ -57,7 +57,7 @@ fun NavController.getOrganizer(): NavigationOrganizer {
 
 object NavigationOrganizer {
     private val navActionStream = PublishSubject.create<() -> Unit>()
-    private val debouncedStream = navActionStream.throttleFirst(1000, TimeUnit.MILLISECONDS)
+    private val debouncedStream = navActionStream.throttleFirst(500, TimeUnit.MILLISECONDS)
 
 
     fun addToEventsStream(event: () -> Unit) {

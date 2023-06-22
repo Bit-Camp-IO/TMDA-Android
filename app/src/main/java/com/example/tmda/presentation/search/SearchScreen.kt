@@ -24,7 +24,6 @@ import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -96,27 +95,23 @@ fun SearchScreen(
 
     val lifecycleOwner = LocalLifecycleOwner.current
     val onBackPressedDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
-    SideEffect {
+    onBackPressedDispatcher?.addCallback(owner = lifecycleOwner) {
+        val currentStateHolder = viewModel.currentStateHolder
+        if (currentStateHolder.displayedKeyWord.value.isNotEmpty()) {
+            currentStateHolder.updateKeyword("")
+            return@addCallback
+        }
 
-        onBackPressedDispatcher?.addCallback(owner = lifecycleOwner) {
-            val currentStateHolder = viewModel.currentStateHolder
-            if (currentStateHolder.displayedKeyWord.value.isNotEmpty()) {
-                currentStateHolder.updateKeyword("")
-                return@addCallback
-            }
-
-            viewModel.moviesStateHolder.updateKeyword("")
-            viewModel.seriesStateHolder.updateKeyword("")
-            viewModel.actorStateHolder.updateKeyword("")
-            navController.navigate(Destinations.MOVIES_ROUTE) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
+        viewModel.moviesStateHolder.updateKeyword("")
+        viewModel.seriesStateHolder.updateKeyword("")
+        viewModel.actorStateHolder.updateKeyword("")
+        navController.navigate(Destinations.MOVIES_ROUTE) {
+            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+            launchSingleTop = true
+            restoreState = true
         }
     }
+
 }
 
 @Composable
@@ -126,6 +121,8 @@ fun SearchBox(
     currentSearchType: State<SearchType>,
     onChipChanged: (SearchType) -> Unit,
 ) {
+
+
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier
             .height(60.dp)
@@ -161,8 +158,9 @@ fun SearchBox(
             shape = RoundedCornerShape(10.dp),
             onActiveChange = {},
             windowInsets = WindowInsets(0.dp, 0.dp, 0.dp, 0.dp),
-            colors = SearchBarDefaults.colors(containerColor = BlackTransparent37)
-        ) {}
+            colors = SearchBarDefaults.colors(containerColor = BlackTransparent37),
+        ) {
+        }
         Spacer(modifier = Modifier.height(24.dp))
         ChipRow(typeState = currentSearchType, onClick = onChipChanged)
     }

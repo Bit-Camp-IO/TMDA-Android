@@ -2,6 +2,7 @@ package com.example.tmda.presentation.shared.uiStates
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -15,7 +16,7 @@ import com.example.tmda.ui.theme.PineGreenMedium
 fun ErrorComponent(onTryAgain:()->Unit){
     Button(
         onClick = onTryAgain,
-        modifier = Modifier.height(160.dp).fillMaxWidth(),
+        modifier = Modifier.height(160.dp).fillMaxWidth().padding(vertical =  16.dp, horizontal = 24.dp),
         shape = RoundedCornerShape(10.dp),
         colors = ButtonDefaults.buttonColors(containerColor = PineGreenMedium)
     ) {
