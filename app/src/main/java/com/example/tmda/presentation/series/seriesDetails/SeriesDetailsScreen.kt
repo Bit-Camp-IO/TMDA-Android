@@ -48,7 +48,6 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.MotionLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.bitIO.tvshowcomponent.domain.entity.TvShow
@@ -131,6 +130,7 @@ fun SeriesDetailsScreen(
                             videos = overView.videos,
                             savedState = overView.savedState,
                             onSaveClicked = onSaveClicked,
+                            navController = navController
 
                         )
                     }
@@ -307,6 +307,7 @@ fun MotionLayoutAppBar(
     rating: Double,
     totalVotes: Int,
     progress: Float,
+    navController: NavController,
     videos: List<Video>,
     savedState: MutableState<Boolean>,
     onSaveClicked: () -> Unit
@@ -339,7 +340,7 @@ fun MotionLayoutAppBar(
 
         AppToolBar(
             modifier = Modifier.layoutId(MotionLayoutAppBarItem.MainAppBar),
-            navController = rememberNavController()
+            navController = navController
         ) {
             IconButton(
                 modifier = Modifier

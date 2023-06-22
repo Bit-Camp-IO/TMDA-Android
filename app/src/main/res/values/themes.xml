@@ -3,14 +3,15 @@
 
     <style name="Theme.TMDA" parent="android:Theme.Material.Light.NoActionBar" >
         <item name="android:navigationBarColor">
-            @android:color/transparent
+            @color/grey_dark
         </item>
         <item name="android:windowTranslucentStatus">
-            false
+            true
         </item>
         <item name="android:statusBarColor">
             @android:color/transparent
         </item>
         <item name="android:windowBackground">@drawable/tmda_launcher_background</item>
+
     </style>
 </resources>

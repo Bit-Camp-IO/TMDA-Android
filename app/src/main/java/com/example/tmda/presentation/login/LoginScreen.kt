@@ -1,5 +1,10 @@
 package com.example.tmda.presentation.login
 
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,6 +38,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -52,7 +58,7 @@ fun LoginScreen() {
     val viewModel = hiltViewModel<LoginViewModel>()
     val snackBarHostState = remember { SnackbarHostState() }
     val localCoroutineScope = rememberCoroutineScope()
-
+    val context = LocalContext.current as ComponentActivity
     LaunchedEffect(viewModel.errorMsg.value) {
         if (viewModel.errorMsg.value.isNotEmpty())
             localCoroutineScope.launch {
@@ -128,7 +134,7 @@ fun LoginScreen() {
                 .fillMaxWidth()
                 .padding(horizontal = 30.dp), horizontalArrangement = Arrangement.End
         ) {
-            TextButton(onClick = { /*TODO*/ }) {
+            TextButton(onClick = { context.startBrowserIntent("https://www.themoviedb.org/reset-password") }) {
                 Text(
                     text = "Forget password?",
                     style = MaterialTheme.typography.bodySmall,
@@ -156,7 +162,7 @@ fun LoginScreen() {
                 text = "Don’t have an account?",
                 style = MaterialTheme.typography.bodySmall
             )
-            TextButton(onClick = { /*TODO*/ }) {
+            TextButton(onClick = { context.startBrowserIntent("https://www.themoviedb.org/signup") }) {
                 Text(
                     text = "Register",
                     style = MaterialTheme.typography.bodySmall,
@@ -166,6 +172,18 @@ fun LoginScreen() {
         }
     }
 
+}
+
+
+fun Context.startBrowserIntent(url: String, onError: () -> Unit = {}) {
+    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+    try {
+        startActivity(intent)
+    } catch (e: ActivityNotFoundException) {
+        onError()
+    }
 }
 
 const val LOGIN_MESSAGE = "Welcome to our community"

@@ -20,6 +20,7 @@
             android:name="com.example.tmda.main.MainActivity"
             android:exported="true"
             android:label="@string/app_name"
+            android:fitsSystemWindows="true"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.TMDA">
             <intent-filter>
