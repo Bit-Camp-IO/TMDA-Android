@@ -13,8 +13,8 @@ import com.bitIO.tvshowcomponent.domain.useCases.GetTvShowDetailsUseCase
 import com.bitIO.tvshowcomponent.domain.useCases.GetTvShowReviews
 import com.bitIO.tvshowcomponent.domain.useCases.GetTvVideosUseCase
 import com.bitIO.tvshowcomponent.domain.useCases.tvShow.TvShowUseCaseFactory
-import com.example.authentication.domain.useCases.AddOrRemoveTvFromWatchListUseCase
-import com.example.authentication.domain.useCases.GetTvSavedStateUseCase
+import com.example.user.domain.useCases.AddOrRemoveTvFromWatchListUseCase
+import com.example.user.domain.useCases.GetTvSavedStateUseCase
 import com.example.shared.entities.Video
 import com.example.shared.entities.credits.Credits
 import com.example.shared.entities.review.Review

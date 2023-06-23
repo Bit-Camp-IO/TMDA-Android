@@ -2,8 +2,8 @@ package com.example.tmda.di
 
 import com.bitIO.tvshowcomponent.data.repository.TvShowRepositoryImpl
 import com.bitIO.tvshowcomponent.domain.repository.TvShowRepository
-import com.example.authentication.data.repositories.UserRepositoryImpl
-import com.example.authentication.domain.repositories.UserRepository
+import com.example.user.data.repositories.UserRepositoryImpl
+import com.example.user.domain.repositories.UserRepository
 import com.example.movies.data.repositories.MoviesRepositoryImpl
 import com.example.movies.domain.repositories.MoviesRepository
 import dagger.Binds

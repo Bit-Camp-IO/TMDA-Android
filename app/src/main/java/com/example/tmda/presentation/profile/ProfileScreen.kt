@@ -33,7 +33,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import coil.compose.AsyncImage
 import com.bitIO.tvshowcomponent.domain.entity.TvShow
-import com.example.authentication.domain.entities.UserDetails
+import com.example.user.domain.entities.UserDetails
 import com.example.movies.domain.enities.movie.Movie
 import com.example.tmda.R
 import com.example.tmda.presentation.movies.getTmdbImageLink

@@ -6,8 +6,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.authentication.domain.useCases.GetIsFirstUserLoginUseCase
-import com.example.authentication.domain.useCases.LoginUseCase
+import com.example.user.domain.useCases.GetIsFirstUserLoginUseCase
+import com.example.user.domain.useCases.LoginUseCase
 import com.example.tmda.presentation.shared.uiStates.UiState
 import com.example.tmda.presentation.shared.uiStates.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel

@@ -4,9 +4,9 @@ import android.app.Application
 import androidx.room.Room
 import com.bitIO.tvshowcomponent.data.local.TvShowDao
 import com.bitIO.tvshowcomponent.data.remote.TvShowApiService
-import com.example.authentication.data.local.UserDao
-import com.example.authentication.data.remote.UserApiServices
-import com.example.authentication.domain.repositories.UserRepository
+import com.example.user.data.local.UserDao
+import com.example.user.data.remote.UserApiServices
+import com.example.user.domain.repositories.UserRepository
 import com.example.movies.data.local.MoviesDao
 import com.example.movies.data.remote.MoviesApiService
 import com.example.shared.auth.SessionProvider

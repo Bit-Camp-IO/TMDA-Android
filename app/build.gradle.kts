@@ -98,7 +98,7 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.7.2")
     implementation("androidx.navigation:navigation-compose:2.6.0")
     //Compose
-    implementation("androidx.compose.ui:ui:1.5.0-beta02")
+    implementation("androidx.compose.ui:ui:1.6.0-alpha01")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
@@ -129,7 +129,7 @@ dependencies {
 
     //Paging
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
-    implementation("androidx.paging:paging-compose:3.2.0-beta01")
+    implementation("androidx.paging:paging-compose:3.2.0-rc01")
 
     //Coil
     implementation("io.coil-kt:coil-compose:2.4.0")

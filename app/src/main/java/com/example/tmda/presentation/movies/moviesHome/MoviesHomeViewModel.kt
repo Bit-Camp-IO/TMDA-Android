@@ -13,6 +13,7 @@ import com.example.tmda.presentation.shared.uiStates.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -54,7 +55,10 @@ class MoviesHomeViewModel @Inject constructor(
 
             val movies = interactor.getUseCase(MovieUseCaseFactory.MovieType.NowPlaying)
                 .invoke(1).mapToOtherType { it.results.take(5) }.toUiState()
-            _nowPlayingMoviesState.value = movies
+            withContext(Dispatchers.Main){
+                _nowPlayingMoviesState.value = movies
+            }
+
 
         }
     }
@@ -65,8 +69,11 @@ class MoviesHomeViewModel @Inject constructor(
                 interactor.getUseCase(MovieUseCaseFactory.MovieType.Upcoming)
                     .invoke(1).mapToOtherType { it -> it.results.map { MovieUiDto(it, false) } }
                     .toUiState()
+            withContext(Dispatchers.Main){
+                _upComingMoviesState.value = moviesUiState
+            }
 
-            _upComingMoviesState.value = moviesUiState
+
         }
     }
 
@@ -76,7 +83,10 @@ class MoviesHomeViewModel @Inject constructor(
                 interactor.getUseCase(MovieUseCaseFactory.MovieType.TopRated).invoke(1)
                     .mapToOtherType { it -> it.results.map { MovieUiDto(it, false) } }
                     .toUiState()
-            _topRatedMoviesState.value = moviesUiState
+            withContext(Dispatchers.Main){
+                _topRatedMoviesState.value = moviesUiState
+            }
+
         }
     }
 
@@ -86,7 +96,10 @@ class MoviesHomeViewModel @Inject constructor(
                 interactor.getUseCase(MovieUseCaseFactory.MovieType.Popular).invoke(1)
                     .mapToOtherType { it -> it.results.map { MovieUiDto(it, false) } }
                     .toUiState()
-            _popularMoviesState.value = moviesUiState
+            withContext(Dispatchers.Main){
+                _popularMoviesState.value = moviesUiState
+            }
+
         }
     }
 

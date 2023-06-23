@@ -7,9 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bitIO.tvshowcomponent.domain.entity.TvShow
 import com.bitIO.tvshowcomponent.domain.useCases.GetBookMarkedSeriesUseCase
-import com.example.authentication.domain.entities.UserDetails
-import com.example.authentication.domain.useCases.GetUserDetailsUseCase
-import com.example.authentication.domain.useCases.SignOutUseCase
+import com.example.user.domain.entities.UserDetails
+import com.example.user.domain.useCases.GetUserDetailsUseCase
+import com.example.user.domain.useCases.SignOutUseCase
 import com.example.movies.domain.enities.movie.Movie
 import com.example.movies.domain.useCases.GetBookMarkedMoviesUseCase
 import com.example.tmda.presentation.shared.uiStates.UiState

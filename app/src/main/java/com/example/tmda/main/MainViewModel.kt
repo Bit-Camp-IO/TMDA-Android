@@ -5,11 +5,13 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.authentication.domain.useCases.GetSessionStateStreamUseCase
+import com.example.user.domain.useCases.GetSessionStateStreamUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @FlowPreview
@@ -34,7 +36,10 @@ class MainViewModel @Inject constructor(
     private fun observeUserState() {
         viewModelScope.launch {
             getUserFlow().debounce(200).collect {
-                _userState.value = if (it == null) LoginState.LoggedOut else LoginState.LoggedIn
+                withContext(Dispatchers.Main){
+                    _userState.value = if (it == null) LoginState.LoggedOut else LoginState.LoggedIn
+                }
+
             }
         }
 

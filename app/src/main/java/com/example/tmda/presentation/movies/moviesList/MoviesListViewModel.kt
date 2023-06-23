@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.example.authentication.domain.entities.User
-import com.example.authentication.domain.useCases.GetCurrentUserUseCase
+import com.example.user.domain.entities.User
+import com.example.user.domain.useCases.GetCurrentUserUseCase
 import com.example.movies.domain.enities.movie.MoviesPage
 import com.example.movies.domain.useCases.AddMovieToWatchListUseCase
 import com.example.movies.domain.useCases.GetMovieSavedStateUseCase

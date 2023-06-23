@@ -36,12 +36,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
        // WindowCompat.setDecorFitsSystemWindows(window,false)
-        window.setFlags( WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-        window.decorView.systemUiVisibility = (
-                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                )
+        try {
+            window.setFlags( WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
+            window.decorView.systemUiVisibility = (
+                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                    )
+        }catch (e:Throwable){}
+
         setContent {
             val navController = rememberNavController()
             TMDATheme {
