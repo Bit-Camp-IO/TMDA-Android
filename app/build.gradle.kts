@@ -89,7 +89,7 @@ dependencies {
 
 
     api(project(":movies"))
-    api(project(":authentication"))
+    api(project(":user"))
 
     //endregion
 

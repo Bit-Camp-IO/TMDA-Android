@@ -18,5 +18,5 @@ rootProject.name = "TMDA"
 include(":app")
 include(":movies")
 include(":tvShowComponent")
-include(":authentication")
+include(":user")
 include(":shared")

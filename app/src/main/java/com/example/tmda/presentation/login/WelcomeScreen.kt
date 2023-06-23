@@ -20,25 +20,31 @@ import androidx.compose.ui.unit.dp
 import com.example.tmda.R
 
 @Composable
-fun WelcomeScreen() {
+fun WelcomeScreen(onRegisterClick: () -> Unit, onLoginClick: () -> Unit) {
 
-    Column(modifier = Modifier.fillMaxSize(),
+    Column(
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Bottom,
-        horizontalAlignment = Alignment.CenterHorizontally) {
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Image(
             modifier = Modifier.size(250.dp),
             painter = painterResource(id = R.drawable.ic_login),
             contentDescription = "App Logo"
         )
         Spacer(modifier = Modifier.height(60.dp))
-        Text(modifier=Modifier.padding(horizontal = 46.dp),
-            text = WELCOME_MESSAGE, style = MaterialTheme.typography.headlineSmall, textAlign = TextAlign.Center)
+        Text(
+            modifier = Modifier.padding(horizontal = 46.dp),
+            text = WELCOME_MESSAGE,
+            style = MaterialTheme.typography.headlineSmall,
+            textAlign = TextAlign.Center
+        )
         Spacer(modifier = Modifier.height(60.dp))
 
         Image(
             modifier = Modifier
                 .size(180.dp, 48.dp)
-                .clickable { },
+                .clickable {onLoginClick() },
             painter = painterResource(id = R.drawable.img_btn_login),
             contentDescription = "Login Button"
         )
@@ -46,7 +52,7 @@ fun WelcomeScreen() {
         Image(
             modifier = Modifier
                 .size(180.dp, 48.dp)
-                .clickable { },
+                .clickable {onRegisterClick() },
             painter = painterResource(id = R.drawable.img_btn_register),
             contentDescription = "Register Button"
         )

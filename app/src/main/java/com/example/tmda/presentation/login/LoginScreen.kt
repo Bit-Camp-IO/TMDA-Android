@@ -4,6 +4,7 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -48,6 +49,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.tmda.R
+import com.example.tmda.presentation.shared.uiStates.LoadingScreen
+import com.example.tmda.presentation.shared.uiStates.UiState
 import com.example.tmda.ui.theme.PineGreenDark
 import com.example.tmda.ui.theme.WhiteTransparent15
 import com.example.tmda.ui.theme.WhiteTransparent60
@@ -59,6 +62,7 @@ fun LoginScreen() {
     val snackBarHostState = remember { SnackbarHostState() }
     val localCoroutineScope = rememberCoroutineScope()
     val context = LocalContext.current as ComponentActivity
+
     LaunchedEffect(viewModel.errorMsg.value) {
         if (viewModel.errorMsg.value.isNotEmpty())
             localCoroutineScope.launch {
@@ -69,11 +73,45 @@ fun LoginScreen() {
             }
 
     }
+    var isUserNavigateToLogin by remember { mutableStateOf(false) }
 
-    var isPasswordVisible by remember {
-        mutableStateOf(false)
+    when (val isFirstLogin = viewModel.isFirstLogin.value) {
+
+
+        is UiState.Failure -> {}
+        is UiState.Loading -> LoadingScreen()
+        is UiState.Success -> {
+            when (isFirstLogin.data && !isUserNavigateToLogin) {
+                true -> WelcomeScreen({ context.startBrowserIntent("https://www.themoviedb.org/signup") }) {
+                    Log.d("xxx", viewModel.isFirstLogin.value.toString())
+                    isUserNavigateToLogin = true
+                }
+
+                false -> LoginScreen(
+                    viewModel = viewModel,
+                    context = context,
+                    snackBarHostState = snackBarHostState
+                )
+            }
+        }
+
+
     }
-    Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+
+
+}
+
+@Composable
+fun LoginScreen(
+    viewModel: LoginViewModel,
+    context: ComponentActivity,
+    snackBarHostState: SnackbarHostState
+) {
+    var isPasswordVisible by remember { mutableStateOf(false) }
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text(
             modifier = Modifier.padding(all = 90.dp),
             text = LOGIN_MESSAGE, style = MaterialTheme.typography.headlineSmall,
@@ -171,9 +209,7 @@ fun LoginScreen() {
             }
         }
     }
-
 }
-
 
 fun Context.startBrowserIntent(url: String, onError: () -> Unit = {}) {
     val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))

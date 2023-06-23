@@ -15,5 +15,6 @@ interface UserRepository {
     suspend fun addMovieToWatchList(movieId:Int,isAddRequest:Boolean)
     suspend fun getTvSavedState(seriesId: Int): Boolean
     suspend fun getUserDetails():UserDetails
+    suspend fun getIsFirstUserLogin():Boolean
 
 }

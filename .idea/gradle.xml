@@ -11,10 +11,10 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/authentication" />
             <option value="$PROJECT_DIR$/movies" />
             <option value="$PROJECT_DIR$/shared" />
             <option value="$PROJECT_DIR$/tvShowComponent" />
+            <option value="$PROJECT_DIR$/user" />
           </set>
         </option>
       </GradleProjectSettings>

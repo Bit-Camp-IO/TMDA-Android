@@ -7,6 +7,7 @@ import com.example.authentication.data.mappers.toUserDetails
 import com.example.authentication.data.remote.UserApiServices
 import com.example.authentication.domain.entities.User
 import com.example.authentication.domain.entities.UserDetails
+import com.example.authentication.domain.entities.UserFirstLoginState
 import com.example.authentication.domain.repositories.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -40,6 +41,7 @@ class UserRepositoryImpl @Inject constructor(
         cachedUser = user
         userDao.saveCurrentUser(user)
         userState.value = cachedUser
+        userDao.insertUserFirstTime(UserFirstLoginState(false))
         return user
     }
 
@@ -88,6 +90,10 @@ class UserRepositoryImpl @Inject constructor(
             accountId = 16874876,
             sessionId = cachedUser!!.sessionId
         ).toUserDetails()
+    }
+
+    override suspend fun getIsFirstUserLogin(): Boolean {
+        return userDao.getUserFirstLoginState()?.isUSerFirstLogin?:true
     }
 
 

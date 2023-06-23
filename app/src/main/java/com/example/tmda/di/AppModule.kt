@@ -33,6 +33,7 @@ object AppModule {
         ).build()
     }
 
+
     //Movies
     @Provides
     @Singleton
