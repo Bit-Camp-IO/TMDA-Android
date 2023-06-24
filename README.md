@@ -1,6 +1,6 @@
 # 📱 TMDA Android App
 
-![GitHub](https://img.shields.io/github/license/Bit-Camp-IO/TMDA-Android)
+![GitHub](https://img.shields.io/github/LICENSE/Bit-Camp-IO/TMDA-Android)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Bit-Camp-IO/TMDA-Android)
 ![GitHub issues](https://img.shields.io/github/issues/Bit-Camp-IO/TMDA-Android)
 
