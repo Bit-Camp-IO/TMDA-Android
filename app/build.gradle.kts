@@ -48,11 +48,10 @@ android {
                 "proguard-rules.pro"
             )
             signingConfig = signingConfigs.getByName("debug")
-            multiDexEnabled = true
+            multiDexEnabled = false
         }
         getByName("debug") {
-            isJniDebuggable = true
-            isRenderscriptDebuggable = true
+
         }
 
     }

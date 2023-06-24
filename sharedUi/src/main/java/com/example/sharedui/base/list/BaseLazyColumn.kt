@@ -39,7 +39,7 @@ fun <T : Any> BaseLazyColumn(
         items(
             count = lazyItems.itemSnapshotList.size,
             contentType = contentType,
-            key = { keyGetter(lazyItems.peek(it)!!) },
+            key = { it },
             ) { content(it) }
         when (lazyItems.loadState.append) {
             is LoadState.Error -> {

@@ -17,9 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.sharedui.x.BackGround
 import com.example.tmda.navigation.BottomNavBar
 import com.example.tmda.navigation.NavigationHost
-import com.example.sharedui.x.BackGround
 import com.example.tmda.ui.theme.TMDATheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.FlowPreview
@@ -29,19 +29,21 @@ import kotlinx.coroutines.FlowPreview
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
 
-    @OptIn(FlowPreview::class)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-       // WindowCompat.setDecorFitsSystemWindows(window,false)
-        try {
-            window.setFlags( WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-            window.decorView.systemUiVisibility = (
-                    View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
-                            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                    )
-        }catch (e:Throwable){}
+        // WindowCompat.setDecorFitsSystemWindows(window,false)
+
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        )
+        window.decorView.systemUiVisibility = (
+                View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or
+                        View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                )
+
 
         setContent {
             val navController = rememberNavController()
@@ -59,7 +61,6 @@ class MainActivity : ComponentActivity() {
         }
 
     }
-
 
 
 }

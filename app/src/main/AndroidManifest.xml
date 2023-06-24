@@ -12,7 +12,7 @@
         android:icon="@mipmap/tmda_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/tmda_launcher_round"
-        android:supportsRtl="true"
+        android:supportsRtl="false"
         android:theme="@style/Theme.TMDA"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
