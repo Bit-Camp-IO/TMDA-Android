@@ -2,9 +2,9 @@ package com.example.tvshowfeature.seriesDetails.uiDto
 
 import androidx.compose.runtime.MutableState
 import com.bitIO.tvshowcomponent.domain.entity.TvShow
-import com.example.shared.entities.Video
-import com.example.shared.entities.credits.CastMember
-import com.example.shared.entities.review.Review
+import com.example.sharedComponent.entities.Video
+import com.example.sharedComponent.entities.credits.CastMember
+import com.example.sharedComponent.entities.review.Review
 
 data class OverView(
     val id: Int,

@@ -3,9 +3,9 @@ package com.example.tvshowfeature.seriesDetails.uiDto
 import androidx.compose.runtime.mutableStateOf
 import com.bitIO.tvshowcomponent.domain.entity.TvShow
 import com.bitIO.tvshowcomponent.domain.entity.TvShowDetails
-import com.example.shared.entities.Video
-import com.example.shared.entities.credits.Credits
-import com.example.shared.entities.review.Review
+import com.example.sharedComponent.entities.Video
+import com.example.sharedComponent.entities.credits.Credits
+import com.example.sharedComponent.entities.review.Review
 
 fun makeOverView(
     tvShowDetails: TvShowDetails,

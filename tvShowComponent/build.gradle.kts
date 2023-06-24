@@ -13,8 +13,7 @@ java {
 dependencies {
 
 
-    api(project(":shared"))
-
+    api(project(":sharedComponent"))
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
     implementation("com.squareup.moshi:moshi:1.15.0")

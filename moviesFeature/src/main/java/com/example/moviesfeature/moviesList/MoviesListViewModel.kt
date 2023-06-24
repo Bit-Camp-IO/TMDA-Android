@@ -7,10 +7,10 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 
-import com.example.movies.domain.enities.movie.MoviesPage
-import com.example.movies.domain.useCases.AddMovieToWatchListUseCase
-import com.example.movies.domain.useCases.GetMovieSavedStateUseCase
-import com.example.movies.domain.useCases.MovieUseCaseFactory
+import com.example.moviesComponent.domain.enities.movie.MoviesPage
+import com.example.moviesComponent.domain.useCases.AddMovieToWatchListUseCase
+import com.example.moviesComponent.domain.useCases.GetMovieSavedStateUseCase
+import com.example.moviesComponent.domain.useCases.MovieUseCaseFactory
 import com.example.moviesfeature.navigation.MOVIES_LIST_SCREEN_TYPE
 import com.example.moviesfeature.navigation.MOVIE_ID
 import com.example.moviesfeature.uiModels.MovieUiDto

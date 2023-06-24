@@ -66,8 +66,7 @@ dependencies {
     api("androidx.compose.material3:material3")
     api("androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha10")
 
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+
 
     //hilt
     api("androidx.hilt:hilt-navigation-compose:1.0.0")
@@ -83,14 +82,7 @@ dependencies {
     api("io.coil-kt:coil-compose:2.4.0")
     //Lottie
     api("com.airbnb.android:lottie-compose:6.0.1")
+    api(project(":sharedComponent"))
 
-    api(project(":shared"))
 
-    //Testing
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-
-    implementation("androidx.paging:paging-runtime-ktx:3.1.1")
 }

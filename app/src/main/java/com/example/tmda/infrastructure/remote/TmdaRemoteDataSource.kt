@@ -1,6 +1,6 @@
 package com.example.tmda.infrastructure.remote
 
-import com.example.movies.data.remote.ApiKeyInterceptor
+import com.example.moviesComponent.data.remote.ApiKeyInterceptor
 import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit

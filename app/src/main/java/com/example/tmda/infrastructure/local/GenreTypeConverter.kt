@@ -2,13 +2,13 @@ package com.example.tmda.infrastructure.local
 
 import androidx.room.TypeConverter
 import com.bitIO.tvshowcomponent.domain.entity.TvShowGenre
-import com.example.shared.entities.Genre
+import com.example.sharedComponent.entities.Genre
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 
-//@ProvidedTypeConverter
+
 class GenreTypeConverter {
     @TypeConverter
     fun stringToGenres(string: String) = try {

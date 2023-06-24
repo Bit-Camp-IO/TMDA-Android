@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bitIO.tvshowcomponent.domain.useCases.SearchSeriesUseCase
 
-import com.example.movies.domain.useCases.SearchMoviesUseCase
-import com.example.movies.domain.useCases.SearchPeopleUseCase
-import com.example.shared.entities.people.Person
+import com.example.moviesComponent.domain.useCases.SearchMoviesUseCase
+import com.example.moviesComponent.domain.useCases.SearchPeopleUseCase
+import com.example.sharedComponent.entities.people.Person
 import com.example.searchfeature.data.SearchItemModel
 import com.example.searchfeature.data.toSearchItem
 
@@ -88,9 +88,6 @@ class SearchViewModel @Inject constructor(
         currentStateHolder.updateKeyword(keyword)
     }
 
-    fun onTryAgain() {
-        moviesStateHolder
-    }
 
 }
 

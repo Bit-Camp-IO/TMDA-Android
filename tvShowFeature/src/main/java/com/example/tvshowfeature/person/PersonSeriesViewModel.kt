@@ -9,7 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.bitIO.tvshowcomponent.domain.entity.TvShow
 import com.bitIO.tvshowcomponent.domain.useCases.GetPersonDetailsUseCase
 import com.bitIO.tvshowcomponent.domain.useCases.GetPersonSeriesUseCase
-import com.example.shared.entities.people.PersonDetails
+import com.example.sharedComponent.entities.people.PersonDetails
 import com.example.sharedui.navigation.PERSON_ID
 
 

@@ -5,21 +5,22 @@
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
         <option name="testRunner" value="GRADLE" />
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleJvm" value="JDK" />
+        <option name="gradleJvm" value="jbr-17" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/movies" />
+            <option value="$PROJECT_DIR$/moviesComponent" />
             <option value="$PROJECT_DIR$/moviesFeature" />
             <option value="$PROJECT_DIR$/profileFeature" />
             <option value="$PROJECT_DIR$/searchFeature" />
-            <option value="$PROJECT_DIR$/shared" />
+            <option value="$PROJECT_DIR$/sharedComponent" />
             <option value="$PROJECT_DIR$/sharedUi" />
             <option value="$PROJECT_DIR$/tvShowComponent" />
             <option value="$PROJECT_DIR$/tvShowFeature" />
-            <option value="$PROJECT_DIR$/user" />
+            <option value="$PROJECT_DIR$/userComponent" />
           </set>
         </option>
       </GradleProjectSettings>

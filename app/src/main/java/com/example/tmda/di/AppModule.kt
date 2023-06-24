@@ -7,9 +7,9 @@ import com.bitIO.tvshowcomponent.data.remote.TvShowApiService
 import com.example.user.data.local.UserDao
 import com.example.user.data.remote.UserApiServices
 import com.example.user.domain.repositories.UserRepository
-import com.example.movies.data.local.MoviesDao
-import com.example.movies.data.remote.MoviesApiService
-import com.example.shared.auth.SessionProvider
+import com.example.moviesComponent.data.local.MoviesDao
+import com.example.moviesComponent.data.remote.MoviesApiService
+import com.example.sharedComponent.auth.SessionProvider
 import com.example.tmda.infrastructure.local.TmdaDatabase
 import com.example.tmda.infrastructure.remote.TmdaRemoteDataSource
 import dagger.Module

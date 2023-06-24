@@ -15,9 +15,9 @@ import com.bitIO.tvshowcomponent.domain.useCases.GetTvShowDetailsUseCase
 import com.bitIO.tvshowcomponent.domain.useCases.GetTvShowReviews
 import com.bitIO.tvshowcomponent.domain.useCases.GetTvVideosUseCase
 import com.bitIO.tvshowcomponent.domain.useCases.tvShow.TvShowUseCaseFactory
-import com.example.shared.entities.Video
-import com.example.shared.entities.credits.Credits
-import com.example.shared.entities.review.Review
+import com.example.sharedComponent.entities.Video
+import com.example.sharedComponent.entities.credits.Credits
+import com.example.sharedComponent.entities.review.Review
 import com.example.tvshowfeature.navigation.SERIES_ID
 import com.example.tvshowfeature.seriesDetails.uiDto.OverView
 import com.example.tvshowfeature.seriesDetails.uiDto.makeOverView
@@ -57,11 +57,6 @@ class SeriesDetailsViewModel @Inject constructor(
         mutableStateOf(com.example.sharedui.uiStates.UiState.Loading())
     val overView: State<com.example.sharedui.uiStates.UiState<OverView>>
         get() = _overView
-
-    private val _seasons: MutableState<com.example.sharedui.uiStates.UiState<OverView>> =
-        mutableStateOf(com.example.sharedui.uiStates.UiState.Loading())
-    val seasons: State<com.example.sharedui.uiStates.UiState<OverView>>
-        get() = _seasons
 
 
     init {

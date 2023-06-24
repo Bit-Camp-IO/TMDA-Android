@@ -9,9 +9,9 @@ import androidx.lifecycle.viewModelScope
 import com.bitIO.tvshowcomponent.domain.entity.TvShow
 import com.bitIO.tvshowcomponent.domain.useCases.GetPersonDetailsUseCase
 import com.bitIO.tvshowcomponent.domain.useCases.GetPersonSeriesUseCase
-import com.example.movies.domain.enities.movie.Movie
-import com.example.movies.domain.useCases.GetPersonMoviesUseCase
-import com.example.shared.entities.people.PersonDetails
+import com.example.moviesComponent.domain.enities.movie.Movie
+import com.example.moviesComponent.domain.useCases.GetPersonMoviesUseCase
+import com.example.sharedComponent.entities.people.PersonDetails
 import com.example.sharedui.navigation.PERSON_ID
 
 import com.example.sharedui.uiStates.toUiState

@@ -1,7 +1,7 @@
 package com.bitIO.tvshowcomponent.domain.useCases
 
 import com.bitIO.tvshowcomponent.domain.repository.TvShowRepository
-import com.example.shared.entities.credits.Credits
+import com.example.sharedComponent.entities.credits.Credits
 import javax.inject.Inject
 
 class GetTvShowCreditsUseCase @Inject constructor(private val repository: TvShowRepository) {

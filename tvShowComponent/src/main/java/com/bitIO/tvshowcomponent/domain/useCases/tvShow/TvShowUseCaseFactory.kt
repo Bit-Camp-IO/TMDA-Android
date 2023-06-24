@@ -2,7 +2,7 @@ package com.bitIO.tvshowcomponent.domain.useCases.tvShow
 
 import com.bitIO.tvshowcomponent.domain.entity.TvShowPage
 import com.bitIO.tvshowcomponent.domain.repository.TvShowRepository
-import com.example.shared.auth.SessionProvider
+import com.example.sharedComponent.auth.SessionProvider
 import javax.inject.Inject
 
 class TvShowUseCaseFactory @Inject constructor(

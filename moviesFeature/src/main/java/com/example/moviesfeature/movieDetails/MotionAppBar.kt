@@ -33,8 +33,8 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.MotionLayout
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.movies.domain.enities.movie.MovieDetails
-import com.example.shared.entities.Video
+import com.example.moviesComponent.domain.enities.movie.MovieDetails
+import com.example.sharedComponent.entities.Video
 import com.example.sharedui.R
 import com.example.sharedui.colors.BlackTransparent37
 import com.example.sharedui.colors.GoldenYellow

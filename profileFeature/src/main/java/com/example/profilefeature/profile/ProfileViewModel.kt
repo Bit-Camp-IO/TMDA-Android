@@ -10,9 +10,8 @@ import com.bitIO.tvshowcomponent.domain.useCases.GetBookMarkedSeriesUseCase
 import com.example.user.domain.entities.UserDetails
 import com.example.user.domain.useCases.GetUserDetailsUseCase
 import com.example.user.domain.useCases.SignOutUseCase
-import com.example.movies.domain.enities.movie.Movie
-import com.example.movies.domain.useCases.GetBookMarkedMoviesUseCase
-import com.example.sharedui.uiStates.UiState
+import com.example.moviesComponent.domain.enities.movie.Movie
+import com.example.moviesComponent.domain.useCases.GetBookMarkedMoviesUseCase
 import com.example.sharedui.uiStates.mapToOtherType
 import com.example.sharedui.uiStates.toUiState
 import dagger.hilt.android.lifecycle.HiltViewModel

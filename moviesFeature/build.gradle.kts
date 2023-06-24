@@ -45,9 +45,8 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.10.1")
-
-    api(project(":movies"))
+ //   implementation("androidx.core:core-ktx:1.10.1")
+    api(project(":moviesComponent"))
     api(project(":sharedUi"))
     kapt("com.google.dagger:hilt-compiler:$hilt")
 

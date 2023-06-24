@@ -50,7 +50,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.bitIO.tvshowcomponent.domain.entity.TvShow
-import com.example.shared.entities.Video
+import com.example.sharedComponent.entities.Video
 import com.example.sharedui.R
 import com.example.sharedui.base.credits.CreditsComponent
 import com.example.sharedui.base.imageCardModifier

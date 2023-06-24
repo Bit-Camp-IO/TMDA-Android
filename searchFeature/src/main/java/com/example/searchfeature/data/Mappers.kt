@@ -1,7 +1,7 @@
 package com.example.searchfeature.data
 
 import com.bitIO.tvshowcomponent.domain.entity.TvShow
-import com.example.movies.domain.enities.movie.Movie
+import com.example.moviesComponent.domain.enities.movie.Movie
 
 fun Movie.toSearchItem() =
     SearchItemModel(

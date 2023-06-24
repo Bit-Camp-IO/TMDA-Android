@@ -2,7 +2,7 @@ package com.example.moviesfeature.uiModels
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import com.example.movies.domain.enities.movie.Movie
+import com.example.moviesComponent.domain.enities.movie.Movie
 
 data class MovieUiDto(
     val backdropPath: String? = "",

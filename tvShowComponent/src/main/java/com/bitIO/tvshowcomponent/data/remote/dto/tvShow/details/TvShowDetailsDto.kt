@@ -8,7 +8,7 @@ import com.bitIO.tvshowcomponent.data.remote.response.NextEpisodeToAir
 import com.bitIO.tvshowcomponent.data.remote.response.ProductionCompany
 import com.bitIO.tvshowcomponent.data.remote.response.ProductionCountry
 import com.bitIO.tvshowcomponent.data.remote.response.SpokenLanguage
-import com.example.shared.dto.details.GenreDto
+import com.example.sharedComponent.dto.details.GenreDto
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 

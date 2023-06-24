@@ -22,9 +22,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.shared.entities.credits.CastMember
-import com.example.shared.entities.credits.CreditItem
-import com.example.shared.entities.credits.CrewMember
+import com.example.sharedComponent.entities.credits.CastMember
+import com.example.sharedComponent.entities.credits.CreditItem
+import com.example.sharedComponent.entities.credits.CrewMember
 import com.example.sharedui.x.DividerTitle
 import com.example.sharedui.x.NoDataComponent
 import com.example.sharedui.base.mainShape

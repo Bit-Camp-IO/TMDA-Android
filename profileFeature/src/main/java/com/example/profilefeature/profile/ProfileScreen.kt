@@ -32,7 +32,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import coil.compose.AsyncImage
 import com.bitIO.tvshowcomponent.domain.entity.TvShow
-import com.example.movies.domain.enities.movie.Movie
+import com.example.moviesComponent.domain.enities.movie.Movie
 import com.example.moviesfeature.uiModels.MoviesScreenType
 import com.example.profilefeature.navigation.ProfileNavigator
 import com.example.sharedui.R
@@ -52,7 +52,7 @@ fun ProfileScreen(
     val series = viewModel.userSeries.value
     val allData =
         viewModel.userDetails.value + viewModel.userMovies.value + viewModel.userSeries.value
-    when (allData.any { it is com.example.sharedui.uiStates.UiState.Failure }) {
+    when (allData.any { it is UiState.Failure }) {
         true -> com.example.sharedui.uiStates.ErrorScreen(viewModel::updateAll)
         false -> Column {
             Spacer(modifier = Modifier.height(72.dp))
@@ -101,11 +101,11 @@ fun ProfileScreen(
 fun UserInfoRow(userDetailsState: UiState<UserDetails>, onLogOut: () -> Unit) {
 
     when (userDetailsState) {
-        is com.example.sharedui.uiStates.UiState.Failure -> com.example.sharedui.uiStates.ErrorComponent {}
-        is com.example.sharedui.uiStates.UiState.Loading -> com.example.sharedui.uiStates.LoadingScreen(
+        is UiState.Failure -> com.example.sharedui.uiStates.ErrorComponent {}
+        is UiState.Loading -> com.example.sharedui.uiStates.LoadingScreen(
             Modifier.height(100.dp)
         )
-        is com.example.sharedui.uiStates.UiState.Success -> {
+        is UiState.Success -> {
             val userDetails = userDetailsState.data
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,

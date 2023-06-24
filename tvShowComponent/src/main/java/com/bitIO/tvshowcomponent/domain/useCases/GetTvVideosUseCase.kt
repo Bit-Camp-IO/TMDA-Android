@@ -1,7 +1,7 @@
 package com.bitIO.tvshowcomponent.domain.useCases
 
 import com.bitIO.tvshowcomponent.domain.repository.TvShowRepository
-import com.example.shared.entities.Video
+import com.example.sharedComponent.entities.Video
 import javax.inject.Inject
 
 class GetTvVideosUseCase @Inject constructor(private val repo: TvShowRepository) {

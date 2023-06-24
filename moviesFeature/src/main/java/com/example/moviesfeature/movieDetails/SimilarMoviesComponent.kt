@@ -19,7 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.movies.domain.enities.movie.Movie
+import com.example.moviesComponent.domain.enities.movie.Movie
 import com.example.sharedui.R
 import com.example.sharedui.base.BaseImageCard
 import com.example.sharedui.base.BaseLazyRowComponent

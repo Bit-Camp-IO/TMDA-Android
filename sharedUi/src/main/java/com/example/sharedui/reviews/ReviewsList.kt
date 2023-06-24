@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.shared.entities.review.Review
+import com.example.sharedComponent.entities.review.Review
 import com.example.sharedui.x.DividerTitle
 import com.example.sharedui.x.NoDataComponent
 import com.example.sharedui.uiStates.ErrorComponent

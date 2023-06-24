@@ -4,8 +4,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.movies.domain.enities.movie.Movie
-import com.example.movies.domain.useCases.MovieUseCaseFactory
+import com.example.moviesComponent.domain.enities.movie.Movie
+import com.example.moviesComponent.domain.useCases.MovieUseCaseFactory
 import com.example.moviesfeature.uiModels.MovieUiDto
 import com.example.sharedui.uiStates.UiState
 import com.example.sharedui.uiStates.mapToOtherType

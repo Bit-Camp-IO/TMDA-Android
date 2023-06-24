@@ -4,8 +4,8 @@ import com.bitIO.tvshowcomponent.data.repository.TvShowRepositoryImpl
 import com.bitIO.tvshowcomponent.domain.repository.TvShowRepository
 import com.example.user.data.repositories.UserRepositoryImpl
 import com.example.user.domain.repositories.UserRepository
-import com.example.movies.data.repositories.MoviesRepositoryImpl
-import com.example.movies.domain.repositories.MoviesRepository
+import com.example.moviesComponent.data.repositories.MoviesRepositoryImpl
+import com.example.moviesComponent.domain.repositories.MoviesRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

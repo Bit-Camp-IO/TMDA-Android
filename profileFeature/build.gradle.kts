@@ -45,6 +45,6 @@ android {
 dependencies {
     implementation(project(":moviesFeature"))
     implementation(project(":tvShowFeature"))
-    implementation(project(":user"))
+    implementation(project(":userComponent"))
     kapt("com.google.dagger:hilt-compiler:$hilt")
 }

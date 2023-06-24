@@ -5,11 +5,10 @@ import com.bitIO.tvshowcomponent.data.remote.dto.AccountSavedStateDto
 import com.bitIO.tvshowcomponent.data.remote.dto.tvShow.PersonSeriesWrapper
 import com.bitIO.tvshowcomponent.data.remote.dto.tvShow.TvShowDtoPage
 import com.bitIO.tvshowcomponent.data.remote.dto.tvShow.details.TvShowDetailsDto
-import com.bitIO.tvshowcomponent.data.remote.response.ContentRatingResponse
-import com.example.shared.dto.credits.CreditsDto
-import com.example.shared.dto.people.PersonDetailsDto
-import com.example.shared.dto.review.ReviewsWrapperDto
-import com.example.shared.dto.videos.VideoContainerDto
+import com.example.sharedComponent.dto.credits.CreditsDto
+import com.example.sharedComponent.dto.people.PersonDetailsDto
+import com.example.sharedComponent.dto.review.ReviewsWrapperDto
+import com.example.sharedComponent.dto.videos.VideoContainerDto
 import okhttp3.RequestBody
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -43,11 +42,7 @@ interface TvShowApiService {
         @Query("page") page: Int
     ): TvShowDtoPage
 
-    @GET("tv/changes")
-    suspend fun getChangesTvShows(): TvShowDtoPage
-    //
 
-    //
     @GET("trending/tv/{time_window}")
     suspend fun getTrendyTvShows(@Path("time_window") timeWindow: String = "day"): TvShowDtoPage
 
@@ -55,12 +50,7 @@ interface TvShowApiService {
     @GET("tv/{series_id}")
     suspend fun getTvShowDetails(@Path("series_id") tvShowId: Int): TvShowDetailsDto
 
-    @GET("tv/latest")
-    suspend fun getLatestTvShow(): TvShowDetailsDto
-    //
 
-    @GET("tv/{series_id}/content_ratings")
-    suspend fun getContentRatings(@Path("series_id") tvShowId: Int): ContentRatingResponse
 
 
     @GET("tv/{series_id}/reviews")

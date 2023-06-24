@@ -3,10 +3,10 @@ package com.bitIO.tvshowcomponent.domain.repository
 import com.bitIO.tvshowcomponent.domain.entity.TvShow
 import com.bitIO.tvshowcomponent.domain.entity.TvShowDetails
 import com.bitIO.tvshowcomponent.domain.entity.TvShowPage
-import com.example.shared.entities.Video
-import com.example.shared.entities.credits.Credits
-import com.example.shared.entities.people.PersonDetails
-import com.example.shared.entities.review.Review
+import com.example.sharedComponent.entities.Video
+import com.example.sharedComponent.entities.credits.Credits
+import com.example.sharedComponent.entities.people.PersonDetails
+import com.example.sharedComponent.entities.review.Review
 
 
 interface TvShowRepository {

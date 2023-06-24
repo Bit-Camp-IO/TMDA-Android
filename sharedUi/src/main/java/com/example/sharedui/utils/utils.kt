@@ -3,7 +3,7 @@ package com.example.sharedui.utils
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
-import com.example.shared.entities.Video
+import com.example.sharedComponent.entities.Video
 
 fun getTmdbImageLink(path: String?) =
     if (path != null) "https://image.tmdb.org/t/p/w500$path" else null

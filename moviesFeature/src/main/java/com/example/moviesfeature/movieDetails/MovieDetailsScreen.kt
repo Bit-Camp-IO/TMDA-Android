@@ -35,10 +35,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.navigation.NavController
-import com.example.movies.domain.enities.movie.MovieDetails
+import com.example.moviesComponent.domain.enities.movie.MovieDetails
 import com.example.moviesfeature.navigation.MoviesNavigator
 import com.example.moviesfeature.uiModels.MoviesScreenType
-import com.example.shared.entities.Genre
+import com.example.sharedComponent.entities.Genre
 import com.example.sharedui.base.credits.CreditsComponent
 import com.example.sharedui.reviews.ReviewsList
 import com.example.sharedui.uiStates.ErrorScreen

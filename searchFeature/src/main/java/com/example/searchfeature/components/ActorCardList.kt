@@ -30,8 +30,8 @@ import androidx.compose.ui.unit.sp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import coil.compose.AsyncImage
-import com.example.shared.entities.people.Person
-import com.example.shared.entities.people.PersonDetails
+import com.example.sharedComponent.entities.people.Person
+import com.example.sharedComponent.entities.people.PersonDetails
 import com.example.sharedui.colors.BlackTransparent28
 import com.example.sharedui.utils.getTmdbImageLink
 
@@ -63,7 +63,7 @@ fun ActorCardList(
                     )
                 }
 
-                when (val state = searchItems.loadState.append) {
+                when (searchItems.loadState.append) {
                     is LoadState.Error -> item {
                         com.example.sharedui.uiStates.ErrorComponent(
                             onTryAgain
@@ -112,7 +112,7 @@ fun ActorItemCard(
                 .fillMaxWidth()
                 .padding(all = 8.dp)
         ) {
-            val coroutineScope = rememberCoroutineScope()
+            rememberCoroutineScope()
             AsyncImage(
                 model = getTmdbImageLink(
                     searchItemModel.profilePath
