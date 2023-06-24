@@ -30,7 +30,7 @@ object AppModule {
             context = context.applicationContext,
             TmdaDatabase::class.java,
             "TMDA database"
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
 
 

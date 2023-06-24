@@ -18,6 +18,7 @@ import com.bitIO.tvshowcomponent.domain.useCases.tvShow.TvShowUseCaseFactory
 import com.example.sharedComponent.entities.Video
 import com.example.sharedComponent.entities.credits.Credits
 import com.example.sharedComponent.entities.review.Review
+import com.example.sharedui.uiStates.UiState
 import com.example.tvshowfeature.navigation.SERIES_ID
 import com.example.tvshowfeature.seriesDetails.uiDto.OverView
 import com.example.tvshowfeature.seriesDetails.uiDto.makeOverView
@@ -28,6 +29,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 typealias DResult<T> = Deferred<Result<T>>
@@ -78,16 +80,18 @@ class SeriesDetailsViewModel @Inject constructor(
                 isBookmarkedDeferred, recommendedDeferred,
                 reviewsDeferred
             )
-            mapDataToOverView(
-                detailsDeferred,
-                creditsDeferred,
-                similarDeferred,
-                recommendedDeferred,
-                videosDeferred,
-                isBookmarkedDeferred,
-                reviewsDeferred
-            )
+            withContext(Dispatchers.Main) {
+                mapDataToOverView(
+                    detailsDeferred,
+                    creditsDeferred,
+                    similarDeferred,
+                    recommendedDeferred,
+                    videosDeferred,
+                    isBookmarkedDeferred,
+                    reviewsDeferred
+                )
 
+            }
         }
     }
 
@@ -101,6 +105,7 @@ class SeriesDetailsViewModel @Inject constructor(
         isSavedDef: DResult<Boolean>,
         reviewsDef: DResult<List<Review>>
     ) {
+
         _overView.value =
             try {
                 val details = detailsDef.getCompleted().getOrThrow()
@@ -109,9 +114,9 @@ class SeriesDetailsViewModel @Inject constructor(
                 val recommended = recommendedDef.getCompleted().getOrThrow().results
                 val videos = videosDef.getCompleted().getOrThrow()
                 val isSaved = isSavedDef.getCompleted().getOrThrow()
-                val reviews= reviewsDef.getCompleted().getOrThrow()
+                val reviews = reviewsDef.getCompleted().getOrThrow()
 
-                com.example.sharedui.uiStates.UiState.Success(
+                UiState.Success(
                     makeOverView(
                         details,
                         videos,
@@ -123,7 +128,7 @@ class SeriesDetailsViewModel @Inject constructor(
                     )
                 )
             } catch (e: Throwable) {
-                com.example.sharedui.uiStates.UiState.Failure(e.message ?: "Unknown Error")
+                UiState.Failure(e.message ?: "Unknown Error")
             }
 
     }
@@ -172,7 +177,8 @@ class SeriesDetailsViewModel @Inject constructor(
 
     fun addOrRemoveSeriesFromSaveList() {
         viewModelScope.launch {
-            val isSaved = (_overView.value as com.example.sharedui.uiStates.UiState.Success).data.savedState
+            val isSaved =
+                (_overView.value as UiState.Success).data.savedState
 
             val result = addOrRemoveTvFromWatchListUseCase.invoke(seriesId, !isSaved.value)
             if (result.isSuccess)

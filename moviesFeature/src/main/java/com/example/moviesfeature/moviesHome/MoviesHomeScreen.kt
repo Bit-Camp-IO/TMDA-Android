@@ -1,5 +1,6 @@
 package com.example.moviesfeature.moviesHome
 
+import android.util.Log
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -18,6 +19,7 @@ fun MoviesHomeScreen(moviesNavigator: MoviesNavigator) {
     val viewModel = hiltViewModel<MoviesHomeViewModel>()
     if (viewModel.isErrorState()) ErrorScreen(viewModel::updateAll) else
         LazyColumn {
+            Log.d("xxx","Xxxx")
             item {
                 NowPlayingHeader(
                     viewModel.nowPlayingMoviesState.value,
