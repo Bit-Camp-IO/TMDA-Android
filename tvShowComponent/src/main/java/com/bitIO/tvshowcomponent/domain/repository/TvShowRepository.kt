@@ -34,4 +34,6 @@ interface TvShowRepository {
     ): TvShowPage
 
     suspend fun getTvShowReviews(tvShowId: Int):List<Review>
+    suspend fun getTvSavedState(seriesId: Int, sessionId: String): Boolean
+    suspend fun addSeriesToWatchList(sessionId: String, seriesId: Int, isAddRequest: Boolean)
 }

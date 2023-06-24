@@ -12,8 +12,13 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/movies" />
+            <option value="$PROJECT_DIR$/moviesFeature" />
+            <option value="$PROJECT_DIR$/profileFeature" />
+            <option value="$PROJECT_DIR$/searchFeature" />
             <option value="$PROJECT_DIR$/shared" />
+            <option value="$PROJECT_DIR$/sharedUi" />
             <option value="$PROJECT_DIR$/tvShowComponent" />
+            <option value="$PROJECT_DIR$/tvShowFeature" />
             <option value="$PROJECT_DIR$/user" />
           </set>
         </option>

@@ -1,6 +1,7 @@
 package com.bitIO.tvshowcomponent.data.remote
 
 
+import com.bitIO.tvshowcomponent.data.remote.dto.AccountSavedStateDto
 import com.bitIO.tvshowcomponent.data.remote.dto.tvShow.PersonSeriesWrapper
 import com.bitIO.tvshowcomponent.data.remote.dto.tvShow.TvShowDtoPage
 import com.bitIO.tvshowcomponent.data.remote.dto.tvShow.details.TvShowDetailsDto
@@ -9,7 +10,10 @@ import com.example.shared.dto.credits.CreditsDto
 import com.example.shared.dto.people.PersonDetailsDto
 import com.example.shared.dto.review.ReviewsWrapperDto
 import com.example.shared.dto.videos.VideoContainerDto
+import okhttp3.RequestBody
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -91,5 +95,17 @@ interface TvShowApiService {
         @Query("page") page: Int
     ): TvShowDtoPage
 
+    @POST("account/{account_id}/watchlist")
+    suspend fun postToWatchList(
+        @Path("account_id") accountId: Int,
+        @Query("session_id") sessionId: String,
+        @Body body: RequestBody
+    )
+
+    @GET("tv/{series_id}/account_states")
+    suspend fun getTvSavedState(
+        @Path("series_id") seriesId: Int,
+        @Query("session_id") sessionId: String
+    ): AccountSavedStateDto
 
 }

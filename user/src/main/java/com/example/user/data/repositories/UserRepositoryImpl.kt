@@ -65,25 +65,25 @@ class UserRepositoryImpl @Inject constructor(
         return isSessionDeleted.success
     }
 
-    override suspend fun addSeriesToWatchList(seriesId: Int, isAddRequest: Boolean) {
-        userApiServices.postToWatchList(
-            accountId = ACCOUNT_ID,
-            sessionId = cachedUser!!.sessionId,
-            body = makePostToWatchListBody(type = "tv", mediaId = seriesId, isAddRequest)
-        )
-    }
+//    override suspend fun addSeriesToWatchList(seriesId: Int, isAddRequest: Boolean) {
+//        userApiServices.postToWatchList(
+//            accountId = ACCOUNT_ID,
+//            sessionId = cachedUser!!.sessionId,
+//            body = makePostToWatchListBody(type = "tv", mediaId = seriesId, isAddRequest)
+//        )
+//    }
 
-    override suspend fun addMovieToWatchList(movieId: Int, isAddRequest: Boolean) {
-        userApiServices.postToWatchList(
-            accountId = ACCOUNT_ID,
-            sessionId = cachedUser!!.sessionId,
-            body = makePostToWatchListBody(type = "movie", mediaId = movieId, isAddRequest)
-        )
-    }
+//    override suspend fun addMovieToWatchList(movieId: Int, isAddRequest: Boolean) {
+//        userApiServices.postToWatchList(
+//            accountId = ACCOUNT_ID,
+//            sessionId = cachedUser!!.sessionId,
+//            body = makePostToWatchListBody(type = "movie", mediaId = movieId, isAddRequest)
+//        )
+//    }
 
-    override suspend fun getTvSavedState(seriesId: Int): Boolean {
-        return userApiServices.getTvSavedState(seriesId, cachedUser!!.sessionId).watchList
-    }
+//    override suspend fun getTvSavedState(seriesId: Int): Boolean {
+//        return userApiServices.getTvSavedState(seriesId, cachedUser!!.sessionId).watchList
+//    }
 
     override suspend fun getUserDetails(): UserDetails {
         return userApiServices.getUserDetails(
@@ -120,17 +120,7 @@ class UserRepositoryImpl @Inject constructor(
 
     }
 
-    private fun makePostToWatchListBody(
-        type: String,
-        mediaId: Int,
-        isSaveRequest: Boolean
-    ): RequestBody {
-        val mediaType = MediaType.parse("application/json")
-        return RequestBody.create(
-            mediaType,
-            "{\"media_type\":\"$type\",\"media_id\":\"$mediaId\",\"watchlist\":$isSaveRequest}"
-        )
-    }
+
 
     companion object {
         private var cachedUser: User? = null

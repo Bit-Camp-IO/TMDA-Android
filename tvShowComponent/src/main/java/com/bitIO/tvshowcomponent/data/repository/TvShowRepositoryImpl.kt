@@ -17,6 +17,8 @@ import com.example.shared.mappers.toCredits
 import com.example.shared.mappers.toPersonDetails
 import com.example.shared.mappers.toReview
 import com.example.shared.mappers.toVideo
+import okhttp3.MediaType
+import okhttp3.RequestBody
 import javax.inject.Inject
 
 
@@ -92,5 +94,25 @@ class TvShowRepositoryImpl @Inject constructor(private val api: TvShowApiService
     override suspend fun getTvShowReviews(tvShowId: Int): List<Review> {
        return api.getTvReviews(tvShowId,1).results.map { it.toReview()}
     }
-
+    override suspend fun getTvSavedState(seriesId: Int,sessionId: String): Boolean {
+        return api.getTvSavedState(seriesId, sessionId).watchList
+    }
+    override suspend fun addSeriesToWatchList(sessionId: String,seriesId: Int, isAddRequest: Boolean) {
+        api.postToWatchList(
+            accountId = 16874876,
+            sessionId =sessionId,
+            body = makePostToWatchListBody(type = "tv", mediaId = seriesId, isAddRequest)
+        )
+    }
+    private fun makePostToWatchListBody(
+        type: String,
+        mediaId: Int,
+        isSaveRequest: Boolean
+    ): RequestBody {
+        val mediaType = MediaType.parse("application/json")
+        return RequestBody.create(
+            mediaType,
+            "{\"media_type\":\"$type\",\"media_id\":\"$mediaId\",\"watchlist\":$isSaveRequest}"
+        )
+    }
 }

@@ -85,11 +85,13 @@ dependencies {
 
 
 
-    api(project(":tvShowComponent"))
+    implementation(project(":tvShowFeature"))
+    implementation(project(":moviesFeature"))
+    implementation(project(":searchFeature"))
+    implementation(project(":profileFeature"))
 
 
-    api(project(":movies"))
-    api(project(":user"))
+    implementation(project(":user"))
 
     //endregion
 
@@ -98,7 +100,7 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.7.2")
     implementation("androidx.navigation:navigation-compose:2.6.0")
     //Compose
-    implementation("androidx.compose.ui:ui:1.6.0-alpha01")
+    implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
@@ -118,14 +120,13 @@ dependencies {
     //Retrofit
     implementation("com.squareup.retrofit2:retrofit:$retrofit")
     implementation("com.squareup.retrofit2:converter-gson:$retrofit")
-   // implementation("com.squareup.okhttp3:okhttp:4.10.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
     implementation("com.squareup.moshi:moshi:1.15.0")
     //Room
-    implementation ("androidx.room:room-runtime:2.5.1")
-    implementation("androidx.room:room-ktx:2.5.1")
-    ksp ("androidx.room:room-compiler:2.5.1")
+    implementation ("androidx.room:room-runtime:2.5.2")
+    implementation("androidx.room:room-ktx:2.5.2")
+    ksp ("androidx.room:room-compiler:2.5.2")
 
     //Paging
     implementation("androidx.paging:paging-runtime-ktx:3.1.1")
@@ -142,6 +143,6 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
 
-    implementation("androidx.paging:paging-runtime-ktx:3.1.1")
+
 
 }
