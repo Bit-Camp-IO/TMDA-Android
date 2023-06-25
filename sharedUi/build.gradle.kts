@@ -58,14 +58,8 @@ dependencies {
     api("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     api("androidx.activity:activity-compose:1.7.2")
     api("androidx.navigation:navigation-compose:2.6.0")
-    //Compose
-    api("com.google.android.material:material:1.9.0")
-    api("androidx.compose.ui:ui")
-    api("androidx.compose.ui:ui-graphics")
-    api("androidx.compose.ui:ui-tooling-preview")
     api("androidx.compose.material3:material3")
     api("androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha10")
-
 
 
     //hilt
