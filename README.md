@@ -37,8 +37,7 @@ git clone https://github.com/Bit-Camp-IO/TMDA-Android.git
 3. Navigate to the cloned project directory and select it.
 4. Android Studio will build and sync the project automatically.
 5. Once the project is synced, navigate to the `app` directory in the project structure.
-6. Create a new resource file named `secrets.xml` inside the `res/values` directory.
-7. Open `local.properties` and add the following code, replacing `YOUR_API_KEY` with your TMDB API key:
+6. Open `local.properties` and add the following code, replacing `YOUR_API_KEY` with your TMDB API key:
 
 ```xml
 
@@ -46,8 +45,8 @@ apiKey =  YOUR_API_KEY
 
 ```
 
-8. Save the file.
-9. Run the app on an emulator or physical device by clicking the "Run" button in Android Studio.
+7. Save the file.
+8. Run the app on an emulator or physical device by clicking the "Run" button in Android Studio.
 
 ## API Usage
 
