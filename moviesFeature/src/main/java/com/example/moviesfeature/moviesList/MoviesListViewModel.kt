@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-
 import com.example.moviesComponent.domain.enities.movie.MoviesPage
 import com.example.moviesComponent.domain.useCases.AddMovieToWatchListUseCase
 import com.example.moviesComponent.domain.useCases.GetMovieSavedStateUseCase
@@ -17,7 +16,6 @@ import com.example.moviesfeature.uiModels.MovieUiDto
 import com.example.moviesfeature.uiModels.MoviesScreenType
 import com.example.sharedui.paging.PagingProvider
 import com.example.sharedui.paging.UiPage
-
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -39,7 +37,7 @@ class MoviesListViewModel @Inject constructor(
     private var pagesStream: Flow<PagingData<MovieUiDto>>? = null
 
     init {
-        //viewModelScope.launch(Dispatchers.IO) { user = userUseCase.invoke() }
+
         moviesUseCase = moviesScreenType.toUseCase()
     }
 
@@ -99,8 +97,8 @@ class MoviesListViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             priorityRange.map {
                 async {
-                    if (movies.isEmpty()) return@async
-                    val movie = movies[it]
+                   // if (movies.isEmpty()) return@async
+                    val movie = movies.getOrNull(it) ?: return@async
                     val isSaved = getMovieSavedStateUseCase.invoke(movie.id)
                     movie.isSaved.value = handleUpdateSavedError(isSaved)
                 }

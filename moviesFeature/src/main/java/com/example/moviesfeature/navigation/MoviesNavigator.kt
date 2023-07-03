@@ -10,10 +10,6 @@ interface MoviesNavigator {
         moviesScreenType: MoviesScreenType,
         movieId: Int=-1
     )
-    fun navigateToMovieDetails(
-        movieId: Int
-    )
-    fun navigateToPersonScreen(
-        personId: Int
-    )
+    fun navigateToMovieDetails(movieId: Int)
+    fun navigateToPersonScreen(personId: Int)
 }
